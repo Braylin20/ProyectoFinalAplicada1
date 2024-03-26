@@ -4,7 +4,7 @@
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
 @using ProyectFinal.Data
-
+@attribute [Microsoft.AspNetCore.Authorization.AllowAnonymous]
 @inject SignInManager<ApplicationUser> SignInManager
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager

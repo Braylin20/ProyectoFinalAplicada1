@@ -6,7 +6,7 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 @using ProyectFinal.Data
-
+@attribute [Microsoft.AspNetCore.Authorization.AllowAnonymous]
 @inject UserManager<ApplicationUser> UserManager
 @inject RoleManager<IdentityRole> RoleManager
 @inject IUserStore<ApplicationUser> UserStore
@@ -80,6 +80,7 @@
             identityErrors = result.Errors;
             return;
         }
+
         var adminRole = await RoleManager.FindByNameAsync("Admin");
         if (adminRole is null)
         {
