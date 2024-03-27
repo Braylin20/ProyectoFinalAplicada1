@@ -1,0 +1,37 @@
+﻿@page "/ViewAudiencia/{AudienciaId:int}"
+@inject NotificationService notificationService
+@inject AudienciasServices audienciaServices
+@rendermode InteractiveServer
+
+
+<RadzenNotification />
+<div class="container-fluid">
+    <div class="card shadow-lg w-50 mx-auto">
+        <div class="card-header">
+            <h3 class="text-center"> Informaci&oacute;n de la audiencia</h3>
+        </div>
+        <div class="card-body">
+            <p> AudienciaId: @Audiencia.AudienciaId</p>
+            <p> Fecha: @Audiencia.FechaAudiencia</p>
+            <p> Descripci&oacute;n: @Audiencia.Comentario</p>
+        </div>
+        <div class="card-footer">
+            <div class="btn-group">
+                <a href="IndexAudiencia" class="btn btn-secondary bi bi-arrow-left-square-fill">Atr&aacute;s</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public int AudienciaId { get; set; }
+    public Audiencias Audiencia { get; set; } = new Audiencias();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Audiencia = await audienciaServices.GetAudiencia(AudienciaId);
+    }
+   
+}

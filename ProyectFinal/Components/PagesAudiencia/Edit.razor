@@ -1,0 +1,84 @@
+﻿@page "/EditAudiencia/{AudienciaId:int}"
+@rendermode InteractiveAuto
+@inject NotificationService notificationService
+@inject DemandaServices demandaServices
+@inject AudienciasServices audienciaServices
+
+<RadzenNotification />
+
+<EditForm Model="Audiencia" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container-fluid">
+        <div class="card shadow-lg w-50 mx-auto">
+            <div class="card-header">
+                <h3 class="text-center text-white">Registro Audiencia</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <label class="fw-bold mb-2">Fecha de Audiencia</label>
+                        <InputDate @bind-Value="Audiencia.FechaAudiencia" class="form-control mb-3" />
+                        <ValidationMessage For="@(()=>Audiencia.FechaAudiencia)" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <label class="fw-bold mb-3">Comentario</label>
+                        <InputTextArea @bind-Value="Audiencia.Comentario" class="form-control" placeholder="Ingrese un comentario" />
+                        <ValidationMessage For="@(()=>Audiencia.Comentario)" />
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="btn-group">
+                    <a href="IndexAudiencia" class="btn btn-secondary">Atr&aacute;s</a>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int AudienciaId { get; set; }
+    public Audiencias Audiencia { get; set; } = new Audiencias();
+    private IEnumerable<Demandas>? ListaDemandas { get; set; } = new List<Demandas>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        //await Task.Delay(1000);
+        Audiencia = await audienciaServices.GetAudiencia(AudienciaId);
+        ListaDemandas = await demandaServices.GetDemandas();
+    }
+    public async Task Guardar()
+    {
+        var guardado = await audienciaServices.Edit(Audiencia);
+        if (!guardado)
+        {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "No se ha editado correctamente",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensaje);
+        }
+        else
+        {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Éxito",
+                    Detail = "Se ha editado correctamente",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensaje);
+        }
+
+    }
+}

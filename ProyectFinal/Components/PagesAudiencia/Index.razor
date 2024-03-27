@@ -1,0 +1,67 @@
+﻿@page "/IndexAudiencia"
+
+@rendermode InteractiveAuto
+@inject AudienciasServices audienciaServices
+
+<div class="card shadow-lg">
+    <div class="card-header">
+        <h3 class="text-white text-center">Index</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-4">
+                <label>Filtrar Por</label>
+                <InputSelect @bind-Value="Opcion" class="form-select">
+                    <option value="1">AudienciaId</option>
+                    <option value="2">Fecha</option>
+                    <option value="3">Descripci&oacute;n de demanda </option>
+                    <option value="4">Todo</option>
+                </InputSelect>
+            </div>
+            <div class="justify-content-end d-flex mb-4">
+                <a href="CreateAudiencia" class="btn btn-success bi-floppy-fill">Create</a>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="table-head text-white">AudienciaId</th>
+                        <th class="table-head text-white">Fecha</th>
+                        <th class="table-head text-white">Comentario</th>
+                        <th class="table-head text-white">Opci&oacute;nes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ListaAudiencias)
+                    {
+                        <tr>
+                            <td>@item.AudienciaId</td>
+                            <td>@item.FechaAudiencia</td>
+                            <td>@item.Comentario</td>
+                            <td>
+                                <a href="/DeleteAudiencia/@item.AudienciaId" class="btn btn-danger bi bi-trash-fill"></a>
+                                <a href="/EditAudiencia/@item.AudienciaId" class="btn btn-primary bi-box-arrow-up-right"></a>
+                                <a href="/ViewAudiencia/@item.AudienciaId" class="btn btn-warning bi bi-info-square"></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    public Audiencias Audiencias { get; set; } = new Audiencias();
+    public List<Audiencias>? ListaAudiencias = new List<Audiencias>();
+    public List<Demandas>? ListaDemandas = new List<Demandas>();
+    public int Opcion { get; set; }
+    public Demandas? demandas = new Demandas();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaAudiencias = await audienciaServices.GetAudiencias();
+
+    }
+
+
+}

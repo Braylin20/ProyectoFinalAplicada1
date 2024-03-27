@@ -1,0 +1,65 @@
+﻿@page "/DeleteAudiencia/{AudienciaId:int}"
+@inject NotificationService notificationService
+@inject AudienciasServices audienciaServices
+@rendermode InteractiveServer
+
+
+<RadzenNotification />
+<div class="container-fluid">
+    <div class="card shadow-lg w-50 mx-auto">
+        <div class="card-header">
+            <h3 class="text-danger text-center"> ¿Seguro que quieres eliminar esta Audiencia?</h3>
+        </div>
+        <div class="card-body">
+            <p> AudienciaId: @Audiencia.AudienciaId</p>
+            <p> Fecha: @Audiencia.FechaAudiencia</p>
+            <p> Descripci&oacute;n: @Audiencia.Comentario</p>
+        </div>
+        <div class="card-footer">
+            <div class="btn-group">
+                <a href="IndexAudiencia" class="btn btn-secondary bi bi-arrow-left-square-fill">Atr&aacute;s</a>
+                <button class="btn btn-danger bi bi-trash-fill" @onclick="Eliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public int AudienciaId { get; set; }
+    public Audiencias Audiencia { get; set; } = new Audiencias();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Audiencia = await audienciaServices.GetAudiencia(AudienciaId);
+    }
+    public async Task Eliminar()
+    {
+        var eliminado = audienciaServices.DeleteAudiencia(Audiencia.AudienciaId);
+        if (eliminado is null)
+        {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "No se ha eliminado correctamente",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensaje);
+        }
+        else
+        {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Éxito",
+                    Detail = "Se ha eliminado correctamente",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensaje);
+            Audiencia = new Audiencias();
+        }
+
+    }
+}
