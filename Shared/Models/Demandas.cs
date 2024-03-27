@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProyectFinal.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,16 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shared.Models
+namespace Share.Models
 {
     public class Demandas
     {
         [Key]
         public int DemandaId { get; set; }
-        public int TiposDemandasId { get; set; }
-        public int EstadoId { get; set; }
-        public int AlguacilId { get; set; }
-        public int AudienciaId { get; set; }
+        public int? TiposDemandasId { get; set; }
+        public int? EstadoId { get; set; }
+        public int? AlguacilId { get; set; }
+        public long? Cedula { get; set; }
+        public int? AudienciaId { get; set; }
         public DateTime Fecha { get; set; }
         [Required(ErrorMessage = "Este campo es requerido")]
         public string? Descripcion { get; set; }
@@ -30,8 +32,9 @@ namespace Shared.Models
         //[ForeignKey("DemandaId")]
         //public ICollection<Audiencias> Audiencias { get; set; } = new List<Audiencias>();
         [ForeignKey("DemandaId")]
-        public ICollection<ExpedienteDetalle> Demandados { get; set; } = new List<ExpedienteDetalle>();
+        public ICollection<DemandasDetalle> DemandaDetalles { get; set; } = new List<DemandasDetalle>();
 
-        
+        [ForeignKey("DemandaId")]
+        public ICollection<NinoDetalle> UsuarioNinoDetalles { get; set; } = new List<NinoDetalle>();
     }
 }
