@@ -82,21 +82,6 @@ namespace ProyectFinal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Niños",
-                columns: table => new
-                {
-                    NinoId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Genero = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FechaNacimiento = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Niños", x => x.NinoId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TipoResoluciones",
                 columns: table => new
                 {
@@ -170,10 +155,11 @@ namespace ProyectFinal.Migrations
                 {
                     DemandaId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TiposDemandasId = table.Column<int>(type: "int", nullable: false),
-                    EstadoId = table.Column<int>(type: "int", nullable: false),
-                    AlguacilId = table.Column<int>(type: "int", nullable: false),
-                    AudienciaId = table.Column<int>(type: "int", nullable: false),
+                    TiposDemandasId = table.Column<int>(type: "int", nullable: true),
+                    EstadoId = table.Column<int>(type: "int", nullable: true),
+                    AlguacilId = table.Column<int>(type: "int", nullable: true),
+                    Cedula = table.Column<long>(type: "bigint", nullable: true),
+                    AudienciaId = table.Column<int>(type: "int", nullable: true),
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -184,26 +170,22 @@ namespace ProyectFinal.Migrations
                         name: "FK_Demandas_Alguaciles_AlguacilId",
                         column: x => x.AlguacilId,
                         principalTable: "Alguaciles",
-                        principalColumn: "AlguacilId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "AlguacilId");
                     table.ForeignKey(
                         name: "FK_Demandas_Audiencias_AudienciaId",
                         column: x => x.AudienciaId,
                         principalTable: "Audiencias",
-                        principalColumn: "AudienciaId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "AudienciaId");
                     table.ForeignKey(
                         name: "FK_Demandas_EstadosDemandas_EstadoId",
                         column: x => x.EstadoId,
                         principalTable: "EstadosDemandas",
-                        principalColumn: "EstadoId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "EstadoId");
                     table.ForeignKey(
                         name: "FK_Demandas_TiposDemandas_TiposDemandasId",
                         column: x => x.TiposDemandasId,
                         principalTable: "TiposDemandas",
-                        principalColumn: "TiposDemandasId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "TiposDemandasId");
                 });
 
             migrationBuilder.CreateTable(
@@ -233,20 +215,20 @@ namespace ProyectFinal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ExpedienteDetalle",
+                name: "DemandaDetalles",
                 columns: table => new
                 {
                     DetalleId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DemandaId = table.Column<int>(type: "int", nullable: false),
-                    Cedula = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    NumCedulaDemandado = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NombreDemandado = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ExpedienteDetalle", x => x.DetalleId);
+                    table.PrimaryKey("PK_DemandaDetalles", x => x.DetalleId);
                     table.ForeignKey(
-                        name: "FK_ExpedienteDetalle_Demandas_DemandaId",
+                        name: "FK_DemandaDetalles_Demandas_DemandaId",
                         column: x => x.DemandaId,
                         principalTable: "Demandas",
                         principalColumn: "DemandaId",
@@ -283,13 +265,83 @@ namespace ProyectFinal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "NinoDetalles",
+                columns: table => new
+                {
+                    DetalleId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DemandaId = table.Column<int>(type: "int", nullable: false),
+                    NombreNino = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FechaNacimientoNino = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Genero = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NinoDetalles", x => x.DetalleId);
+                    table.ForeignKey(
+                        name: "FK_NinoDetalles_Demandas_DemandaId",
+                        column: x => x.DemandaId,
+                        principalTable: "Demandas",
+                        principalColumn: "DemandaId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserLogins",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ExpedienteId = table.Column<int>(type: "int", nullable: true),
+                    AbogadoId = table.Column<int>(type: "int", nullable: true),
                     NinoId = table.Column<int>(type: "int", nullable: true),
-                    Cedula = table.Column<int>(type: "int", nullable: false),
+                    Cedula = table.Column<long>(type: "bigint", nullable: true),
                     FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Telefono = table.Column<long>(type: "bigint", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -315,76 +367,6 @@ namespace ProyectFinal.Migrations
                         column: x => x.ExpedienteId,
                         principalTable: "Expedientes",
                         principalColumn: "ExpedienteId");
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_Niños_NinoId",
-                        column: x => x.NinoId,
-                        principalTable: "Niños",
-                        principalColumn: "NinoId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserLogins",
-                columns: table => new
-                {
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -402,6 +384,27 @@ namespace ProyectFinal.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UsuarioDetalles",
+                columns: table => new
+                {
+                    DetalleId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    NombreAbogado = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ColegioAbogadoId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsuarioDetalles", x => x.DetalleId);
+                    table.ForeignKey(
+                        name: "FK_UsuarioDetalles_AspNetUsers_Id",
+                        column: x => x.Id,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -440,14 +443,14 @@ namespace ProyectFinal.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_AbogadoId",
+                table: "AspNetUsers",
+                column: "AbogadoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_ExpedienteId",
                 table: "AspNetUsers",
                 column: "ExpedienteId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_NinoId",
-                table: "AspNetUsers",
-                column: "NinoId");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -455,6 +458,11 @@ namespace ProyectFinal.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DemandaDetalles_DemandaId",
+                table: "DemandaDetalles",
+                column: "DemandaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Demandas_AlguacilId",
@@ -487,11 +495,6 @@ namespace ProyectFinal.Migrations
                 column: "SentenciaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExpedienteDetalle_DemandaId",
-                table: "ExpedienteDetalle",
-                column: "DemandaId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Expedientes_DemandaId",
                 table: "Expedientes",
                 column: "DemandaId");
@@ -502,14 +505,59 @@ namespace ProyectFinal.Migrations
                 column: "SentenciaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_NinoDetalles_DemandaId",
+                table: "NinoDetalles",
+                column: "DemandaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Sentencias_ResolucionId",
                 table: "Sentencias",
                 column: "ResolucionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UsuarioDetalles_Id",
+                table: "UsuarioDetalles",
+                column: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                table: "AspNetUserClaims",
+                column: "UserId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                table: "AspNetUserLogins",
+                column: "UserId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                table: "AspNetUserRoles",
+                column: "UserId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUsers_UsuarioDetalles_AbogadoId",
+                table: "AspNetUsers",
+                column: "AbogadoId",
+                principalTable: "UsuarioDetalles",
+                principalColumn: "DetalleId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_UsuarioDetalles_AspNetUsers_Id",
+                table: "UsuarioDetalles");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -526,25 +574,28 @@ namespace ProyectFinal.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "DemandaDetalles");
+
+            migrationBuilder.DropTable(
                 name: "EmpleadoSentencia");
 
             migrationBuilder.DropTable(
-                name: "ExpedienteDetalle");
+                name: "NinoDetalles");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Empleados");
 
             migrationBuilder.DropTable(
-                name: "Empleados");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Expedientes");
 
             migrationBuilder.DropTable(
-                name: "Niños");
+                name: "UsuarioDetalles");
 
             migrationBuilder.DropTable(
                 name: "Demandas");

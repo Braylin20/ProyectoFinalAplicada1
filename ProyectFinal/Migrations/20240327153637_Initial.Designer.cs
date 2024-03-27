@@ -12,7 +12,7 @@ using ProyectFinal.Data;
 namespace ProyectFinal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240326144952_Initial")]
+    [Migration("20240327153637_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -163,11 +163,14 @@ namespace ProyectFinal.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int?>("AbogadoId")
+                        .HasColumnType("int");
+
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("Cedula")
-                        .HasColumnType("int");
+                    b.Property<long?>("Cedula")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -227,9 +230,9 @@ namespace ProyectFinal.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExpedienteId");
+                    b.HasIndex("AbogadoId");
 
-                    b.HasIndex("NinoId");
+                    b.HasIndex("ExpedienteId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -242,7 +245,7 @@ namespace ProyectFinal.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Shared.Models.Alguaciles", b =>
+            modelBuilder.Entity("Share.Models.Alguaciles", b =>
                 {
                     b.Property<int>("AlguacilId")
                         .ValueGeneratedOnAdd()
@@ -258,7 +261,7 @@ namespace ProyectFinal.Migrations
                     b.ToTable("Alguaciles");
                 });
 
-            modelBuilder.Entity("Shared.Models.Audiencias", b =>
+            modelBuilder.Entity("Share.Models.Audiencias", b =>
                 {
                     b.Property<int>("AudienciaId")
                         .ValueGeneratedOnAdd()
@@ -278,7 +281,7 @@ namespace ProyectFinal.Migrations
                     b.ToTable("Audiencias");
                 });
 
-            modelBuilder.Entity("Shared.Models.Demandas", b =>
+            modelBuilder.Entity("Share.Models.Demandas", b =>
                 {
                     b.Property<int>("DemandaId")
                         .ValueGeneratedOnAdd()
@@ -286,23 +289,26 @@ namespace ProyectFinal.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DemandaId"));
 
-                    b.Property<int>("AlguacilId")
+                    b.Property<int?>("AlguacilId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AudienciaId")
+                    b.Property<int?>("AudienciaId")
                         .HasColumnType("int");
+
+                    b.Property<long?>("Cedula")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EstadoId")
+                    b.Property<int?>("EstadoId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("TiposDemandasId")
+                    b.Property<int?>("TiposDemandasId")
                         .HasColumnType("int");
 
                     b.HasKey("DemandaId");
@@ -318,7 +324,31 @@ namespace ProyectFinal.Migrations
                     b.ToTable("Demandas");
                 });
 
-            modelBuilder.Entity("Shared.Models.Empleados", b =>
+            modelBuilder.Entity("Share.Models.DemandasDetalle", b =>
+                {
+                    b.Property<int>("DetalleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DetalleId"));
+
+                    b.Property<int>("DemandaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NombreDemandado")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NumCedulaDemandado")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DetalleId");
+
+                    b.HasIndex("DemandaId");
+
+                    b.ToTable("DemandaDetalles");
+                });
+
+            modelBuilder.Entity("Share.Models.Empleados", b =>
                 {
                     b.Property<int>("EmpleadoId")
                         .ValueGeneratedOnAdd()
@@ -346,7 +376,7 @@ namespace ProyectFinal.Migrations
                     b.ToTable("Empleados");
                 });
 
-            modelBuilder.Entity("Shared.Models.EstadosDemandas", b =>
+            modelBuilder.Entity("Share.Models.EstadosDemandas", b =>
                 {
                     b.Property<int>("EstadoId")
                         .ValueGeneratedOnAdd()
@@ -362,31 +392,7 @@ namespace ProyectFinal.Migrations
                     b.ToTable("EstadosDemandas");
                 });
 
-            modelBuilder.Entity("Shared.Models.ExpedienteDetalle", b =>
-                {
-                    b.Property<int>("DetalleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DetalleId"));
-
-                    b.Property<string>("Cedula")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DemandaId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("DetalleId");
-
-                    b.HasIndex("DemandaId");
-
-                    b.ToTable("ExpedienteDetalle");
-                });
-
-            modelBuilder.Entity("Shared.Models.Expedientes", b =>
+            modelBuilder.Entity("Share.Models.Expedientes", b =>
                 {
                     b.Property<int>("ExpedienteId")
                         .ValueGeneratedOnAdd()
@@ -419,31 +425,34 @@ namespace ProyectFinal.Migrations
                     b.ToTable("Expedientes");
                 });
 
-            modelBuilder.Entity("Shared.Models.Niños", b =>
+            modelBuilder.Entity("Share.Models.NinoDetalle", b =>
                 {
-                    b.Property<int>("NinoId")
+                    b.Property<int>("DetalleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NinoId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DetalleId"));
 
-                    b.Property<DateTime>("FechaNacimiento")
+                    b.Property<int>("DemandaId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("FechaNacimientoNino")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Genero")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Nombre")
-                        .IsRequired()
+                    b.Property<string>("NombreNino")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("NinoId");
+                    b.HasKey("DetalleId");
 
-                    b.ToTable("Niños");
+                    b.HasIndex("DemandaId");
+
+                    b.ToTable("NinoDetalles");
                 });
 
-            modelBuilder.Entity("Shared.Models.Sentencias", b =>
+            modelBuilder.Entity("Share.Models.Sentencias", b =>
                 {
                     b.Property<int>("SentenciaId")
                         .ValueGeneratedOnAdd()
@@ -468,7 +477,7 @@ namespace ProyectFinal.Migrations
                     b.ToTable("Sentencias");
                 });
 
-            modelBuilder.Entity("Shared.Models.TipoResoluciones", b =>
+            modelBuilder.Entity("Share.Models.TipoResoluciones", b =>
                 {
                     b.Property<int>("ResolucionId")
                         .ValueGeneratedOnAdd()
@@ -484,7 +493,7 @@ namespace ProyectFinal.Migrations
                     b.ToTable("TipoResoluciones");
                 });
 
-            modelBuilder.Entity("Shared.Models.TiposDemandas", b =>
+            modelBuilder.Entity("Share.Models.TiposDemandas", b =>
                 {
                     b.Property<int>("TiposDemandasId")
                         .ValueGeneratedOnAdd()
@@ -498,6 +507,31 @@ namespace ProyectFinal.Migrations
                     b.HasKey("TiposDemandasId");
 
                     b.ToTable("TiposDemandas");
+                });
+
+            modelBuilder.Entity("Share.Models.UsuarioDetalle", b =>
+                {
+                    b.Property<int>("DetalleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DetalleId"));
+
+                    b.Property<int?>("ColegioAbogadoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("NombreAbogado")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DetalleId");
+
+                    b.HasIndex("Id");
+
+                    b.ToTable("UsuarioDetalles");
                 });
 
             modelBuilder.Entity("Shared1.Models.EmpleadoSentencia", b =>
@@ -576,44 +610,36 @@ namespace ProyectFinal.Migrations
 
             modelBuilder.Entity("ProyectFinal.Data.ApplicationUser", b =>
                 {
-                    b.HasOne("Shared.Models.Expedientes", "Exepediente")
+                    b.HasOne("Share.Models.UsuarioDetalle", "Abogado")
+                        .WithMany()
+                        .HasForeignKey("AbogadoId");
+
+                    b.HasOne("Share.Models.Expedientes", "Exepediente")
                         .WithMany()
                         .HasForeignKey("ExpedienteId");
 
-                    b.HasOne("Shared.Models.Niños", "Niño")
-                        .WithMany()
-                        .HasForeignKey("NinoId");
+                    b.Navigation("Abogado");
 
                     b.Navigation("Exepediente");
-
-                    b.Navigation("Niño");
                 });
 
-            modelBuilder.Entity("Shared.Models.Demandas", b =>
+            modelBuilder.Entity("Share.Models.Demandas", b =>
                 {
-                    b.HasOne("Shared.Models.Alguaciles", "Alguacil")
+                    b.HasOne("Share.Models.Alguaciles", "Alguacil")
                         .WithMany()
-                        .HasForeignKey("AlguacilId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AlguacilId");
 
-                    b.HasOne("Shared.Models.Audiencias", "Audiencia")
+                    b.HasOne("Share.Models.Audiencias", "Audiencia")
                         .WithMany()
-                        .HasForeignKey("AudienciaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AudienciaId");
 
-                    b.HasOne("Shared.Models.EstadosDemandas", "EstadoDemanda")
+                    b.HasOne("Share.Models.EstadosDemandas", "EstadoDemanda")
                         .WithMany()
-                        .HasForeignKey("EstadoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EstadoId");
 
-                    b.HasOne("Shared.Models.TiposDemandas", "TipoDemanda")
+                    b.HasOne("Share.Models.TiposDemandas", "TipoDemanda")
                         .WithMany()
-                        .HasForeignKey("TiposDemandasId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TiposDemandasId");
 
                     b.Navigation("Alguacil");
 
@@ -624,24 +650,24 @@ namespace ProyectFinal.Migrations
                     b.Navigation("TipoDemanda");
                 });
 
-            modelBuilder.Entity("Shared.Models.ExpedienteDetalle", b =>
+            modelBuilder.Entity("Share.Models.DemandasDetalle", b =>
                 {
-                    b.HasOne("Shared.Models.Demandas", null)
-                        .WithMany("Demandados")
+                    b.HasOne("Share.Models.Demandas", null)
+                        .WithMany("DemandaDetalles")
                         .HasForeignKey("DemandaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Shared.Models.Expedientes", b =>
+            modelBuilder.Entity("Share.Models.Expedientes", b =>
                 {
-                    b.HasOne("Shared.Models.Demandas", "Demandas")
+                    b.HasOne("Share.Models.Demandas", "Demandas")
                         .WithMany()
                         .HasForeignKey("DemandaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Shared.Models.Sentencias", "Sentencia")
+                    b.HasOne("Share.Models.Sentencias", "Sentencia")
                         .WithMany()
                         .HasForeignKey("SentenciaId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -652,9 +678,18 @@ namespace ProyectFinal.Migrations
                     b.Navigation("Sentencia");
                 });
 
-            modelBuilder.Entity("Shared.Models.Sentencias", b =>
+            modelBuilder.Entity("Share.Models.NinoDetalle", b =>
                 {
-                    b.HasOne("Shared.Models.TipoResoluciones", "TipoResoluciones")
+                    b.HasOne("Share.Models.Demandas", null)
+                        .WithMany("UsuarioNinoDetalles")
+                        .HasForeignKey("DemandaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Share.Models.Sentencias", b =>
+                {
+                    b.HasOne("Share.Models.TipoResoluciones", "TipoResoluciones")
                         .WithMany()
                         .HasForeignKey("ResolucionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -663,15 +698,24 @@ namespace ProyectFinal.Migrations
                     b.Navigation("TipoResoluciones");
                 });
 
+            modelBuilder.Entity("Share.Models.UsuarioDetalle", b =>
+                {
+                    b.HasOne("ProyectFinal.Data.ApplicationUser", null)
+                        .WithMany("UsuarioDetalle")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Shared1.Models.EmpleadoSentencia", b =>
                 {
-                    b.HasOne("Shared.Models.Empleados", "Empleado")
+                    b.HasOne("Share.Models.Empleados", "Empleado")
                         .WithMany()
                         .HasForeignKey("EmpleadoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Shared.Models.Sentencias", "Sentencia")
+                    b.HasOne("Share.Models.Sentencias", "Sentencia")
                         .WithMany()
                         .HasForeignKey("SentenciaId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -682,9 +726,16 @@ namespace ProyectFinal.Migrations
                     b.Navigation("Sentencia");
                 });
 
-            modelBuilder.Entity("Shared.Models.Demandas", b =>
+            modelBuilder.Entity("ProyectFinal.Data.ApplicationUser", b =>
                 {
-                    b.Navigation("Demandados");
+                    b.Navigation("UsuarioDetalle");
+                });
+
+            modelBuilder.Entity("Share.Models.Demandas", b =>
+                {
+                    b.Navigation("DemandaDetalles");
+
+                    b.Navigation("UsuarioNinoDetalles");
                 });
 #pragma warning restore 612, 618
         }
