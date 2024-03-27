@@ -5,6 +5,8 @@ using ProyectFinal.Client.Pages;
 using ProyectFinal.Components;
 using ProyectFinal.Components.Account;
 using ProyectFinal.Data;
+using ProyectFinal.Services;
+using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +38,17 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddScoped<AudienciasServices>();
+builder.Services.AddScoped<DemandaServices>();
+builder.Services.AddScoped<TipoDemandaServices>();
+builder.Services.AddScoped<AlguacilServices>();
+builder.Services.AddScoped<SentenciaServices>();
+builder.Services.AddScoped<EmpleadoServices>();
+builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<EstadoServices>();
+
+
+
 
 var app = builder.Build();
 
