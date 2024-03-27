@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-using Shared.Models;
+using Share.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
@@ -9,23 +9,23 @@ namespace ProyectFinal.Data
     public class ApplicationUser : IdentityUser
     {
         public int? ExpedienteId { get; set; }
-       // public int AbogadoId { get; set; }
+        public int? AbogadoId { get; set; }
         public int? NinoId { get; set; }
-        [Required(ErrorMessage = "Este campo es requerido")]
-        public int Cedula { get; set; }
+        public long? Cedula { get; set; }
         [Required(ErrorMessage = "Este campo es requerido")]
         public DateTime FechaCreacion { get; set; }
         [Required(ErrorMessage = "Este campo es requerido")]
         public long Telefono { get; set; }
         [ForeignKey("ExpedienteId")]
         public Expedientes? Exepediente { get; set; }
-        //[ForeignKey("AbogadoId")]
-        //public Abogados? Abogado { get; set; }
-        [ForeignKey("NinoId")]
-        public Niños? Niño { get; set; }
+        [ForeignKey("AbogadoId")]
+        public UsuarioDetalle? Abogado { get; set; }
+        //[ForeignKey("NinoId")]
+        //public Niños? Niño { get; set; }
+        [ForeignKey("Id")]
+        public ICollection<UsuarioDetalle> UsuarioDetalle { get; set; } = new List<UsuarioDetalle>();
+        
 
-
-       
     }
 
 }
