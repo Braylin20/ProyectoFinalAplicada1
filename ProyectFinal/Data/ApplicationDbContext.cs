@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Shared.Models;
+using Share.Models;
 using Shared1.Models;
 
 namespace ProyectFinal.Data
@@ -9,17 +9,18 @@ namespace ProyectFinal.Data
     {
         public DbSet<Sentencias> Sentencias { get; set; }
         public DbSet<TiposDemandas> TiposDemandas { get; set; }
-        public DbSet<Niños> Niños { get; set; }
+        //public DbSet<Niños> Niños { get; set; }
         public DbSet<TipoResoluciones> TipoResoluciones { get; set; }
         public DbSet<Expedientes> Expedientes { get; set; }
-        public DbSet<ExpedienteDetalle> ExpedienteDetalle { get; set; }
+        public DbSet<DemandasDetalle> DemandaDetalles { get; set; }
         public DbSet<EstadosDemandas> EstadosDemandas { get; set; }
         public DbSet<EmpleadoSentencia> EmpleadoSentencia { get; set; }
         public DbSet<Empleados> Empleados { get; set; }
         public DbSet<Demandas> Demandas { get; set; }
         public DbSet<Audiencias> Audiencias { get; set; }
         public DbSet<Alguaciles> Alguaciles { get; set; }
-        //public DbSet<Abogados> Abogados { get; set; }
+        public DbSet<UsuarioDetalle> UsuarioDetalles { get; set; }
+        public DbSet<NinoDetalle> NinoDetalles { get; set; }
 
 
 
