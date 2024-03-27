@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using ProyectFinal.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,13 +14,15 @@ namespace Share.Models
     {
         [Key]
         public int EmpleadoId { get; set; }
-        [Required(ErrorMessage = "Este campo es requerido")]
-        public DateTime FechaCreacion { get; set; }
-        [Required(ErrorMessage = "Este campo es requerido")]
-        public string? Correo { get; set; }
-        [Required(ErrorMessage = "Este campo es requerido")]
-        public string? Clave { get; set; }
-        [Required(ErrorMessage = "Este campo es requerido")]
-        public string? Rol { get; set; }
+        public string UserId { get; set; }
+
+        [ForeignKey("UserId")]
+        public ApplicationUser User { get; set; }
+
+
+
+
+
+
     }
 }

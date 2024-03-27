@@ -53,22 +53,6 @@ namespace ProyectFinal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Empleados",
-                columns: table => new
-                {
-                    EmpleadoId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Correo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Clave = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Rol = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Empleados", x => x.EmpleadoId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "EstadosDemandas",
                 columns: table => new
                 {
@@ -186,32 +170,6 @@ namespace ProyectFinal.Migrations
                         column: x => x.TiposDemandasId,
                         principalTable: "TiposDemandas",
                         principalColumn: "TiposDemandasId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EmpleadoSentencia",
-                columns: table => new
-                {
-                    EmpleadoSentenciaId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SentenciaId = table.Column<int>(type: "int", nullable: false),
-                    EmpleadoId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EmpleadoSentencia", x => x.EmpleadoSentenciaId);
-                    table.ForeignKey(
-                        name: "FK_EmpleadoSentencia_Empleados_EmpleadoId",
-                        column: x => x.EmpleadoId,
-                        principalTable: "Empleados",
-                        principalColumn: "EmpleadoId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_EmpleadoSentencia_Sentencias_SentenciaId",
-                        column: x => x.SentenciaId,
-                        principalTable: "Sentencias",
-                        principalColumn: "SentenciaId",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -390,6 +348,25 @@ namespace ProyectFinal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Empleados",
+                columns: table => new
+                {
+                    EmpleadoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Empleados", x => x.EmpleadoId);
+                    table.ForeignKey(
+                        name: "FK_Empleados_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UsuarioDetalles",
                 columns: table => new
                 {
@@ -407,6 +384,32 @@ namespace ProyectFinal.Migrations
                         column: x => x.Id,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmpleadoSentencia",
+                columns: table => new
+                {
+                    EmpleadoSentenciaId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SentenciaId = table.Column<int>(type: "int", nullable: false),
+                    EmpleadoId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmpleadoSentencia", x => x.EmpleadoSentenciaId);
+                    table.ForeignKey(
+                        name: "FK_EmpleadoSentencia_Empleados_EmpleadoId",
+                        column: x => x.EmpleadoId,
+                        principalTable: "Empleados",
+                        principalColumn: "EmpleadoId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EmpleadoSentencia_Sentencias_SentenciaId",
+                        column: x => x.SentenciaId,
+                        principalTable: "Sentencias",
+                        principalColumn: "SentenciaId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -483,6 +486,11 @@ namespace ProyectFinal.Migrations
                 name: "IX_Demandas_TiposDemandasId",
                 table: "Demandas",
                 column: "TiposDemandasId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Empleados_UserId",
+                table: "Empleados",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EmpleadoSentencia_EmpleadoId",
