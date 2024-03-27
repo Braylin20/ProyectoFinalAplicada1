@@ -1,0 +1,140 @@
+﻿@page "/EditDemanda"
+@rendermode InteractiveServer
+@inject NotificationService notificationService
+@inject DemandaServices demandaServices
+@inject AlguacilServices alguacilServices
+@inject EstadoServices estadoServices
+@inject AudienciasServices audienciaServices
+@inject TipoDemandaServices tipoDemandaServices
+
+
+<EditForm Model="Demanda" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container-fluid">
+        <div class="card shadow-lg w-50 mx-auto">
+            <div class="card-header">
+                <h3 class="text-center text-white">Registro Demanda</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <label class="fw-bold mb-2">Tipo de Demanda</label>
+                        <InputDate @bind-Value="Demanda.Fecha" class="form-control mb-3" />
+                        <ValidationMessage For="@(()=>Demanda.Fecha)" />
+                    </div>
+                    <div class="col-6">
+                        <label class="fw-bold mb-2">Estado</label>
+                        <InputNumber @bind-Value="Demanda.Cedula" class="form-control mb-3" />
+                        <ValidationMessage For="@(()=>Demanda.Cedula)" />
+                    </div>
+                </div>
+                <div class="row">
+                    @*  <div>
+                    <label class="fw-bold mb-3">Descripción</label>
+                    <InputTextArea @bind-Value="Demanda.Descripcion" class="form-control" placeholder="Ingrese una descripción" />
+                    <ValidationMessage For="@(()=>Demanda.Descripcion)" />
+                    </div> *@
+
+                    <div class="col-4">
+                        <label class="form-label" for="SolicitadoPor">Alguacil</label>
+                        <InputSelect @bind-Value="Demanda.AlguacilId" class="form-control">
+                            @foreach (var alguacil in Alguaciles)
+                            {
+                                <option value="@alguacil.AlguacilId">@alguacil.Nombre</option>
+                            }
+                        </InputSelect>
+                        @* <ValidationMessage For="@(() => ticket.ClienteId)" /> *@
+
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="SolicitadoPor">EstadoDemanda</label>
+                        <InputSelect @bind-Value="Demanda.EstadoId" class="form-control">
+                            @foreach (var estado in EstadoDemandas)
+                            {
+                                <option value="@estado.EstadoId">@estado.Estado</option>
+                            }
+                        </InputSelect>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+
+                            <label class="form-label" for="SolicitadoPor">Audiencia</label>
+                            <InputSelect @bind-Value="Demanda.AudienciaId" class="form-control">
+                                @foreach (var alguacil in Alguaciles)
+                                {
+                                    <option value="@alguacil.AlguacilId">@alguacil.Nombre</option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                        <div class="col-6">
+
+                            <label class="form-label" for="SolicitadoPor">Audiencia</label>
+                            <InputSelect @bind-Value="Demanda.TiposDemandasId" class="form-control">
+                                @foreach (var tipoDemanda in TiposDemandas)
+                                {
+                                    <option value="@tipoDemanda.TiposDemandasId">@tipoDemanda.TipoDemanda</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="btn-group">
+                    <a href="IndexDemanda" class="btn btn-secondary">Atr&aacute;s</a>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+@code {
+    public Demandas Demanda = new Demandas();
+    public List<Alguaciles> Alguaciles { get; set; } = new List<Alguaciles>();
+    public List<EstadosDemandas> EstadoDemandas { get; set; } = new List<EstadosDemandas>();
+    public List<Audiencias> Audiencias { get; set; } = new List<Audiencias>();
+    public List<TiposDemandas> TiposDemandas { get; set; } = new List<TiposDemandas>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        Alguaciles = await alguacilServices.Listar(a => true);
+        EstadoDemandas = await estadoServices.Listar(e => true);
+        Audiencias = await audienciaServices.Listar(e => true);
+        TiposDemandas = await tipoDemandaServices.Listar(e => true);
+
+    }
+
+
+    public async Task Guardar()
+    {
+        var guardado = await demandaServices.Save(Demanda);
+        if (!guardado)
+        {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "No se ha guardado correctamente",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensaje);
+        }
+        else
+        {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Éxito",
+                    Detail = "Se ha guardado correctamente",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensaje);
+            Demanda = new Demandas();
+        }
+    }
+}
