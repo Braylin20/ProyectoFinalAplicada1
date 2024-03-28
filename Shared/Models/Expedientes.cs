@@ -18,8 +18,6 @@ namespace Share.Models
         public int DemandaId { get; set; }
         [Required(ErrorMessage = "Este campo es requerido")]
         public string? Comentario { get; set; }
-
-
         public DateTime FechaCreacion { get; set; }
         [Required(ErrorMessage = "Este campo es requerido")]
         public DateTime FechaEntrada { get; set; }
