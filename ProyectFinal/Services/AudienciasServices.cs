@@ -21,6 +21,7 @@ namespace ProyectFinal.Services
                 .AsNoTracking()
                 .Where(a => a.AudienciaId == id)
                 .ExecuteDeleteAsync() > 0;
+
         }
         public async Task<List<Audiencias>> Listar(Expression<Func<Audiencias, bool>> criterio)
         {
