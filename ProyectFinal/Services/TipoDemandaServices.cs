@@ -15,5 +15,12 @@ namespace ProyectFinal.Services
                 .ToListAsync();
         }
 
+        public string GetTipoDemanda(int? id)
+        {
+            var resolucion = _context!.TiposDemandas.Find(id);
+
+            return resolucion != null ? resolucion.TipoDemanda : "";
+        }
+
     }
 }

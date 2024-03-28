@@ -406,9 +406,6 @@ namespace ProyectFinal.Migrations
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("FechaEntrada")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("SentenciaId")
                         .HasColumnType("int");
 

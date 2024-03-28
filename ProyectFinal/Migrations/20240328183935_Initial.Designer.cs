@@ -12,7 +12,7 @@ using ProyectFinal.Data;
 namespace ProyectFinal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240327183036_Initial")]
+    [Migration("20240328183935_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -399,9 +399,6 @@ namespace ProyectFinal.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaEntrada")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("SentenciaId")
