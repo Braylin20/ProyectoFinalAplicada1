@@ -16,16 +16,10 @@
     <div class="container-fluid ">
         <div class="card shadow-lg ">
             <div class="card-header" style="background-color: #012E40">
-                <h3 class="text-center text-white">Registro Demanda</h3>
+                <h3 class="text-center text-white">Edit Demanda</h3>
             </div>
             <div class="row">
                 <div class="card-body">
-                
-                    <div class="col-6">
-                        <label class="fw-bold mb-2">C&eacute;dula</label>
-                        <InputNumber @bind-Value="Demanda.Cedula" class="form-control mb-3" min="0"/>
-                        <ValidationMessage For="@(()=>Demanda.Cedula)" />
-                    </div>
                     <div class="col-12">
                         <label class="fw-bold mb-2">Descripci&oacute;n</label>
                         <InputTextArea @bind-Value="Demanda.Descripcion" class="form-control mb-3" />
@@ -71,7 +65,7 @@
                                                     <td>@item.NombreDemandado</td>
                                                     <td>@item.NumCedulaDemandado</td>
                                                     <td>
-                                                        <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalle(item))" />
+                                                        <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalleDemandado(item))" />
                                                     </td>
                                                 </tr>
                                             }
@@ -126,7 +120,7 @@
                                                     <td>@item.Genero</td>
                                                     <td>@item.FechaNacimientoNino</td>
                                                     <td>
-                                                        @* <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalle(item))" /> *@
+                                                        <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalleNino(item))" />
                                                     </td>
                                                 </tr>
                                             }
@@ -241,12 +235,20 @@
             NinoDetalle = new NinoDetalle();
         }
     }
-    public async Task RemoverDetalle(DemandasDetalle detalle)
+    public async Task RemoverDetalleDemandado(DemandasDetalle detalle)
     {
         var detalleEncontrado = Demanda.DemandaDetalles.FirstOrDefault(v => v.DetalleId == detalle.DetalleId);
         if (detalleEncontrado != null)
         {
             Demanda.DemandaDetalles.Remove(detalle);
+        }
+    }
+    public async Task RemoverDetalleNino(NinoDetalle detalle)
+    {
+        var detalleEncontrado = Demanda.UsuarioNinoDetalles.FirstOrDefault(v => v.DetalleId == detalle.DetalleId);
+        if (detalleEncontrado != null)
+        {
+            Demanda.UsuarioNinoDetalles.Remove(detalle);
         }
     }
     public bool Validar()

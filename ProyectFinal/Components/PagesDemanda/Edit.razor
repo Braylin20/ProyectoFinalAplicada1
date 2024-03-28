@@ -1,4 +1,5 @@
-﻿@page "/EditDemanda"
+﻿@page "/EditDemanda/{DemandaId:int}"
+
 @rendermode InteractiveServer
 @inject NotificationService notificationService
 @inject DemandaServices demandaServices
@@ -6,79 +7,183 @@
 @inject EstadoServices estadoServices
 @inject AudienciasServices audienciaServices
 @inject TipoDemandaServices tipoDemandaServices
+@inject UserManager<ApplicationUser> userManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-
+<RadzenNotification />
 <EditForm Model="Demanda" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
-
-    <div class="container-fluid">
-        <div class="card shadow-lg w-50 mx-auto">
-            <div class="card-header">
+    
+    <div class="container-fluid ">
+        <div class="card shadow-lg ">
+            <div class="card-header" style="background-color: #012E40">
                 <h3 class="text-center text-white">Registro Demanda</h3>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-6">
-                        <label class="fw-bold mb-2">Tipo de Demanda</label>
-                        <InputDate @bind-Value="Demanda.Fecha" class="form-control mb-3" />
-                        <ValidationMessage For="@(()=>Demanda.Fecha)" />
-                    </div>
-                    <div class="col-6">
-                        <label class="fw-bold mb-2">Estado</label>
-                        <InputNumber @bind-Value="Demanda.Cedula" class="form-control mb-3" />
-                        <ValidationMessage For="@(()=>Demanda.Cedula)" />
+            <div class="row">
+                <div class="card-body">
+                    <AuthorizeView Roles="Empleado,Admin,Juez">
+                        <ChildContent Context="formContext">
+                            <div class="row"
+                                <div class="col-6">
+                                     <label class="fw-bold mb-2">Alguacil</label>
+                                    <InputSelect @bind-Value="Demanda.AlguacilId" class="form-select mb-2">
+                                        <option value="">Elija una opci&oacute;n</option>
+                                        @foreach (var item in Alguaciles)
+                                        {
+                                            <option value="@item.AlguacilId">@item.Nombre</option>
+                                        }
+                                    </InputSelect>
+                                </div>
+                                <div class="col-6">
+                                     <label class="fw-bold mb-2">Estado</label>
+                                    <InputSelect @bind-Value="Demanda.EstadoId" class="form-select mb-2">
+                                        <option value="">Elija una opci&oacute;n</option>
+                                        @foreach (var item in EstadoDemandas)
+                                        {
+                                            <option value="@item.EstadoId">@item.Estado</option>
+                                        }
+                                    </InputSelect>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="fw-bold mb-2">Tipo de Demanda</label>
+                                    <InputSelect @bind-Value="Demanda.TiposDemandasId" class="form-select mb-2">
+                                        <option value="">Elija una opci&oacute;n</option>
+                                        @foreach (var item in TiposDemandas)
+                                        {
+                                            <option value="@item.TiposDemandasId">@item.TipoDemanda</option>
+
+                                        }
+                                    </InputSelect>
+                                </div>
+                                <div class="col-6">
+                                    <label class="fw-bold mb-2">Fecha de audiencia</label>
+                                    <InputSelect @bind-Value="Demanda.AudienciaId" class="form-select mb-2">
+                                        <option value="">Elija una opci&oacute;n</option>
+                                        @foreach (var item in Audiencias)
+                                        {
+                                            <option value="@item.AudienciaId">@item.FechaAudiencia</option>
+
+                                        }
+                                    </InputSelect>
+                                </div>
+                            </div>
+                        </ChildContent>
+                       
+                    </AuthorizeView>
+                    <div class="row">
+                        <div class="col-12">
+                            <label class="fw-bold mb-2">Descripci&oacute;n</label>
+                            <InputTextArea @bind-Value="Demanda.Descripcion" class="form-control mb-3" />
+                            <ValidationMessage For="@(()=>Demanda.Descripcion)" />
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    @*  <div>
-                    <label class="fw-bold mb-3">Descripción</label>
-                    <InputTextArea @bind-Value="Demanda.Descripcion" class="form-control" placeholder="Ingrese una descripción" />
-                    <ValidationMessage For="@(()=>Demanda.Descripcion)" />
-                    </div> *@
-
-                    <div class="col-4">
-                        <label class="form-label" for="SolicitadoPor">Alguacil</label>
-                        <InputSelect @bind-Value="Demanda.AlguacilId" class="form-control">
-                            @foreach (var alguacil in Alguaciles)
-                            {
-                                <option value="@alguacil.AlguacilId">@alguacil.Nombre</option>
-                            }
-                        </InputSelect>
-                        @* <ValidationMessage For="@(() => ticket.ClienteId)" /> *@
-
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label" for="SolicitadoPor">EstadoDemanda</label>
-                        <InputSelect @bind-Value="Demanda.EstadoId" class="form-control">
-                            @foreach (var estado in EstadoDemandas)
-                            {
-                                <option value="@estado.EstadoId">@estado.Estado</option>
-                            }
-                        </InputSelect>
-
-                    </div>
+                <div class="card-body">
                     <div class="row">
                         <div class="col-6">
+                            <div class="card-body border border-primary">
+                                <div>
+                                    <h3>Registro Demandado</h3>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 ">
+                                        <label>Nombre</label>
+                                        <div class="input-group">
+                                            <InputText @bind-Value="demandasDetalle.NombreDemandado" class="form-control " />
+                                            <button type="button" class="btn btn-success bi-floppy-fill" @onclick="AgregarDetalleDemandado">Agregar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-8">
+                                        <label class="mt-3">Numero de cedula</label>
+                                        <InputText @bind-Value="demandasDetalle.NumCedulaDemandado" class="form-control" />
+                                    </div>
+                                </div>
+                                <hr clas="border-bottom" />
+                                <div>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>AccesorioId</th>
+                                                <th>Valor</th>
 
-                            <label class="form-label" for="SolicitadoPor">Audiencia</label>
-                            <InputSelect @bind-Value="Demanda.AudienciaId" class="form-control">
-                                @foreach (var alguacil in Alguaciles)
-                                {
-                                    <option value="@alguacil.AlguacilId">@alguacil.Nombre</option>
-                                }
-                            </InputSelect>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Demanda.DemandaDetalles)
+                                            {
+                                                <tr>
+                                                    <td>@item.NombreDemandado</td>
+                                                    <td>@item.NumCedulaDemandado</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalle(item))" />
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-
                         <div class="col-6">
+                            <div class="card-body  border border-primary">
+                                <div>
+                                    <h3>Registro Niño</h3>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 ">
+                                        <label>Fecha de nacimiento</label>
+                                        <div class="input-group">
+                                            <InputDate @bind-Value="NinoDetalle.FechaNacimientoNino" class="form-control " />
+                                            <button type="button" class="btn btn-success bi-floppy-fill" @onclick="AgregarDetalleNino">Agregar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="mt-3">Nombre</label>
+                                        <InputText @bind-Value="NinoDetalle.NombreNino" class="form-control" />
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="mt-3">Genero</label>
+                                        <InputSelect @bind-Value="NinoDetalle.Genero" class="form-control">
+                                            <option value="">Seleccione un genero</option>
+                                            <option value="Femenino">Femenino</option>
+                                            <option value="Masculino">Masculino</option>
+                                        </InputSelect>
+                                    </div>
+                                </div>
+                                <hr clas="border-bottom" />
+                                <div>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>AccesorioId</th>
+                                                <th>Valor</th>
 
-                            <label class="form-label" for="SolicitadoPor">Audiencia</label>
-                            <InputSelect @bind-Value="Demanda.TiposDemandasId" class="form-control">
-                                @foreach (var tipoDemanda in TiposDemandas)
-                                {
-                                    <option value="@tipoDemanda.TiposDemandasId">@tipoDemanda.TipoDemanda</option>
-                                }
-                            </InputSelect>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Demanda.UsuarioNinoDetalles)
+                                            {
+                                                <tr>
+                                                    <td>@item.NombreNino</td>
+                                                    <td>@item.Genero</td>
+                                                    <td>@item.FechaNacimientoNino</td>
+                                                    <td>
+                                                        @* <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalle(item))" /> *@
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -90,28 +195,75 @@
             </div>
         </div>
     </div>
+
+
 </EditForm>
 @code {
+    [Parameter]
+    public int DemandaId { get; set; }
     public Demandas Demanda = new Demandas();
+    public DemandasDetalle demandasDetalle = new DemandasDetalle();
+    public NinoDetalle NinoDetalle = new NinoDetalle();
+    public ApplicationUser User = new ApplicationUser();
     public List<Alguaciles> Alguaciles { get; set; } = new List<Alguaciles>();
     public List<EstadosDemandas> EstadoDemandas { get; set; } = new List<EstadosDemandas>();
     public List<Audiencias> Audiencias { get; set; } = new List<Audiencias>();
     public List<TiposDemandas> TiposDemandas { get; set; } = new List<TiposDemandas>();
-
+    private AuthenticationState authenticationState;
 
     protected override async Task OnInitializedAsync()
     {
-
+        Demanda = await demandaServices.GetDemanda(DemandaId);
         Alguaciles = await alguacilServices.Listar(a => true);
         EstadoDemandas = await estadoServices.Listar(e => true);
         Audiencias = await audienciaServices.Listar(e => true);
         TiposDemandas = await tipoDemandaServices.Listar(e => true);
+        Alguaciles = await alguacilServices.Listar(a => true);
+        // Nino.FechaNacimiento = DateTime.Now;
+        authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
     }
-
+    public async Task AgregarDetalleDemandado()
+    {
+        if (Validar())
+        {
+            return;
+        }
+        // if (VehiculoDetalle.AccesorioId == 0)
+        // {
+        //     Mensaje = "Debe llenar los campos del detalle o está agregando valores negativos";
+        //     return;
+        // }
+        else
+        {
+            Demanda.DemandaDetalles.Add(demandasDetalle);
+            demandasDetalle = new DemandasDetalle();
+        }
+    }
+    public async Task AgregarDetalleNino()
+    {
+        if (Validar())
+        {
+            return;
+        }
+        // if (VehiculoDetalle.AccesorioId == 0)
+        // {
+        //     Mensaje = "Debe llenar los campos del detalle o está agregando valores negativos";
+        //     return;
+        // }
+        else
+        {
+            Demanda.UsuarioNinoDetalles.Add(NinoDetalle);
+            NinoDetalle = new NinoDetalle();
+        }
+    }
 
     public async Task Guardar()
     {
+        Demanda.Fecha = DateTime.Now;
+        // var user = await userManager.GetUserAsync(authenticationState.User);
+        // NinoDetalle.Id=user.Id;
+
         var guardado = await demandaServices.Save(Demanda);
         if (!guardado)
         {
@@ -134,7 +286,29 @@
                     Duration = 4_000
                 };
             notificationService.Notify(mensaje);
-            Demanda = new Demandas();
+            demandasDetalle = new DemandasDetalle();
+            NinoDetalle = new NinoDetalle();
         }
     }
+    public async Task RemoverDetalle(DemandasDetalle detalle)
+    {
+        var detalleEncontrado = Demanda.DemandaDetalles.FirstOrDefault(v => v.DetalleId == detalle.DetalleId);
+        if (detalleEncontrado != null)
+        {
+            Demanda.DemandaDetalles.Remove(detalle);
+        }
+    }
+    public bool Validar()
+    {
+        return Demanda.DemandaDetalles
+        .Any(v => v.NumCedulaDemandado == demandasDetalle.NumCedulaDemandado);
+    }
+    public void Nuevo()
+    {
+        Demanda = new Demandas();
+        demandasDetalle = new DemandasDetalle();
+        Demanda.Fecha = DateTime.Now;
+    }
+
+
 }
