@@ -47,6 +47,8 @@ builder.Services.AddScoped<SentenciaServices>();
 builder.Services.AddScoped<EmpleadoServices>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<EstadoServices>();
+builder.Services.AddScoped<ExpedienteServices>();
+builder.Services.AddScoped<TiposResolucionServices>();
 
 
 
