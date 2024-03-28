@@ -1,0 +1,17 @@
+﻿/*@import url('https://fonts.googleapis.com/css2?family=NOMBRE_DE_LA_FUENTE');*/
+
+
+/*<!-- -----------------Login Container----------------------- !>*/
+.box-area{
+    width:900px;
+    height: 600px;
+}
+/*<!-- -----------------Right Box----------------------- !>*/
+.right-box{
+    padding: 40px 30px 40px 40px;
+}
+/*<!-- -----------------Custom Placeholder----------------------- !>*/
+::placeholder{
+    font-size:16px;
+}
+/*<!-- -----------------For small screen----------------------- !>*/
