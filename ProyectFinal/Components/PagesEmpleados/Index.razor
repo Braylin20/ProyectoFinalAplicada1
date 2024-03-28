@@ -1,16 +1,67 @@
 ﻿@page "/IndexEmpleado"
 @inject EmpleadoServices empleadoServices
 @inject UserManager<ApplicationUser> userManager
-<div>
-    @foreach (var empleado in Empleados)
-    {
-        <p>@empleado.NormalizedEmail</p>
-        <a href="EditEmpleado/@empleado.Id" class="btn btn-primary"></a>
-    }
+@rendermode InteractiveServer
+@inject NotificationService notificationService
+
+
+<RadzenNotification />
+<div class="card shadow-lg">
+    <div class="card-header" style="background-color: #012E40">
+        <h3 class="text-white text-center">Index</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-4">
+                <label>Filtrar Por</label>
+                <InputSelect @bind-Value="Opcion" class="form-select">
+                    <option value="1">EmpleadoId</option>
+                    <option value="2">Nombre</option>
+                </InputSelect>
+            </div>
+            <div class="justify-content-end d-flex mb-4">
+                <a href="CreateEmpleado" class="btn btn-success bi-floppy-fill">Create</a>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="table-head text-white" style="background-color: #012E40">Fecha</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Comentario</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Opci&oacute;nes</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Fecha Creacion</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Tel&eacute;fono</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Email</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Opci&oacute;nes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Empleados)
+                    {
+                        <tr>
+                            <td>@item.Nombre</td>
+                            <td>@item.Apellido</td>
+                            <td>@item.Apellido</td>
+                            <td>@item.FechaCreacion</td>
+                            <td>@item.Telefono</td>
+                            <td>@item.UserName</td>
+                            <td>
+                                <a href="/EditEmpleado/@item.Id" class="btn btn-primary bi-box-arrow-up-right"></a>
+                                <a href="/ViewAudiencia/@item.Id" class="btn btn-warning bi bi-info-square"></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+
+
+
 @code {
     public ICollection<ApplicationUser> Empleados { get; set; } = new List<ApplicationUser>();
-
+    public ApplicationUser User { get; set; } = new ApplicationUser();
+    public int Opcion { get; set; }
     protected override async Task OnInitializedAsync()
     {
         Empleados = await userManager.GetUsersInRoleAsync("Empleado");
