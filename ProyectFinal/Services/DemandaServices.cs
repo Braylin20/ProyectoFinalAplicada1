@@ -13,6 +13,13 @@ namespace ProyectFinal.Services
             return await _context!.Demandas
                 .AsNoTracking().ToListAsync();
         }
+        public async Task<Demandas?> GetDemanda(int id)
+        {
+            return await _context!.Demandas.
+                Include(d => d.DemandaDetalles).
+                Include(d => d.UsuarioNinoDetalles).
+                FirstOrDefaultAsync(d=> d.DemandaId == id);
+        }
         public async Task<List<Demandas>> Listar(Expression<Func<Demandas, bool>> criterio)
         {
             return await _context.Demandas
