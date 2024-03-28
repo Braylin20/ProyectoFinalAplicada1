@@ -8,6 +8,8 @@ namespace ProyectFinal.Data
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }
         public int? ExpedienteId { get; set; }
         public int? AbogadoId { get; set; }
         public int? NinoId { get; set; }
