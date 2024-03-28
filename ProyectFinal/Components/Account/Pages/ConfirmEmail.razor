@@ -11,9 +11,15 @@
 <PageTitle>Confirm email</PageTitle>
 
 <h1>Confirm email</h1>
-<a href="">Inicio</a>
-<StatusMessage Message="@statusMessage" />
+<AuthorizeView Roles="User">
+    <a href="">Inicio</a>
+    <StatusMessage Message="@statusMessage" />
+</AuthorizeView>
 
+<AuthorizeView Roles="Empleado,Juez">
+    <a href="/Account/Login">Inicio</a>
+    <StatusMessage Message="@statusMessage" />
+</AuthorizeView>
 @code {
     private string? statusMessage;
 
