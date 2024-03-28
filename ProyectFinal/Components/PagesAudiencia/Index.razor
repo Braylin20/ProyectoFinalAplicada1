@@ -1,8 +1,10 @@
 ﻿@page "/IndexAudiencia"
-
-@rendermode InteractiveAuto
+@rendermode InteractiveServer
 @inject AudienciasServices audienciaServices
+@inject NotificationService notificationService
 
+
+<RadzenNotification />
 <div class="card shadow-lg">
     <div class="card-header">
         <h3 class="text-white text-center">Index</h3>
@@ -38,7 +40,6 @@
                             <td>@item.FechaAudiencia</td>
                             <td>@item.Comentario</td>
                             <td>
-                                <a href="/DeleteAudiencia/@item.AudienciaId" class="btn btn-danger bi bi-trash-fill"></a>
                                 <a href="/EditAudiencia/@item.AudienciaId" class="btn btn-primary bi-box-arrow-up-right"></a>
                                 <a href="/ViewAudiencia/@item.AudienciaId" class="btn btn-warning bi bi-info-square"></a>
                             </td>
@@ -50,18 +51,18 @@
     </div>
 </div>
 
+
+
 @code {
     public Audiencias Audiencias { get; set; } = new Audiencias();
     public List<Audiencias>? ListaAudiencias = new List<Audiencias>();
     public List<Demandas>? ListaDemandas = new List<Demandas>();
     public int Opcion { get; set; }
     public Demandas? demandas = new Demandas();
-
     protected override async Task OnInitializedAsync()
     {
         ListaAudiencias = await audienciaServices.GetAudiencias();
 
     }
-
 
 }

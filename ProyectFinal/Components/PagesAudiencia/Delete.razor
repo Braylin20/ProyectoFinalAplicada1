@@ -36,8 +36,8 @@
     }
     public async Task Eliminar()
     {
-        var eliminado = audienciaServices.DeleteAudiencia(Audiencia.AudienciaId);
-        if (eliminado is null)
+        var eliminado = await audienciaServices.DeleteAudiencia(Audiencia.AudienciaId);
+        if (!eliminado)
         {
             var mensaje = new NotificationMessage
                 {
@@ -61,5 +61,9 @@
             Audiencia = new Audiencias();
         }
 
+    }
+    public async Task Eliminar1()
+    {
+        var eliminado = await audienciaServices.DeleteAudiencia(Audiencia.AudienciaId);
     }
 }
