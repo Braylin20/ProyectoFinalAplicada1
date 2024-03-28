@@ -1,0 +1,90 @@
+﻿@page "/EditEmpleado/{Id:guid}"
+
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Identity
+@using ProyectFinal.Data
+@attribute [AllowAnonymous]
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+
+@inject IdentityUserAccessor UserAccessor
+@inject IdentityRedirectManager RedirectManager
+@inject ILogger<Edit> Logger
+@rendermode InteractiveServer
+<PageTitle>Change password</PageTitle>
+
+<h3>Change password</h3>
+<StatusMessage Message="@message" />
+<div class="row">
+    <div class="col-md-6">
+        <EditForm Model="Input" FormName="change-password" OnValidSubmit="OnValidSubmitAsync" method="post">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert" />
+            <div class="form-floating mb-3">
+                <InputText  @bind-Value="Input.Email" class="form-control"  />
+                <label class="form-label">Email</label>
+                @* <ValidationMessage For="() => user.NormalizedUserName" class="text-danger" /> *@
+            </div>
+            <div class="form-floating mb-3">
+                <InputSelect @bind-Value="Input.Rol" class="form-control">
+                    <option value="">Seleccione un rol</option>
+                    <option value="Empleado">Empleado</option>
+                    <option value="Juez">Juez</option>
+                    <option value="Admin">Admin</option>
+                </InputSelect>>
+            </div>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Update password</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+    private string? message;
+    private ApplicationUser user = new ApplicationUser();
+    private bool hasPassword;
+    public string ActualRol { get; set; }
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // user = await UserAccessor.GetRequiredUserAsync(HttpContext);
+        user = await UserManager.FindByIdAsync(Id.ToString());
+        Input.Email = user.UserName;
+        var roles = await UserManager.GetRolesAsync(user);
+        Input.Rol = roles.FirstOrDefault();
+        ActualRol = roles.FirstOrDefault();
+        hasPassword = await UserManager.HasPasswordAsync(user);
+        if (!hasPassword)
+        {
+            RedirectManager.RedirectTo("Account/Manage/SetPassword");
+        }
+    }
+
+    private async Task OnValidSubmitAsync()
+    {
+        // var changePasswordResult = await UserManager.ChangePasswordAsync(user, Input.OldPassword, Input.NewPassword);
+
+        // if (!changePasswordResult.Succeeded)
+        // {
+        //     message = $"Error: {string.Join(",", changePasswordResult.Errors.Select(error => error.Description))}";
+        //     return;
+        // }
+        await UserManager.RemoveFromRoleAsync(user, ActualRol);
+        await UserManager.ChangeEmailAsync(user, Input.Email,"");
+        await UserManager.AddToRoleAsync(user, Input.Rol);
+        await SignInManager.RefreshSignInAsync(user);
+
+    }
+
+    private sealed class InputModel
+    {
+        public string Rol { get; set; } = "";
+        public string Email { get; set; } = "";
+    }
+}

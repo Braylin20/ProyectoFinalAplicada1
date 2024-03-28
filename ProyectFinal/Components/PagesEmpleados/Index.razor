@@ -1,0 +1,18 @@
+﻿@page "/IndexEmpleado"
+@inject EmpleadoServices empleadoServices
+@inject UserManager<ApplicationUser> userManager
+<div>
+    @foreach (var empleado in Empleados)
+    {
+        <p>@empleado.NormalizedEmail</p>
+        <a href="EditEmpleado/@empleado.Id" class="btn btn-primary"></a>
+    }
+</div>
+@code {
+    public ICollection<ApplicationUser> Empleados { get; set; } = new List<ApplicationUser>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Empleados = await userManager.GetUsersInRoleAsync("Empleado");
+    }
+}
