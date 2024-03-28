@@ -26,10 +26,11 @@ namespace ProyectFinal.Services
 
         public async Task<bool> DeleteExpediente(int id)
         {
-            return await _context!.Expedientes
-                .AsNoTracking()
-                .Where(a => a.DemandaId == id)
-                .ExecuteDeleteAsync() > 0;
+            var expediente = _context.Expedientes.Find(id);
+
+            _context.Expedientes.Remove(expediente);
+            var deleted = await _context.SaveChangesAsync() > 0;
+            return deleted;
         }
         public async Task<bool> Save(Expedientes expediente)
         {
