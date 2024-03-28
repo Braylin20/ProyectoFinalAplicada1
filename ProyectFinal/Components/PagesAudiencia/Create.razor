@@ -30,17 +30,6 @@ else
                             <InputDate @bind-Value="Audiencia.FechaAudiencia" class="form-control mb-3"/>
                             <ValidationMessage For="@(()=>Audiencia.FechaAudiencia)" />
                         </div>
-                        @* <div class="col-6">
-                            <label class="fw-bold mb-2">Demandas</label>
-                            <InputSelect @bind-Value="Audiencia.DemandaId" class="form-control">
-                                <option value="">Seleccione un tipo de demanda</option>
-                                @foreach (var demanda in ListaDemandas)
-                                {
-                                    <option value="@demanda.DemandaId">@demanda.TipoDemanda</option>
-                                }
-
-                            </InputSelect>
-                        </div> *@
                         
                     </div>
                     <div class="row">
