@@ -89,6 +89,8 @@
     [Parameter]
     public int ExpedienteId { get; set; }
     public Expedientes expediente = new Expedientes();
+    public List<Sentencias> sentencias { get; set; } = new List<Sentencias>();
+    public List<Demandas> demandas { get; set; } = new List<Demandas>();
     
 
     protected override async Task OnInitializedAsync()
@@ -117,8 +119,6 @@
     }
 
 
-    public List<Sentencias> sentencias { get; set; } = new List<Sentencias>();
-    public List<Demandas> demandas { get; set; } = new List<Demandas>();
 
     
 
