@@ -51,19 +51,14 @@
                 <label for="confirm-password">Confirm Password</label>
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
             </div>
-
-            <div class="form-floating mb-3">
+            <div class="row">
                 <InputSelect @bind-Value="Input.Rol" class="form-control">
-                   
-                        <option value="Empleado">Empleado</option>
-                        <option value="Juez">Juez</option>
-                   
-
+                    <option value="">Seleccione un rol</option>
+                    <option value="Empleado">Empleado</option>
+                    <option value="Juez">Juez</option>
                 </InputSelect>>
                 <ValidationMessage For="() => Input.Rol" class="text-danger" />
             </div>
-
-            
             <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </EditForm>
     </div>
@@ -187,7 +182,7 @@
         public string ConfirmPassword { get; set; } = "";
         [Required]
         public long Cedula { get; set; }
-
+        [Required]
         public string Rol { get; set; }
     }
 }
