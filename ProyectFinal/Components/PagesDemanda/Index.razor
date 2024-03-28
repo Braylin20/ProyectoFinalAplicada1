@@ -2,6 +2,10 @@
 
 @rendermode InteractiveAuto
 @inject DemandaServices demandaServices
+@inject TipoDemandaServices tipoDemandaServices
+@inject AlguacilServices alguacilServices
+@inject AudienciasServices audienciasServices
+@inject EstadoServices estadosDemandasServices
 
 <div class="card shadow-lg">
     <div class="card-header" style="background-color: #012E40">
@@ -26,16 +30,26 @@
                         <th class="table-head text-white" style="background-color: #012E40">DemandaID</th>
                         <th class="table-head text-white" style="background-color: #012E40">Fecha</th>
                         <th class="table-head text-white" style="background-color: #012E40">Descripci&oacute;n</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Opci&oacute;nes</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Tipo de demanda</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Fecha de Audiencia</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Estado</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Opciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in ListaDemandas)
                     {
+                         TipoDemanda= TiposDemadas.FirstOrDefault(t=> t.TiposDemandasId == item.TiposDemandasId);
+                         Audiencia = Audiencias.FirstOrDefault(t=> t.AudienciaId == item.AudienciaId);
+                         Estado = Estados.FirstOrDefault(t=> t.EstadoId == item.EstadoId);
+
                         <tr>
                             <td>@item.DemandaId</td>
                             <td>@item.Fecha</td>
                             <td>@item.Descripcion</td>
+                            <td>@TipoDemanda!.TipoDemanda</td>
+                            <td>@Audiencia!.FechaAudiencia</td>
+                            <td>@Estado!.Estado</td>
                             <td>
                                 <a href="/DeleteDemanda/@item.DemandaId" class="btn btn-danger bi bi-trash-fill"></a>
                                 <a href="/EditDemanda/@item.DemandaId" class="btn btn-primary bi-box-arrow-up-right"></a>
@@ -50,15 +64,21 @@
 </div>
 
 @code {
-    public Audiencias Audiencias { get; set; } = new Audiencias();
-    public List<Demandas>? ListaDemandas = new List<Demandas>();
-    public int Opcion { get; set; }
+    public TiposDemandas TipoDemanda { get; set; } = new TiposDemandas();
+    public Audiencias Audiencia { get; set; } = new Audiencias();
+    public EstadosDemandas Estado { get; set; } = new EstadosDemandas();
     public Demandas? demandas = new Demandas();
-
+    public List<Demandas>? ListaDemandas = new List<Demandas>();
+    public List<TiposDemandas>? TiposDemadas = new List<TiposDemandas>();
+    public List<Audiencias>? Audiencias = new List<Audiencias>();
+    public List<EstadosDemandas>? Estados = new List<EstadosDemandas>();
+    public int Opcion { get; set; }
     protected override async Task OnInitializedAsync()
     {
         ListaDemandas = await demandaServices.GetDemandas();
-
+        TiposDemadas = await tipoDemandaServices.Listar(t=> true);
+        Audiencias = await audienciasServices.Listar(t=> true);
+        Estados = await estadosDemandasServices.Listar(t => true);
     }
 
 
