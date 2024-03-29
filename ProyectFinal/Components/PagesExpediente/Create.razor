@@ -145,7 +145,7 @@
 
         var users = UserManager.Users.ToList();
         var user = users.FirstOrDefault(u => u.Cedula == Usuario.Cedula);
-        user.ExpedienteId = expediente.ExpedienteId;
+        // user.ExpedienteId = expediente.ExpedienteId;
         await UserManager.UpdateAsync(user);
 
         if (guardo)
