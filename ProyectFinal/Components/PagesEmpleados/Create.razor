@@ -1,15 +1,5 @@
 ﻿@page "/CreateEmpleado"
-
-
-
-@using System.ComponentModel.DataAnnotations
-@using System.Text
-@using System.Text.Encodings.Web
-@using Microsoft.AspNetCore.Identity
-@using Microsoft.AspNetCore.WebUtilities
-@using ProyectFinal.Components.Account
-@using ProyectFinal.Data
-@attribute [Microsoft.AspNetCore.Authorization.AllowAnonymous]
+@attribute [Authorize(Roles = "Admin")]
 @inject UserManager<ApplicationUser> UserManager
 @inject RoleManager<IdentityRole> RoleManager
 @inject IUserStore<ApplicationUser> UserStore
@@ -22,69 +12,66 @@
 <PageTitle>Register</PageTitle>
 
 <h1>Register</h1>
+<AuthorizeView>
+    <ChildContent Context="formContext">
+        <div class="row">
+            <div class="col-md-4">
+                <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
+                    <DataAnnotationsValidator />
+                    <h2>Create a new account.</h2>
+                    <hr />
+                    <ValidationSummary class="text-danger" role="alert" />
+                    <div class="form-floating mb-3">
+                        <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                        <label for="email">Email</label>
+                        <ValidationMessage For="() => Input.Email" class="text-danger" />
+                    </div>
+                    <div class="form-floating mb-3">
+                        <InputText @bind-Value="Input.Nombre" class="form-control" autocomplete="username" aria-required="true" placeholder="Nombre" />
+                        <label for="email">Nombre</label>
+                        <ValidationMessage For="() => Input.Nombre" class="text-danger" />
+                    </div>
+                    <div class="form-floating mb-3">
+                        <InputText @bind-Value="Input.Apellido" class="form-control" autocomplete="username" aria-required="true" placeholder="Apellido" />
+                        <label for="email">Apellido</label>
+                        <ValidationMessage For="() => Input.Apellido" class="text-danger" />
+                    </div>
+                    <div class="form-floating mb-3">
+                        <InputNumber type="password" @bind-Value="Input.Cedula" class="form-control" autocomplete="new-password" aria-required="true" placeholder="C&eacute;dula" />
+                        <label for="confirm-password">Cedula</label>
+                        <ValidationMessage For="() => Input.Cedula" class="text-danger" />
+                    </div>
+                    <div class="form-floating mb-3">
+                        <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                        <label for="password">Password</label>
+                        <ValidationMessage For="() => Input.Password" class="text-danger" />
+                    </div>
+                    <div class="form-floating mb-3">
+                        <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                        <label for="confirm-password">Confirm Password</label>
+                        <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+                    </div>
+                    <div class="row">
+                        <InputSelect @bind-Value="Input.Rol" class="form-control">
+                            <option value="">Seleccione un rol</option>
+                            <option value="Empleado">Empleado</option>
+                            <option value="Juez">Juez</option>
+                        </InputSelect>>
+                        <ValidationMessage For="() => Input.Rol" class="text-danger" />
+                    </div>
+                    <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+                </EditForm>
+            </div>
+        </div>
+    </ChildContent>
+</AuthorizeView>
 
-<div class="row">
-    <div class="col-md-4">
-        <StatusMessage Message="@Message" />
-        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
-            <DataAnnotationsValidator />
-            <h2>Create a new account.</h2>
-            <hr />
-            <ValidationSummary class="text-danger" role="alert" />
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label for="email">Email</label>
-                <ValidationMessage For="() => Input.Email" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Nombre" class="form-control" autocomplete="username" aria-required="true" placeholder="Nombre" />
-                <label for="email">Nombre</label>
-                <ValidationMessage For="() => Input.Nombre" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Apellido" class="form-control" autocomplete="username" aria-required="true" placeholder="Apellido" />
-                <label for="email">Apellido</label>
-                <ValidationMessage For="() => Input.Apellido" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputNumber type="password" @bind-Value="Input.Cedula" class="form-control" autocomplete="new-password" aria-required="true" placeholder="C&eacute;dula" />
-                <label for="confirm-password">Cedula</label>
-                <ValidationMessage For="() => Input.Cedula" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="password">Password</label>
-                <ValidationMessage For="() => Input.Password" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="confirm-password">Confirm Password</label>
-                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
-            </div>
-            <div class="row">
-                <InputSelect @bind-Value="Input.Rol" class="form-control">
-                    <option value="">Seleccione un rol</option>
-                    <option value="Empleado">Empleado</option>
-                    <option value="Juez">Juez</option>
-                </InputSelect>>
-                <ValidationMessage For="() => Input.Rol" class="text-danger" />
-            </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-        </EditForm>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            <ExternalLoginPicker />
-        </section>
-    </div>
-</div>
 
 @code {
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         Roles = RoleManager.Roles.ToList();
+        
     }
 
     private IEnumerable<IdentityError>? identityErrors;
@@ -100,6 +87,7 @@
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
+        user.FechaCreacion = DateTime.Today;
         user.Cedula = Input.Cedula;
         user.Nombre = Input.Nombre;
         user.Apellido = Input.Apellido;
