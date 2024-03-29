@@ -18,6 +18,7 @@ namespace Share.Models
         public int? AlguacilId { get; set; }
         public long? Cedula { get; set; }
         public int? AudienciaId { get; set; }
+        public byte[]? Archivo { get; set; }
         public DateTime Fecha { get; set; }
         [Required(ErrorMessage = "Este campo es requerido")]
         public string? Descripcion { get; set; }

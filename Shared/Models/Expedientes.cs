@@ -19,7 +19,6 @@ namespace Share.Models
         [Required(ErrorMessage = "Este campo es requerido")]
         public string? Comentario { get; set; }
 
-
         [Required(ErrorMessage = "Este campo es requerido")]
         public DateTime FechaCreacion { get; set; }
 

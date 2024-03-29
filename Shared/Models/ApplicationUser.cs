@@ -14,6 +14,7 @@ namespace ProyectFinal.Data
         public int? AbogadoId { get; set; }
         public int? NinoId { get; set; }
         public long? Cedula { get; set; }
+        
         [Required(ErrorMessage = "Este campo es requerido")]
         public DateTime FechaCreacion { get; set; }
         [Required(ErrorMessage = "Este campo es requerido")]
