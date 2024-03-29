@@ -12,8 +12,8 @@ using ProyectFinal.Data;
 namespace ProyectFinal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240329165245_FotoCedula")]
-    partial class FotoCedula
+    [Migration("20240329224918_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -187,9 +187,6 @@ namespace ProyectFinal.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("ExpedienteId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
@@ -198,9 +195,6 @@ namespace ProyectFinal.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<int?>("NinoId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -240,8 +234,6 @@ namespace ProyectFinal.Migrations
 
                     b.HasIndex("AbogadoId");
 
-                    b.HasIndex("ExpedienteId");
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -261,7 +253,12 @@ namespace ProyectFinal.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AlguacilId"));
 
+                    b.Property<string>("Apellido")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Nombre")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AlguacilId");
@@ -536,6 +533,29 @@ namespace ProyectFinal.Migrations
                     b.ToTable("UsuarioDetalles");
                 });
 
+            modelBuilder.Entity("Share.Models.UsuarioExpedienteDetalle", b =>
+                {
+                    b.Property<int>("DetalleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DetalleId"));
+
+                    b.Property<int>("ExpedienteId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("DetalleId");
+
+                    b.HasIndex("ExpedienteId");
+
+                    b.HasIndex("Id");
+
+                    b.ToTable("UsuarioExpedienteDetalle");
+                });
+
             modelBuilder.Entity("Shared1.Models.EmpleadoSentencia", b =>
                 {
                     b.Property<int>("EmpleadoSentenciaId")
@@ -616,13 +636,7 @@ namespace ProyectFinal.Migrations
                         .WithMany()
                         .HasForeignKey("AbogadoId");
 
-                    b.HasOne("Share.Models.Expedientes", "Exepediente")
-                        .WithMany()
-                        .HasForeignKey("ExpedienteId");
-
                     b.Navigation("Abogado");
-
-                    b.Navigation("Exepediente");
                 });
 
             modelBuilder.Entity("Share.Models.Demandas", b =>
@@ -718,6 +732,23 @@ namespace ProyectFinal.Migrations
                         .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Share.Models.UsuarioExpedienteDetalle", b =>
+                {
+                    b.HasOne("Share.Models.Expedientes", "Expediente")
+                        .WithMany()
+                        .HasForeignKey("ExpedienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProyectFinal.Data.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("Id");
+
+                    b.Navigation("Expediente");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Shared1.Models.EmpleadoSentencia", b =>

@@ -17,7 +17,8 @@ namespace ProyectFinal.Migrations
                 {
                     AlguacilId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -144,7 +145,8 @@ namespace ProyectFinal.Migrations
                     AlguacilId = table.Column<int>(type: "int", nullable: true),
                     Cedula = table.Column<long>(type: "bigint", nullable: true),
                     AudienciaId = table.Column<int>(type: "int", nullable: true),
-                    Archivo = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Documento = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    FotoCedula = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -298,9 +300,7 @@ namespace ProyectFinal.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ExpedienteId = table.Column<int>(type: "int", nullable: true),
                     AbogadoId = table.Column<int>(type: "int", nullable: true),
-                    NinoId = table.Column<int>(type: "int", nullable: true),
                     Cedula = table.Column<long>(type: "bigint", nullable: true),
                     FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Telefono = table.Column<long>(type: "bigint", nullable: false),
@@ -322,11 +322,6 @@ namespace ProyectFinal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_Expedientes_ExpedienteId",
-                        column: x => x.ExpedienteId,
-                        principalTable: "Expedientes",
-                        principalColumn: "ExpedienteId");
                 });
 
             migrationBuilder.CreateTable(
@@ -386,6 +381,31 @@ namespace ProyectFinal.Migrations
                         column: x => x.Id,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UsuarioExpedienteDetalle",
+                columns: table => new
+                {
+                    DetalleId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ExpedienteId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsuarioExpedienteDetalle", x => x.DetalleId);
+                    table.ForeignKey(
+                        name: "FK_UsuarioExpedienteDetalle_AspNetUsers_Id",
+                        column: x => x.Id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UsuarioExpedienteDetalle_Expedientes_ExpedienteId",
+                        column: x => x.ExpedienteId,
+                        principalTable: "Expedientes",
+                        principalColumn: "ExpedienteId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -451,11 +471,6 @@ namespace ProyectFinal.Migrations
                 name: "IX_AspNetUsers_AbogadoId",
                 table: "AspNetUsers",
                 column: "AbogadoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_ExpedienteId",
-                table: "AspNetUsers",
-                column: "ExpedienteId");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -529,6 +544,16 @@ namespace ProyectFinal.Migrations
                 table: "UsuarioDetalles",
                 column: "Id");
 
+            migrationBuilder.CreateIndex(
+                name: "IX_UsuarioExpedienteDetalle_ExpedienteId",
+                table: "UsuarioExpedienteDetalle",
+                column: "ExpedienteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UsuarioExpedienteDetalle_Id",
+                table: "UsuarioExpedienteDetalle",
+                column: "Id");
+
             migrationBuilder.AddForeignKey(
                 name: "FK_AspNetUserClaims_AspNetUsers_UserId",
                 table: "AspNetUserClaims",
@@ -593,19 +618,16 @@ namespace ProyectFinal.Migrations
                 name: "NinoDetalles");
 
             migrationBuilder.DropTable(
+                name: "UsuarioExpedienteDetalle");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Empleados");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Expedientes");
-
-            migrationBuilder.DropTable(
-                name: "UsuarioDetalles");
 
             migrationBuilder.DropTable(
                 name: "Demandas");
@@ -627,6 +649,12 @@ namespace ProyectFinal.Migrations
 
             migrationBuilder.DropTable(
                 name: "TipoResoluciones");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "UsuarioDetalles");
         }
     }
 }
