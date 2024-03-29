@@ -10,7 +10,7 @@ namespace ProyectFinal.Data
     {
         public string Nombre { get; set; }
         public string Apellido { get; set; }
-        public int? ExpedienteId { get; set; }
+        //public int? ExpedienteId { get; set; }
         public int? AbogadoId { get; set; }
         public long? Cedula { get; set; }
         
@@ -18,8 +18,8 @@ namespace ProyectFinal.Data
         public DateTime FechaCreacion { get; set; }
         [Required(ErrorMessage = "Este campo es requerido")]
         public long Telefono { get; set; }
-        [ForeignKey("ExpedienteId")]
-        public Expedientes? Exepediente { get; set; }
+        //[ForeignKey("ExpedienteId")]
+        //public Expedientes? Exepediente { get; set; }
         [ForeignKey("AbogadoId")]
         public UsuarioDetalle? Abogado { get; set; }
         //[ForeignKey("NinoId")]
