@@ -9,63 +9,80 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Register</PageTitle>
+<PageTitle>Registrar Empleado</PageTitle>
 
-<h1>Register</h1>
 <AuthorizeView>
     <ChildContent Context="formContext">
-        <div class="row">
-            <div class="col-md-4">
-                <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
-                    <DataAnnotationsValidator />
-                    <h2>Create a new account.</h2>
-                    <hr />
-                    <ValidationSummary class="text-danger" role="alert" />
-                    <div class="form-floating mb-3">
-                        <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                        <label for="email">Email</label>
-                        <ValidationMessage For="() => Input.Email" class="text-danger" />
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow-lg border-0 rounded-3">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h2 class="fw-bold">Registrar Empleado</h2>
+                            <img src="PoderJudicial.png" class="img-fluid" style="width:150px;" />
+                        </div>
+                        <div class="card-body">
+                            <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
+                                <DataAnnotationsValidator />
+                                <h2 class="text-center mb-4">Crear Empleado</h2>
+                                <ValidationSummary class="text-danger" role="alert" />
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-floating mb-3">
+                                            <InputText @bind-Value="Input.Nombre" class="form-control" autocomplete="username" aria-required="true" placeholder="Nombre" />
+                                            <label for="nombre">Nombre</label>
+                                            <ValidationMessage For="() => Input.Nombre" class="text-danger" />
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                                            <label for="email">Email</label>
+                                            <ValidationMessage For="() => Input.Email" class="text-danger" />
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-floating mb-3">
+                                            <InputText @bind-Value="Input.Apellido" class="form-control" autocomplete="username" aria-required="true" placeholder="Apellido" />
+                                            <label for="apellido">Apellido</label>
+                                            <ValidationMessage For="() => Input.Apellido" class="text-danger" />
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <InputNumber type="password" @bind-Value="Input.Cedula" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Cédula" />
+                                            <label for="confirm-password">Cedula</label>
+                                            <ValidationMessage For="() => Input.Cedula" class="text-danger" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                                    <label for="password">Password</label>
+                                    <ValidationMessage For="() => Input.Password" class="text-danger" />
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                                    <label for="confirm-password">Confirm Password</label>
+                                    <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <InputSelect @bind-Value="Input.Rol" class="form-control">
+                                        \
+                                        <label for="Seleccione un rol">Seleccione un rol</label>
+                                        <option value="">Seleccione un rol</option>
+                                        <option value="Empleado">Empleado</option>
+                                        <option value="Juez">Juez</option>
+                                    </InputSelect>
+                                    <ValidationMessage For="() => Input.Rol" class="text-danger" />
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">Registrar Empleado</button>
+                                </div>
+                            </EditForm>
+                        </div>
                     </div>
-                    <div class="form-floating mb-3">
-                        <InputText @bind-Value="Input.Nombre" class="form-control" autocomplete="username" aria-required="true" placeholder="Nombre" />
-                        <label for="email">Nombre</label>
-                        <ValidationMessage For="() => Input.Nombre" class="text-danger" />
-                    </div>
-                    <div class="form-floating mb-3">
-                        <InputText @bind-Value="Input.Apellido" class="form-control" autocomplete="username" aria-required="true" placeholder="Apellido" />
-                        <label for="email">Apellido</label>
-                        <ValidationMessage For="() => Input.Apellido" class="text-danger" />
-                    </div>
-                    <div class="form-floating mb-3">
-                        <InputNumber type="password" @bind-Value="Input.Cedula" class="form-control" autocomplete="new-password" aria-required="true" placeholder="C&eacute;dula" />
-                        <label for="confirm-password">Cedula</label>
-                        <ValidationMessage For="() => Input.Cedula" class="text-danger" />
-                    </div>
-                    <div class="form-floating mb-3">
-                        <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                        <label for="password">Password</label>
-                        <ValidationMessage For="() => Input.Password" class="text-danger" />
-                    </div>
-                    <div class="form-floating mb-3">
-                        <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                        <label for="confirm-password">Confirm Password</label>
-                        <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
-                    </div>
-                    <div class="row">
-                        <InputSelect @bind-Value="Input.Rol" class="form-control">
-                            <option value="">Seleccione un rol</option>
-                            <option value="Empleado">Empleado</option>
-                            <option value="Juez">Juez</option>
-                        </InputSelect>>
-                        <ValidationMessage For="() => Input.Rol" class="text-danger" />
-                    </div>
-                    <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-                </EditForm>
+                </div>
             </div>
         </div>
     </ChildContent>
 </AuthorizeView>
-
 
 @code {
     protected override async Task OnInitializedAsync()
