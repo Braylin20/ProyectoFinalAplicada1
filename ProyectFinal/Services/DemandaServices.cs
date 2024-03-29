@@ -14,18 +14,7 @@ namespace ProyectFinal.Services
                 .AsNoTracking().ToListAsync();
         }
 
-        public async Task GuardarDocumentoAsync(int demandaId, byte[] contenido)
-        {
-
-                // Busca la demanda en la base de datos
-            var demanda = await _context.Demandas.FindAsync(demandaId);
-            if (demanda == null)
-            {
-                throw new ArgumentException($"La demanda con ID {demandaId} no fue encontrada.");
-            }
-            demanda.Archivo = contenido;
-            await _context.SaveChangesAsync();
-        }
+        
         public async Task<Demandas?> GetDemanda(int id)
         {
             return await _context!.Demandas.
