@@ -1,41 +1,48 @@
 ﻿@page "/CreateAlguacil"
 
-@rendermode InteractiveServer
 @inject NotificationService notificationService
 @inject AlguacilServices alguacilService
 @attribute [StreamRendering]
+@rendermode InteractiveServer
 
 <RadzenNotification />
 
 <EditForm Model="Alguacil" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
 
-
- 
     <div class="container-fluid">
-        <div class="card shadow-lg w-50 mx-auto">
-            <div class="card-header" style="background-color: #012E40;">
-                <h3 class="text-center text-white">Registro Alguacil</h3>
+        <div class="card shadow-lg w-75 mx-auto mt-5">
+            <div class="card-header bg-primary text-white">
+                <h3 class="text-center">Registro de Alguacil</h3>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-md-6">
                         <div class="form-group">
-                            <label class="fw-bold" style="color: #012E40;">Nombre </label>
-                            <input type="text" @bind="Alguacil.Nombre" class="form-control" style="max-width: 300px;" />
+                            <label class="fw-bold" for="Nombre">Nombre:</label>
+                            <InputText @bind-Value="Alguacil.Nombre" class="form-control" />
                             <ValidationMessage For="@(()=>Alguacil.Nombre)" />
                         </div>
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-group">
-                            <label class="fw-bold" style="color: #012E40;">Apellido </label>
-                            <input type="text" @bind="Alguacil.Apellido" class="form-control" style="max-width: 300px;" />
+                            <label class="fw-bold" for="Apellido">Apellido:</label>
+                            <InputText @bind-Value="Alguacil.Apellido" class="form-control" />
                             <ValidationMessage For="@(()=>Alguacil.Apellido)" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="fw-bold" for="FechaCreacion">Fecha Creación:</label>
+                            <InputDate @bind-Value="Alguacil.FechaCreacion" class="form-control" readonly />
+                            <ValidationMessage For="@(()=>Alguacil.FechaCreacion)" />
                         </div>
                     </div>
                 </div>
             </div>
             <div class="card-footer">
-                <div class="d-flex justify-content-between align-items-center">
-                    <a href="IndexAudiencia" class="btn btn-secondary">Atrás</a>
+                <div class="d-flex justify-content-end">
+                    <a href="IndexAudiencia" class="btn btn-secondary me-2">Atrás</a>
                     <button type="submit" class="btn btn-success">Guardar</button>
                 </div>
             </div>
@@ -44,12 +51,14 @@
 </EditForm>
 
 
-
 @code {
     public Alguaciles Alguacil { get; set; } = new Alguaciles();
-  
-    
-    public async Task Guardar()
+
+    protected override async Task OnInitializedAsync()
+    {
+        Alguacil.FechaCreacion = DateTime.Now;
+    }
+        public async Task Guardar()
     {
         var guardado = await alguacilService.Save(Alguacil);
         if (!guardado)
