@@ -1,0 +1,80 @@
+﻿@page "/CreateAlguacil"
+
+@rendermode InteractiveServer
+@inject NotificationService notificationService
+@inject AlguacilServices alguacilService
+@attribute [StreamRendering]
+
+<RadzenNotification />
+
+<EditForm Model="Alguacil" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+
+ 
+    <div class="container-fluid">
+        <div class="card shadow-lg w-50 mx-auto">
+            <div class="card-header" style="background-color: #012E40;">
+                <h3 class="text-center text-white">Registro Alguacil</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label class="fw-bold" style="color: #012E40;">Nombre </label>
+                            <input type="text" @bind="Alguacil.Nombre" class="form-control" style="max-width: 300px;" />
+                            <ValidationMessage For="@(()=>Alguacil.Nombre)" />
+                        </div>
+                        <div class="form-group">
+                            <label class="fw-bold" style="color: #012E40;">Apellido </label>
+                            <input type="text" @bind="Alguacil.Apellido" class="form-control" style="max-width: 300px;" />
+                            <ValidationMessage For="@(()=>Alguacil.Apellido)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="IndexAudiencia" class="btn btn-secondary">Atrás</a>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+
+@code {
+    public Alguaciles Alguacil { get; set; } = new Alguaciles();
+  
+    
+    public async Task Guardar()
+    {
+        var guardado = await alguacilService.Save(Alguacil);
+        if (!guardado)
+        {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "No se ha guardado correctamente",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensaje);
+        }
+        else
+        {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Éxito",
+                    Detail = "Se ha guardado correctamente",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensaje);
+            Alguacil = new Alguaciles();
+        }
+
+    }
+}
