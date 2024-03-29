@@ -1,0 +1,67 @@
+﻿@page "/IndexAlguacil"
+@inject AlguacilServices alguacilService
+@rendermode InteractiveServer
+@inject NotificationService notificationService
+
+
+<RadzenNotification />
+<div class="card shadow-lg">
+    <div class="card-header" style="background-color: #012E40">
+        <h3 class="text-white text-center">Index</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-4">
+                <label>Filtrar Por</label>
+                <InputSelect @bind-Value="Opcion" class="form-select mb-3">
+                    <option value="1">AlguacilId</option>
+                    <option value="2">Nombre</option>
+                </InputSelect>
+            </div>
+            <AuthorizeView Roles="Admin">
+                <div class="justify-content-end d-flex mb-4">
+                    <a href="CreateEmpleado" class="btn btn-success bi-floppy-fill">Create</a>
+                </div>
+            </AuthorizeView>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="table-head text-white" style="background-color: #012E40">Nombre</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Apellido</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Fecha Creaci&oacute;n</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Tel&eacute;fono</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Email</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ListaAlguacil)
+                    {
+                        <tr>
+                            <td>@item.Nombre</td>
+                            <td>@item.Apellido</td>
+                            <td>@item.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                           
+                            <td>
+                                <a href="/EditAlguacil/@item.AlguacilId" class="btn btn-primary bi-box-arrow-up-right"></a>
+                                <a href="/ViewAlguacil/@item.AlguacilId" class="btn btn-warning bi bi-info-square"></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    public List<Alguaciles> ListaAlguacil { get; set; } = new List<Alguaciles>();
+    public int Opcion { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaAlguacil = await alguacilService.GetAlguaciles();
+    }
+}
