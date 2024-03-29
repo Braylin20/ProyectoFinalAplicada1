@@ -20,6 +20,12 @@
             </div>
             <div class="row">
                 <div class="card-body">
+                    @* <div class="col-6">
+                        <div class="form-group">
+                            <label for="imagen">Imagen:</label>
+                            <InputFile id="imagen" accept=".pdf,.docx" class="form-control" OnChange="HandleFileSelection" />
+                        </div>
+                    </div> *@
                     <div class="col-12">
                         <label class="fw-bold mb-2">Descripci&oacute;n</label>
                         <InputTextArea @bind-Value="Demanda.Descripcion" class="form-control mb-3" />
@@ -144,7 +150,14 @@
         
 
 </EditForm>
+
+
+<PageTitle>Counter</PageTitle>
+
+
 @code {
+    private List<IBrowserFile> archivos = new List<IBrowserFile>();
+    private byte[] ArchivoSeleccionado;
     public Demandas Demanda = new Demandas();
     public DemandasDetalle demandasDetalle = new DemandasDetalle();
     public NinoDetalle NinoDetalle = new NinoDetalle();
@@ -155,7 +168,7 @@
     public List<Audiencias> Audiencias { get; set; } = new List<Audiencias>();
     public List<TiposDemandas> TiposDemandas { get; set; } = new List<TiposDemandas>();
     private AuthenticationState authenticationState;
-
+    
     protected override async Task OnInitializedAsync()
     {
 
@@ -204,36 +217,35 @@
 
     public async Task Guardar()
     {
+
         Demanda.Fecha = DateTime.Now;
-        // var user = await userManager.GetUserAsync(authenticationState.User);
-        // NinoDetalle.Id=user.Id;
+        
 
         var guardado = await demandaServices.Save(Demanda);
         if (!guardado)
         {
-            var mensaje = new NotificationMessage
-                {
-                    Severity = NotificationSeverity.Error,
-                    Summary = "Error",
-                    Detail = "No se ha guardado correctamente",
-                    Duration = 4_000
-                };
-            notificationService.Notify(mensaje);
+            var mensajeError = new NotificationMessage
+            {
+                Severity = NotificationSeverity.Error,
+                Summary = "Error",
+                Detail = "No se ha guardado correctamente",
+                Duration = 4_000
+            };
+            notificationService.Notify(mensajeError);
         }
-        else
+        var mensaje = new NotificationMessage
         {
-            var mensaje = new NotificationMessage
-                {
-                    Severity = NotificationSeverity.Success,
-                    Summary = "Éxito",
-                    Detail = "Se ha guardado correctamente",
-                    Duration = 4_000
-                };
-            notificationService.Notify(mensaje);
-            Demanda = new Demandas();
-            demandasDetalle = new DemandasDetalle();
-            NinoDetalle = new NinoDetalle();
-        }
+            Severity = NotificationSeverity.Success,
+            Summary = "Éxito",
+            Detail = "Se ha guardado correctamente",
+            Duration = 4_000
+        };
+        notificationService.Notify(mensaje);
+        Demanda = new Demandas();
+        demandasDetalle = new DemandasDetalle();
+        NinoDetalle = new NinoDetalle();
+
+
     }
     public async Task RemoverDetalleDemandado(DemandasDetalle detalle)
     {
@@ -262,6 +274,4 @@
         demandasDetalle = new DemandasDetalle();
         Demanda.Fecha = DateTime.Now;
     }
-
-    
 }

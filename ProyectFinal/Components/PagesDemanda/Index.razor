@@ -1,6 +1,6 @@
 ﻿@page "/IndexDemanda"
 
-@rendermode InteractiveAuto
+@rendermode InteractiveServer
 @inject DemandaServices demandaServices
 @inject TipoDemandaServices tipoDemandaServices
 @inject AlguacilServices alguacilServices
@@ -21,15 +21,17 @@
                     <option value="4">Todo</option>
                 </InputSelect>
             </div>
+
             <div class="justify-content-end d-flex mb-4">
-                <a href="CreateAudiencia" class="btn btn-success bi-floppy-fill">Create</a>
+                <a href="CreateDemanda" class="btn btn-success bi-floppy-fill">Create</a>
             </div>
+
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th class="table-head text-white" style="background-color: #012E40">DemandaID</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Fecha</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Id</th>
                         <th class="table-head text-white" style="background-color: #012E40">Descripci&oacute;n</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Archivo</th>
                         <th class="table-head text-white" style="background-color: #012E40">Tipo de demanda</th>
                         <th class="table-head text-white" style="background-color: #012E40">Fecha de Audiencia</th>
                         <th class="table-head text-white" style="background-color: #012E40">Estado</th>
@@ -45,11 +47,11 @@
 
                         <tr>
                             <td>@item.DemandaId</td>
-                            <td>@item.Fecha</td>
                             <td>@item.Descripcion</td>
-                            <td>@TipoDemanda!.TipoDemanda</td>
-                            <td>@Audiencia!.FechaAudiencia</td>
-                            <td>@Estado!.Estado</td>
+                            <td>@item.Archivo</td>
+                            <td>@TipoDemanda.TipoDemanda</td>
+                            <td>@Audiencia.FechaAudiencia.ToString("dd/MM/yyyy")</td>
+                            <td>@Estado.Estado</td>
                             <td>
                                 <a href="/DeleteDemanda/@item.DemandaId" class="btn btn-danger bi bi-trash-fill"></a>
                                 <a href="/EditDemanda/@item.DemandaId" class="btn btn-primary bi-box-arrow-up-right"></a>
@@ -73,12 +75,28 @@
     public List<Audiencias>? Audiencias = new List<Audiencias>();
     public List<EstadosDemandas>? Estados = new List<EstadosDemandas>();
     public int Opcion { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-        ListaDemandas = await demandaServices.GetDemandas();
-        TiposDemadas = await tipoDemandaServices.Listar(t=> true);
-        Audiencias = await audienciasServices.Listar(t=> true);
-        Estados = await estadosDemandasServices.Listar(t => true);
+        if (ListaDemandas.Count > 0)
+        {
+            ListaDemandas = await demandaServices.GetDemandas();
+
+        }
+        if(TiposDemadas.Count > 0)
+        {
+            TiposDemadas = await tipoDemandaServices.Listar(t => true);
+        }
+        if (Audiencias.Count > 0)
+        {
+            Audiencias = await audienciasServices.Listar(t => true);
+        }
+        if(Estados.Count > 0)
+        {
+            Estados = await estadosDemandasServices.Listar(t => true);
+        }
+        
+
     }
 
 
