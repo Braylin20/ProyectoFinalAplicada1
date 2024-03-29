@@ -7,7 +7,7 @@
 @rendermode InteractiveServer
 <PageTitle>Ticket</PageTitle>
 
-@* <EditForm Model="expediente" OnValidSubmit="Guardar">
+<EditForm Model="expediente" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
 
     <div class="container">
@@ -79,7 +79,7 @@
         </div>
     </div>
 </EditForm>
- *@
+
 
 @code {
     public Expedientes expediente = new Expedientes();

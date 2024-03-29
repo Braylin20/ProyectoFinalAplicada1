@@ -38,7 +38,7 @@
                 <tbody>
                     @foreach (var item in ListaExpedientes)
                     {
-                       @*  var sen = ListaResolucion.FirstOrDefault(a => a.ResolucionId == item.Sentencia.ResolucionId);
+                        var sen = ListaResolucion.FirstOrDefault(a => a.ResolucionId == item.Sentencia.ResolucionId);
                         <tr> 
                             <td>@item.ExpedienteId</td>
                             <td>@item.FechaCreacion</td>
@@ -46,21 +46,21 @@
 
                             @{
                                 // Buscar la resolución asociada a la sentencia del expediente actual
-                                var sentencia = ListaSentencias.FirstOrDefault(s => s == item.ExpedienteId);
+                                var sentencia = ListaSentencias.FirstOrDefault();
                                 var resolucionSentencia = sentencia != null ? ListaResolucion.FirstOrDefault(r => r.ResolucionId == sentencia.ResolucionId)?.TipoResolcion : "Sin resolución";
                             }
                             <td>@resolucionSentencia</td>
 
                             @{
                                 // Obtener el tipo de demanda asociado al expediente actual
-                                var tipoDemanda = ListaDemandas.FirstOrDefault(d => d.ex == item.ExpedienteId)?.TipoDemanda ?? "Sin tipo de demanda";
+                                var tipoDemanda = ListaDemandas.FirstOrDefault();
                             }
                             <td>@tipoDemanda</td>
                             <td>
                                 <a href="/EditExpediente/@item.ExpedienteId" class="btn btn-primary bi-box-arrow-up-right"></a>
                                 <a href="/ViewExpediente/@item.ExpedienteId" class="btn btn-warning bi bi-info-square"></a>
                             </td>
-                        </tr> *@
+                        </tr>
                     }
                 </tbody>
             </table>
