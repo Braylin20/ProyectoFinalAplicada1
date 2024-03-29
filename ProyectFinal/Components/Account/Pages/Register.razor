@@ -12,52 +12,61 @@
 @inject IdentityRedirectManager RedirectManager
 
 <PageTitle>Register</PageTitle>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2 class="fw-bold">Register</h2>
+                    <img src="PoderJudicial.png" class="img-fluid" style="width:150px;" />
+                </div>
+                <div class="card-body">
+                    <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
+                        <ValidationSummary class="alert alert-danger" />
 
-<h1>Register</h1>
 
-<div class="row">
-    <div class="col-md-4">
-        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
-            <DataAnnotationsValidator />
-            <h2>Create a new account.</h2>
-            <hr />
-            <ValidationSummary class="text-danger" role="alert" />
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label for="email">Email</label>
-                <ValidationMessage For="() => Input.Email" class="text-danger" />
+                        <div class="mb-3">
+                            <label for="inputNombre" class="form-label">Nombre</label>
+                            <InputText @bind-Value="Input.Nombre" class="form-control" id="inputNombre" placeholder="Nombre" />
+                            <ValidationMessage For="() => Input.Nombre" class="text-danger" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="inputApellido" class="form-label">Apellido</label>
+                            <InputText @bind-Value="Input.Apellido" class="form-control" id="inputApellido" placeholder="Apellido" />
+                            <ValidationMessage For="() => Input.Apellido" class="text-danger" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="inputCedula" class="form-label">Cedula</label>
+                            <InputNumber @bind-Value="Input.Cedula" class="form-control" id="inputCedula" placeholder="C&eacute;dula" />
+                            <ValidationMessage For="() => Input.Cedula" class="text-danger" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="inputEmail" class="form-label">Email</label>
+                            <InputText @bind-Value="Input.Email" class="form-control" id="inputEmail" placeholder="name@example.com" />
+                            <ValidationMessage For="() => Input.Email" class="text-danger" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputPassword" class="form-label">Password</label>
+                            <InputText type="password" @bind-Value="Input.Password" class="form-control" id="inputPassword" placeholder="Password" />
+                            <ValidationMessage For="() => Input.Password" class="text-danger" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="inputConfirmPassword" class="form-label">Confirm Password</label>
+                            <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" id="inputConfirmPassword" placeholder="Confirm Password" />
+                            <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Register</button>
+                    </EditForm>
+                </div>
             </div>
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Nombre" class="form-control" autocomplete="username" aria-required="true" placeholder="Nombre" />
-                <label for="email">Nombre</label>
-                <ValidationMessage For="() => Input.Nombre" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Apellido" class="form-control" autocomplete="username" aria-required="true" placeholder="Apellido" />
-                <label for="email">Apellido</label>
-                <ValidationMessage For="() => Input.Apellido" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputNumber type="password" @bind-Value="Input.Cedula" class="form-control" autocomplete="new-password" aria-required="true" placeholder="C&eacute;dula" />
-                <label for="confirm-password">Cedula</label>
-                <ValidationMessage For="() => Input.Cedula" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="password">Password</label>
-                <ValidationMessage For="() => Input.Password" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="confirm-password">Confirm Password</label>
-                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
-            </div>
-            
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-        </EditForm>
+        </div>
     </div>
 </div>
-
 
 
 
