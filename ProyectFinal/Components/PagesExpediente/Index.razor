@@ -38,24 +38,12 @@
                 <tbody>
                     @foreach (var item in ListaExpedientes)
                     {
-                        var sen = ListaResolucion.FirstOrDefault(a => a.ResolucionId == item.Sentencia.ResolucionId);
+                        var sentencia =BuscarResolucion(item);
                         <tr> 
                             <td>@item.ExpedienteId</td>
                             <td>@item.FechaCreacion</td>
                             <td>@item.Comentario</td>
-
-                            @{
-                                // Buscar la resolución asociada a la sentencia del expediente actual
-                                var sentencia = ListaSentencias.FirstOrDefault();
-                                var resolucionSentencia = sentencia != null ? ListaResolucion.FirstOrDefault(r => r.ResolucionId == sentencia.ResolucionId)?.TipoResolcion : "Sin resolución";
-                            }
-                            <td>@resolucionSentencia</td>
-
-                            @{
-                                // Obtener el tipo de demanda asociado al expediente actual
-                                var tipoDemanda = ListaDemandas.FirstOrDefault();
-                            }
-                            <td>@tipoDemanda</td>
+                            <td>@sentencia</td>
                             <td>
                                 <a href="/EditExpediente/@item.ExpedienteId" class="btn btn-primary bi-box-arrow-up-right"></a>
                                 <a href="/ViewExpediente/@item.ExpedienteId" class="btn btn-warning bi bi-info-square"></a>
@@ -88,7 +76,11 @@
         ListaDemandas = await demandaService.GetDemandas();
         ListaSentencias = await sentenciaService.Listar(p => true);
 
-       
     }
-
+    public string BuscarResolucion(Expedientes item)
+    {
+        var sen = ListaSentencias.FirstOrDefault(s => s.SentenciaId == item.SentenciaId);
+        sen.TipoResoluciones = ListaResolucion.FirstOrDefault(r => r.ResolucionId == sen.ResolucionId);
+        return sen.TipoResoluciones.TipoResolcion;
+    }
 }

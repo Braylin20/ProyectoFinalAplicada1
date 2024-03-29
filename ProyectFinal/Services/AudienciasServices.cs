@@ -34,6 +34,7 @@ namespace ProyectFinal.Services
         {
             if(audiencias.AudienciaId == 0)
                 _context!.Audiencias.Add(audiencias);
+
             else
                 _context!.Audiencias.Update(audiencias);
             

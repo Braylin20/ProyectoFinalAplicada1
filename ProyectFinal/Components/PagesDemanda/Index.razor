@@ -64,9 +64,18 @@
                                     <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.Documento)" download="Foto.png" class="btn btn-primary bi bi-download">Descargar</a>
                                 }                        
                             </td>
-                            <td>@TipoDemanda.TipoDemanda</td>
-                            <td>@Audiencia.FechaAudiencia.ToString("dd/MM/yyyy")</td>
-                            <td>@Estado.Estado</td>
+                            <td>
+                                @if(TipoDemanda != null)
+                                    @TipoDemanda.TipoDemanda
+                            </td>
+                            <td>
+                                @if (Audiencia != null)
+                                    @Audiencia.FechaAudiencia.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                @if (Estado != null)
+                                    @Estado.Estado
+                            </td>
                             <td>
                                 <a href="/DeleteDemanda/@item.DemandaId" class="btn btn-danger bi bi-trash-fill"></a>
                                 <a href="/EditDemanda/@item.DemandaId" class="btn btn-primary bi-box-arrow-up-right"></a>
@@ -81,9 +90,9 @@
 </div>
 
 @code {
-    public TiposDemandas TipoDemanda { get; set; } = new TiposDemandas();
-    public Audiencias Audiencia { get; set; } = new Audiencias();
-    public EstadosDemandas Estado { get; set; } = new EstadosDemandas();
+    public TiposDemandas? TipoDemanda { get; set; } = new TiposDemandas();
+    public Audiencias? Audiencia { get; set; } = new Audiencias();
+    public EstadosDemandas? Estado { get; set; } = new EstadosDemandas();
     public Demandas? demandas = new Demandas();
     public List<Demandas>? ListaDemandas = new List<Demandas>();
     public List<TiposDemandas>? TiposDemadas = new List<TiposDemandas>();

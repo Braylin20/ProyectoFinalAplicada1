@@ -12,5 +12,10 @@ namespace Share.Models
         [Key]
         public int ResolucionId { get; set; }
         public string? TipoResolcion { get; set; }
+
+        public override string ToString()
+        {
+            return $"{TipoResolcion}";
+        }
     }
 }

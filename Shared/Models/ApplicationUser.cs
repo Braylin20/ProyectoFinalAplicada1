@@ -12,7 +12,6 @@ namespace ProyectFinal.Data
         public string Apellido { get; set; }
         public int? ExpedienteId { get; set; }
         public int? AbogadoId { get; set; }
-        public int? NinoId { get; set; }
         public long? Cedula { get; set; }
         
         [Required(ErrorMessage = "Este campo es requerido")]

@@ -4,6 +4,7 @@
 @inject DemandaServices demandaService
 @inject TiposResolucionServices resolucionService
 @inject TipoDemandaServices demandasServices
+@inject UserManager<ApplicationUser> UserManager
 @rendermode InteractiveServer
 <PageTitle>Ticket</PageTitle>
 
@@ -17,41 +18,61 @@
             </div>
             <div class=card-body>
 
-            
-                <div class="mb-3">
-                    <label class="form-label" for="Nombre">Fecha:</label>
-                    <InputDate @bind-Value="expediente.FechaCreacion" class="form-control" min="2024-01-01" />
-                    <ValidationMessage For="@(() => expediente.FechaCreacion)" />
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label class="form-label" for="Nombre">C&eacute;dula:</label>
+                        <div class="input-group">
+                            <InputNumber type="number" @bind-Value="@Usuario.Cedula" class="form-control" />
+                            <button type="button"class="btn btn-outline-primary" @onclick="BuscarUsuario">Buscar</button>
+                        </div>
+                        
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label" for="Nombre">Nombre:</label>
+                        <InputText @bind-Value="Usuario.Nombre" class="form-control" readonly />
+                    </div>
                 </div>
-
-                <div class="mb-3">
-                    <label class="form-label" for="SolicitadoPor">Resolucion Sentencia</label>
-                    <InputSelect @bind-Value="expediente.SentenciaId" class="form-control">
-                        <option value="">Seleccione una opcion</option>
-                        @foreach (var item in sentencias)
-                        {
-                            var tipoResolucion = resolucionService.GetResolucion(item.ResolucionId);
-                            <option value="@item.SentenciaId">@tipoResolucion</option>
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="@(() => expediente.SentenciaId)" />
+                
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label class="form-label" for="Nombre">Apellido:</label>
+                        <InputText @bind-Value="Usuario.Apellido" class="form-control" readonly />
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="col-6 mb-3">
+                            <label class="form-label" for="Nombre">Email:</label>
+                            <InputText @bind-Value="Usuario.UserName" class="form-control" readonly />
+                        </div>
+                    </div>
                 </div>
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label class="form-label" for="SolicitadoPor">Resolucion Sentencia</label>
+                        <InputSelect @bind-Value="expediente.SentenciaId" class="form-control">
+                            <option value="">Seleccione una opcion</option>
+                            @foreach (var item in sentencias)
+                            {
+                                var tipoResolucion = resolucionService.GetResolucion(item.ResolucionId);
+                                <option value="@item.SentenciaId">@tipoResolucion</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => expediente.SentenciaId)" />
+                    </div>
 
-        
-                <div class="mb-3">
-                    <label class="form-label" for="Nombre">Tipo Demanda:</label>
-                    <InputSelect @bind-Value="expediente.DemandaId" class="form-control">
-                        <option value="">Seleccione una opcion</option>
-                        @foreach (var item in demandas)
-                        {
-                            var tipoDemanda = demandasServices.GetTipoDemanda(item.TiposDemandasId);
-                            <option value="@item.DemandaId">@tipoDemanda</option>
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="@(() => expediente.DemandaId)" />
+
+                    <div class="mb-3 col-6">
+                        <label class="form-label" for="Nombre">Tipo Demanda:</label>
+                        <InputSelect @bind-Value="expediente.DemandaId" class="form-control">
+                            <option value="">Seleccione una opcion</option>
+                            @foreach (var item in demandas)
+                            {
+                                var tipoDemanda = demandasServices.GetTipoDemanda(item.TiposDemandasId);
+                                <option value="@item.DemandaId">@tipoDemanda</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => expediente.DemandaId)" />
+                    </div>
                 </div>
-
-             
                 <div class="mb-3">
                     <label class="form-label" for="SolicitadoPor">Comentario</label>
                     <InputTextArea @bind-Value="expediente.Comentario" class="form-control" />
@@ -85,19 +106,52 @@
     public Expedientes expediente = new Expedientes();
     public List<Sentencias> sentencias { get; set; } = new List<Sentencias>();
     public List<Demandas> demandas { get; set; } = new List<Demandas>();
-   
+    public ApplicationUser Usuario { get; set; } = new ApplicationUser();
+    public List<ApplicationUser> Usuarios { get; set; } = new List<ApplicationUser>();
+
     protected override async Task OnInitializedAsync()
     { 
         sentencias = await sentenciaService.Listar(p => true);
         demandas = await demandaService.Listar(p => true);
+
+    }
+
+    public async Task BuscarUsuario()
+    {
+        
+        if (string.IsNullOrEmpty(Usuario.Cedula.ToString()))
+        {
+            Usuario.Nombre = string.Empty;
+            Usuario.Apellido = string.Empty;
+            Usuario.UserName = string.Empty;
+            return;
+        }
+        var users = UserManager.Users.ToList();
+        var user = users.FirstOrDefault(u => u.Cedula == Usuario.Cedula);
+        
+        Usuario = new ApplicationUser
+        {
+            Cedula = user.Cedula,
+            Nombre = user.Nombre,
+            Apellido = user.Apellido,
+            UserName = user.UserName
+        };
         
     }
+    
     public async Task Guardar()
     {
         var guardo = await expedienteService.Save(expediente);
+
+        var users = UserManager.Users.ToList();
+        var user = users.FirstOrDefault(u => u.Cedula == Usuario.Cedula);
+        user.ExpedienteId = expediente.ExpedienteId;
+        await UserManager.UpdateAsync(user);
+
         if (guardo)
         {
             Nuevo();  
+            Usuario= new ApplicationUser();
         }
     }
 
