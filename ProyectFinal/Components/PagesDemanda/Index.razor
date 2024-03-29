@@ -6,7 +6,7 @@
 @inject AlguacilServices alguacilServices
 @inject AudienciasServices audienciasServices
 @inject EstadoServices estadosDemandasServices
-
+@inject IJSRuntime JSRuntime
 <div class="card shadow-lg">
     <div class="card-header" style="background-color: #012E40">
         <h3 class="text-white text-center">Index</h3>
@@ -32,6 +32,7 @@
                         <th class="table-head text-white" style="background-color: #012E40">Id</th>
                         <th class="table-head text-white" style="background-color: #012E40">Descripci&oacute;n</th>
                         <th class="table-head text-white" style="background-color: #012E40">Archivo</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Foto de c&eacute;dula</th>
                         <th class="table-head text-white" style="background-color: #012E40">Tipo de demanda</th>
                         <th class="table-head text-white" style="background-color: #012E40">Fecha de Audiencia</th>
                         <th class="table-head text-white" style="background-color: #012E40">Estado</th>
@@ -48,7 +49,21 @@
                         <tr>
                             <td>@item.DemandaId</td>
                             <td>@item.Descripcion</td>
-                            <td>@item.Archivo</td>
+                            <td>
+                                @if (item.FotoCedula != null && item.FotoCedula.Length > 0)
+                                {
+                                    @* <a href="@($"DownloadArchivo/{item.DemandaId}")" class="btn btn-primary bi bi-download">Descargar</a> *@
+                                    <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.FotoCedula)" download="Archivo.pdf" class="btn btn-primary bi bi-download">Descargar</a>
+                                }
+
+                            </td>
+                            <td>
+                                @if (item.Documento != null && item.Documento.Length > 0)
+                                {
+                                    @* <a href="@($"DownloadArchivo/{item.DemandaId}")" class="btn btn-primary bi bi-download">Descargar</a> *@
+                                    <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.Documento)" download="Foto.png" class="btn btn-primary bi bi-download">Descargar</a>
+                                }                        
+                            </td>
                             <td>@TipoDemanda.TipoDemanda</td>
                             <td>@Audiencia.FechaAudiencia.ToString("dd/MM/yyyy")</td>
                             <td>@Estado.Estado</td>
@@ -78,26 +93,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (ListaDemandas.Count > 0)
-        {
-            ListaDemandas = await demandaServices.GetDemandas();
 
-        }
-        if(TiposDemadas.Count > 0)
-        {
-            TiposDemadas = await tipoDemandaServices.Listar(t => true);
-        }
-        if (Audiencias.Count > 0)
-        {
-            Audiencias = await audienciasServices.Listar(t => true);
-        }
-        if(Estados.Count > 0)
-        {
-            Estados = await estadosDemandasServices.Listar(t => true);
-        }
-        
-
+        ListaDemandas = await demandaServices.GetDemandas();
+        TiposDemadas = await tipoDemandaServices.Listar(t => true);
+        Audiencias = await audienciasServices.Listar(t => true);
+        Estados = await estadosDemandasServices.Listar(t => true);
     }
-
+    
 
 }

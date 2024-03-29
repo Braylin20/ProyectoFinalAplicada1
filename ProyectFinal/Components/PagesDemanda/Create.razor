@@ -20,12 +20,21 @@
             </div>
             <div class="row">
                 <div class="card-body">
-                    @* <div class="col-6">
-                        <div class="form-group">
-                            <label for="imagen">Imagen:</label>
-                            <InputFile id="imagen" accept=".pdf,.docx" class="form-control" OnChange="HandleFileSelection" />
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="fw-bold mb-2">Instancia:</label>
+                                <InputFile accept=".pdf" class="form-control" OnChange="agregarArchivo" />
+                            </div>
                         </div>
-                    </div> *@
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="fw-bold mb-2">Foto copia de c&eacute;dula:</label>
+                                <InputFile accept=".png" class="form-control" OnChange="agregarFotoCedula" />
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="col-12">
                         <label class="fw-bold mb-2">Descripci&oacute;n</label>
                         <InputTextArea @bind-Value="Demanda.Descripcion" class="form-control mb-3" />
@@ -180,6 +189,45 @@
         authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
     }
+
+    public async Task agregarArchivo(InputFileChangeEventArgs e)
+    {
+        var archivo = e.File;
+        if (archivo != null)
+        {
+            var stream = archivo.OpenReadStream();
+            using (var memoryStream = new MemoryStream())
+            {
+                await stream.CopyToAsync(memoryStream);
+                Demanda.Documento = memoryStream.ToArray();
+            }
+        }
+    }
+    public async Task agregarFotoCedula(InputFileChangeEventArgs e)
+    {
+        var archivo = e.File;
+        if (archivo != null)
+        {
+            var stream = archivo.OpenReadStream();
+            using (var memoryStream = new MemoryStream())
+            {
+                await stream.CopyToAsync(memoryStream);
+                Demanda.FotoCedula = memoryStream.ToArray();
+            }
+        }
+    }
+    
+    // private async Task HandleImagenSeleccionada(InputFileChangeEventArgs e)
+    // {
+    //     var archivo = e.File;
+    //     if (archivo != null)
+    //     {
+    //         // Obtener los datos del archivo seleccionado
+    //         using var memoryStream = new MemoryStream();
+    //         await archivo.OpenReadStream().CopyToAsync(memoryStream);
+    //         Demanda.Archivo = memoryStream.ToArray(); // Guardar los datos del archivo en tu propiedad Imagen
+    //     }
+    // }
     public async Task AgregarDetalleDemandado()
     {
         if (Validar())
