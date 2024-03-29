@@ -297,6 +297,9 @@ namespace ProyectFinal.Migrations
                     b.Property<int?>("AlguacilId")
                         .HasColumnType("int");
 
+                    b.Property<byte[]>("Archivo")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<int?>("AudienciaId")
                         .HasColumnType("int");
 

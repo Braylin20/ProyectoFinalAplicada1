@@ -12,7 +12,7 @@ using ProyectFinal.Data;
 namespace ProyectFinal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240328183935_Initial")]
+    [Migration("20240329022541_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -169,6 +169,10 @@ namespace ProyectFinal.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Apellido")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long?>("Cedula")
                         .HasColumnType("bigint");
 
@@ -197,6 +201,10 @@ namespace ProyectFinal.Migrations
 
                     b.Property<int?>("NinoId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -291,6 +299,9 @@ namespace ProyectFinal.Migrations
 
                     b.Property<int?>("AlguacilId")
                         .HasColumnType("int");
+
+                    b.Property<byte[]>("Archivo")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<int?>("AudienciaId")
                         .HasColumnType("int");

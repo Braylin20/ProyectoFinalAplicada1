@@ -144,6 +144,7 @@ namespace ProyectFinal.Migrations
                     AlguacilId = table.Column<int>(type: "int", nullable: true),
                     Cedula = table.Column<long>(type: "bigint", nullable: true),
                     AudienciaId = table.Column<int>(type: "int", nullable: true),
+                    Archivo = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -295,6 +296,8 @@ namespace ProyectFinal.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ExpedienteId = table.Column<int>(type: "int", nullable: true),
                     AbogadoId = table.Column<int>(type: "int", nullable: true),
                     NinoId = table.Column<int>(type: "int", nullable: true),
