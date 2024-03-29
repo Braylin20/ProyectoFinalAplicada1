@@ -11,6 +11,9 @@ namespace Share.Models
     {
         [Key]
         public int AlguacilId { get; set; }
+        [Required(ErrorMessage ="Introduce un nombre")]
         public string? Nombre { get; set; }
+        [Required(ErrorMessage = "Introduce un Apellido")]
+        public string? Apellido { get; set; }
     }
 }
