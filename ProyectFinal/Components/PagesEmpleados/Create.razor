@@ -64,7 +64,6 @@
                                 </div>
                                 <div class="form-floating mb-3">
                                     <InputSelect @bind-Value="Input.Rol" class="form-control">
-                                        \
                                         <label for="Seleccione un rol">Seleccione un rol</label>
                                         <option value="">Seleccione un rol</option>
                                         <option value="Empleado">Empleado</option>
@@ -123,7 +122,6 @@
 
         if(Input.Rol == "Admin")
         {
-
             await UserManager.AddToRoleAsync(user, "Admin");
         }
         else if(Input.Rol == "Empleado")
