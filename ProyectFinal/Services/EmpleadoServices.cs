@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProyectFinal.Data;
 using Share.Models;
+using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 
 namespace ProyectFinal.Services
@@ -15,9 +17,9 @@ namespace ProyectFinal.Services
                 .Where(a => a.EmpleadoId == id)
                 .ExecuteDeleteAsync() > 0;
         }
-        public async Task<List<Empleados>> Listar(Expression<Func<Empleados, bool>> criterio)
+        public async Task<ICollection<ApplicationUser>> Listar(Expression<Func<ApplicationUser, bool>> criterio)
         {
-            return await _context.Empleados
+            return await _context.Users
                 .AsNoTracking()
                 .Where(criterio)
                 .ToListAsync();
