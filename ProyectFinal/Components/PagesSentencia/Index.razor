@@ -1,0 +1,78 @@
+﻿@page "/IndexSentencia"
+@inject SentenciaServices sentenciaService
+@inject TiposResolucionServices resolucionService
+@rendermode InteractiveServer
+@inject NotificationService notificationService
+
+
+<RadzenNotification />
+<div class="card shadow-lg">
+    <div class="card-header" style="background-color: #012E40">
+        <h3 class="text-white text-center">Index</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-4">
+                <label>Filtrar Por</label>
+                <InputSelect @bind-Value="Opcion" class="form-select mb-3">
+                    <option value="1">AlguacilId</option>
+                    <option value="2">Nombre</option>
+                </InputSelect>
+            </div>
+            <AuthorizeView Roles="Admin">
+                <div class="justify-content-end d-flex mb-4">
+                    <a href="CreateSentencia" class="btn btn-success bi-floppy-fill">Create</a>
+                </div>
+            </AuthorizeView>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="table-head text-white" style="background-color: #012E40">Nombre Ministerio</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Tipo Resoluci&oacute;n</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Fecha Creaci&oacute;n</th>
+                        <th class="table-head text-white" style="background-color: #012E40"></th>
+                        
+                      
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ListaSentencia)
+                    {
+                        var sentencia = BuscarResolucion(item);
+                        <tr>
+                            <td>@item.NombreMinisterio</td>
+                            <td>@sentencia</td>
+                            <td>@item.FechaCreacion.ToString("dd/MM/yyyy")</td>
+
+                            <td>
+                                <a href="/EditSentencia/@item.SentenciaId" class="btn btn-primary bi-box-arrow-up-right"></a>
+                                <a href="/ViewSentencia/@item.SentenciaId" class="btn btn-warning bi bi-info-square"></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    public List<Sentencias> ListaSentencia { get; set; } = new List<Sentencias>();
+    public List<TipoResoluciones> ListaResolucion { get; set; } = new List<TipoResoluciones>();
+    public int Opcion { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaSentencia = await sentenciaService.Listar(p=> true);
+        ListaResolucion = await resolucionService.GetResoluciones();
+    }
+
+    public string BuscarResolucion(Sentencias item)
+    {
+        var sen = ListaSentencia.FirstOrDefault(s => s.SentenciaId == item.SentenciaId);
+        sen.TipoResoluciones = ListaResolucion.FirstOrDefault(r => r.ResolucionId == sen.ResolucionId);
+        return sen.TipoResoluciones.TipoResolcion;
+    }
+}
