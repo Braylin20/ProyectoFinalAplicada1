@@ -16,8 +16,6 @@ namespace ProyectFinal.Data
         
         [Required(ErrorMessage = "Este campo es requerido")]
         public DateTime FechaCreacion { get; set; }
-        [Required(ErrorMessage = "Este campo es requerido")]
-        public long Telefono { get; set; }
         //[ForeignKey("ExpedienteId")]
         //public Expedientes? Exepediente { get; set; }
         [ForeignKey("AbogadoId")]
@@ -26,8 +24,9 @@ namespace ProyectFinal.Data
         //public Niños? Niño { get; set; }
         [ForeignKey("Id")]
         public ICollection<UsuarioDetalle> UsuarioDetalle { get; set; } = new List<UsuarioDetalle>();
-        
 
+        [ForeignKey("Id")]
+        public ICollection<TelefonoDetalles> TelefonoDetalles { get; set; } = new List<TelefonoDetalles>();
     }
 
 }
