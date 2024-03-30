@@ -21,7 +21,7 @@ namespace ProyectFinal.Data
         public DbSet<Alguaciles> Alguaciles { get; set; }
         public DbSet<UsuarioDetalle> UsuarioDetalles { get; set; }
         public DbSet<NinoDetalle> NinoDetalles { get; set; }
-        public DbSet<UsuarioExpedienteDetalle> UsuarioExpedienteDetalle { get; set; }
+        //public DbSet<UsuarioExpedienteDetalle> UsuarioExpedienteDetalle { get; set; }
         
 
 
