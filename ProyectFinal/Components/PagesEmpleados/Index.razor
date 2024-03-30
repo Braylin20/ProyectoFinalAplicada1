@@ -23,7 +23,7 @@
                         <label class="fw-bold">Fecha Final</label>
                         <div class="input-group">
                             <InputDate @bind-Value="FechaFinal" class="form-control" />
-                            <button type="button" class="btn btn-primary bi bi-search" @onclick="FiltrarPorfecha">Buscar</button>
+                            <button type="button" class="btn btn-primary bi bi-search" @onclick="FiltrarPorfecha"><img src="/Buscar2.svg" style="width: 20px;" />Buscar</button>
                         </div>
                         
                     </div>
@@ -43,7 +43,7 @@
                     </InputSelect>
                     @if (Opcion == 3)
                     {
-                        <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar">Buscar</button>
+                        <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" />Buscar</button>
                     }
                 </div>
             </div>
