@@ -409,12 +409,18 @@ namespace ProyectFinal.Migrations
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("SentenciaId")
                         .HasColumnType("int");
 
                     b.HasKey("ExpedienteId");
 
                     b.HasIndex("DemandaId");
+
+                    b.HasIndex("Id");
 
                     b.HasIndex("SentenciaId");
 
@@ -528,29 +534,6 @@ namespace ProyectFinal.Migrations
                     b.HasIndex("Id");
 
                     b.ToTable("UsuarioDetalles");
-                });
-
-            modelBuilder.Entity("Share.Models.UsuarioExpedienteDetalle", b =>
-                {
-                    b.Property<int>("DetalleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DetalleId"));
-
-                    b.Property<int>("ExpedienteId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("DetalleId");
-
-                    b.HasIndex("ExpedienteId");
-
-                    b.HasIndex("Id");
-
-                    b.ToTable("UsuarioExpedienteDetalle");
                 });
 
             modelBuilder.Entity("Shared1.Models.EmpleadoSentencia", b =>
@@ -691,6 +674,12 @@ namespace ProyectFinal.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ProyectFinal.Data.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Share.Models.Sentencias", "Sentencia")
                         .WithMany()
                         .HasForeignKey("SentenciaId")
@@ -700,6 +689,8 @@ namespace ProyectFinal.Migrations
                     b.Navigation("Demandas");
 
                     b.Navigation("Sentencia");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Share.Models.NinoDetalle", b =>
@@ -729,23 +720,6 @@ namespace ProyectFinal.Migrations
                         .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Share.Models.UsuarioExpedienteDetalle", b =>
-                {
-                    b.HasOne("Share.Models.Expedientes", "Expediente")
-                        .WithMany()
-                        .HasForeignKey("ExpedienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProyectFinal.Data.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("Id");
-
-                    b.Navigation("Expediente");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Shared1.Models.EmpleadoSentencia", b =>
