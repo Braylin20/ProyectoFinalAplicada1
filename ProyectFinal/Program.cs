@@ -7,6 +7,7 @@ using ProyectFinal.Components.Account;
 using ProyectFinal.Data;
 using ProyectFinal.Services;
 using Radzen;
+using Share.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +50,8 @@ builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<EstadoServices>();
 builder.Services.AddScoped<ExpedienteServices>();
 builder.Services.AddScoped<TiposResolucionServices>();
+builder.Services.AddScoped<TiposTelefonosServices>();
+builder.Services.AddScoped<ApplicationUserServices>();
 
 
 
