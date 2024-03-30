@@ -7,6 +7,12 @@ namespace ProyectFinal.Services
 {
     public class SentenciaServices(ApplicationDbContext _context)
     {
+
+        public async Task<Sentencias?> GetSentencia(int id)
+        {
+            return await _context.Sentencias.FindAsync(id);
+
+        }
         public async Task<bool> Delete(int id)
         {
             return await _context!.Sentencias
