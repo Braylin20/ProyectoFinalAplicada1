@@ -4,7 +4,6 @@
 @rendermode InteractiveServer
 @inject NotificationService notificationService
 @attribute [StreamRendering]
-
 <RadzenNotification />
 
 <div class="card shadow-lg">
@@ -21,8 +20,9 @@
                         <InputDate @bind-Value="FechaInicio" class="form-control mb-4"/>
                     </div>
                     <div class="col-6">
-                        <label class="fw-bold">Fecha Inicio</label>
-                        <InputDate @bind-Value="FechaInicio" class="form-control" />
+                        <label class="fw-bold">Fecha Final</label>
+                        <InputDate @bind-Value="FechaFinal" class="form-control" />
+                        @* <button type="button" class="btn btn-primary bi bi-search" @onclick="FiltrarPorfecha">Buscar</button> *@
                     </div>
                 </div>
                 
@@ -32,9 +32,9 @@
             <div class="col-3">
                 <label class="fw-bold">Filtrar Por</label>
                 <InputSelect @bind-Value="Opcion" class="form-select mb-3">
-                    <option value="1">EmpleadoId</option>
+                    <option value="1">C&eacute;dula</option>
                     <option value="2">Nombre</option>
-                    <option value="4">Todo</option>
+                    <option value="3">Todo</option>
                 </InputSelect>
             </div>
             @switch (Opcion)
@@ -44,19 +44,23 @@
                         <label class="fw-bold">C&eacute;dula</label>
                         <div class="input-group">
                             <InputNumber @bind-Value="User.Cedula" class="form-control"></InputNumber>
-                            <button type="button" class="btn btn-primary bi bi-search" @onclick="Filtrar"></button>
+                            @* <button type="button" class="btn btn-primary bi bi-search" @onclick="Filtrar"></button> *@
+                        </div>
+                    </div>
+                    
+                    break;
+                case 2:
+                    <div class="col-3">
+                        <label class="fw-bold">Nombre</label>
+                        <div class="input-group">
+                            <InputText @bind-Value="User.Nombre" class="form-control"></InputText>
+                            @* <button type="button" class="btn btn-primary bi bi-search" @onclick="Filtrar"></button> *@
                         </div>
                     </div>
                     
                     break;
                 case 3:
-                    <div class="input-group">
-                        <InputText @bind-Value="User.Nombre" class="form-control"></InputText>
-                        <button type="button" class="btn btn-primary bi bi-search" @onclick="Filtrar"></button>
-                    </div>
-                    break;
-                case 4:
-                    <button type="button" class="btn btn-primary bi bi-search" @onclick="Filtrar">Buscar</button>
+                    @* <button type="button" class="btn btn-primary bi bi-search" @onclick="Filtrar">Buscar</button> *@
                     break;
             }
         </div>
@@ -128,16 +132,19 @@
         FechaInicio = DateTime.Now;
     }
 
-    public async Task Filtrar()
-    {
-        if (Opcion == 1)
-            Empleados = await empleadoServices.Listar(e => e.Id== User.Id);
-        else if (Opcion == 2)
-            Empleados = await empleadoServices.Listar(e => e.Nombre!.ToLower().Contains(User.Nombre!.ToLower()));
-        else if (Opcion == 3)
-            Empleados = await empleadoServices.Listar(m => m.FechaCreacion <= FechaFinal && m.FechaCreacion >= FechaInicio);
-        else if (Opcion == 4)
-            Empleados = await empleadoServices.Listar(m => true);
-    }
+    // public async Task FiltrarPorfecha()
+    // {
+    //     Empleados = await empleadoServices.ListarPorFecha(m => m.FechaCreacion.Date <= FechaFinal.Date && m.FechaCreacion.Date >= FechaInicio.Date);
+    // }
+    // public async Task Filtrar()
+    // {
+        
+    //     if (Opcion == 1)
+    //         Empleados = await empleadoServices.Listar(Empleados, User);
+    //     else if (Opcion == 2)
+    //         Empleados = await empleadoServices.Listar(Empleados, User);
+    //     else if (Opcion == 3)
+    //         Empleados = await userManager.GetUsersInRoleAsync("Empleado");
+    // }
 
 }

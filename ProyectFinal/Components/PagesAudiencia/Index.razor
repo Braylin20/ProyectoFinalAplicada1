@@ -21,7 +21,9 @@
                 </InputSelect>
             </div>
             <div class="justify-content-end d-flex mb-4">
-                <a href="CreateAudiencia" class="btn btn-success bi-floppy-fill">Create</a>
+                <a href="CreateAudiencia" bi-floppy-fill">
+                    <img src="Create.svg" style="width: 45px;" />
+                </a>
             </div>
             <table class="table table-bordered">
                 <thead>
@@ -41,10 +43,14 @@
                             <td>@item.Comentario</td>
                             <td>
                                 <a href="/EditAudiencia/@item.AudienciaId" >
-                                    <img src="Edit.svg" style="width: 20px;"/>
+                                    <img src="Edit.svg" style="width: 30px;"/>
                                 </a>
-                                <a href="/DeleteAudiencia/@item.AudienciaId" class="btn btn-danger "></a>
-                                <a href="/ViewAudiencia/@item.AudienciaId" class="btn btn-warning "></a>
+                                <a href="/DeleteAudiencia/@item.AudienciaId" >
+                                    <img src="Delete.svg" style="width: 35px;" />
+                                </a>
+                                <a href="/ViewAudiencia/@item.AudienciaId">
+                                    <img src="Info.svg" style="width: 35px;" />
+                                </a>
                             </td>
                         </tr>
                     }

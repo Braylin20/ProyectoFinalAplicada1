@@ -1,4 +1,5 @@
-﻿using ProyectFinal.Data;
+﻿using Microsoft.AspNetCore.Identity;
+using ProyectFinal.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
