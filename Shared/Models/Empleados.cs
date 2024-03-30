@@ -19,10 +19,5 @@ namespace Share.Models
         [ForeignKey("UserId")]
         public ApplicationUser User { get; set; }
 
-
-
-
-
-
     }
 }
