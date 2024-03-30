@@ -7,7 +7,7 @@
 <RadzenNotification />
 <div class="card shadow-lg">
     <div class="card-header" style="background-color: #012E40">
-        <h3 class="text-white text-center">Index</h3>
+        <h3 class="text-white text-center">Index Alguacil</h3>
     </div>
     <div class="card-body">
         <div class="row">
@@ -20,7 +20,8 @@
             </div>
             <AuthorizeView Roles="Admin">
                 <div class="justify-content-end d-flex mb-4">
-                    <a href="CreateAlguacil" class="btn btn-success bi-floppy-fill">Create</a>
+                    <a href="CreateAlguacil" class="btn btn-primary bi-floppy-fill"> <img src="/Create.svg" style="width: 30px;" />Create</a>
+                   
                 </div>
             </AuthorizeView>
             <table class="table table-bordered">
@@ -42,8 +43,15 @@
                             <td>@item.FechaCreacion.ToString("dd/MM/yyyy")</td>
                            
                             <td>
-                                <a href="/EditAlguacil/@item.AlguacilId" class="btn btn-primary bi-box-arrow-up-right"></a>
-                                <a href="/ViewAlguacil/@item.AlguacilId" class="btn btn-warning bi bi-info-square"></a>
+                                <a href="/EditAlguacil/@item.AlguacilId">
+                                    <img src="Edit.svg" style="width: 30px;" />
+                                </a>
+                                <a href="/DeleteAlguacil/@item.AlguacilId">
+                                    <img src="Delete.svg" style="width: 35px;" />
+                                </a>
+                               @*  <a href="/ViewAlguacil/@item.AlguacilId">
+                                    <img src="Info.svg" style="width: 35px;" />
+                                </a> *@
                             </td>
                         </tr>
                     }
