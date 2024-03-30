@@ -17,6 +17,20 @@ namespace ProyectFinal.Services
         }
         public async Task<bool> DeleteAudiencia(int id)
         {
+            //var demandaConAudiencia = _context.Demandas.Include(d => d.Audiencia).FirstOrDefaultAsync(d => d.Audiencia!.AudienciaId == id);
+            //if(demandaConAudiencia != null)
+            //{
+            //    demandaConAudiencia.Audiencia = null;
+            //}
+
+            var demandaConAudiencia = await _context.Demandas.Include(d => d.Audiencia).FirstOrDefaultAsync(d => d.Audiencia!.AudienciaId == id);
+
+            if (demandaConAudiencia != null)
+            {
+                demandaConAudiencia.Audiencia = null;
+            }
+
+            await _context.SaveChangesAsync();
             return await _context!.Audiencias
                 .AsNoTracking()
                 .Where(a => a.AudienciaId == id)
