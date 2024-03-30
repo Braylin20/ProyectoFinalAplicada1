@@ -102,8 +102,15 @@
                             <td>@item.FechaCreacion.ToString("dd/MM/yyyy")</td>
                             <td>@item.UserName</td>
                             <td>
-                                <a href="/EditEmpleado/@item.Id" class="btn btn-primary bi-box-arrow-up-right"></a>
-                                <a href="/ViewAudiencia/@item.Id" class="btn btn-warning bi bi-info-square"></a>
+                                <a href="/EditEmpleado/@item.Id">
+                                    <img src="Edit.svg" style="width: 30px;" />
+                                </a>
+                                <a href="/DeleteEmpleado/@item.Id">
+                                    <img src="Delete.svg" style="width: 35px;" />
+                                </a>
+                                <a href="/ViewEmpleado/@item.Id">
+                                    <img src="Info.svg" style="width: 35px;" />
+                                </a>
                             </td>
                         </tr>
                     }

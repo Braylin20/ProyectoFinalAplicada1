@@ -77,9 +77,16 @@
                                     @Estado.Estado
                             </td>
                             <td>
-                                <a href="/DeleteDemanda/@item.DemandaId" class="btn btn-danger bi bi-trash-fill"></a>
-                                <a href="/EditDemanda/@item.DemandaId" class="btn btn-primary bi-box-arrow-up-right"></a>
-                                <a href="/ViewDemanda/@item.DemandaId" class="btn btn-warning bi bi-info-square"></a>
+                                <a href="/EditDemanda/@item.DemandaId">
+                                    <img src="Edit.svg" style="width: 30px;" />
+                                </a>
+                                <a href="/DeleteDemanda/@item.DemandaId">
+                                    <img src="Delete.svg" style="width: 35px;" />
+                                </a>
+                              @*   <a href="/ViewDemanda/@item.DemandaId">
+                                    <img src="Info.svg" style="width: 35px;" />
+                                </a> *@
+                               
                             </td>
                         </tr>
                     }

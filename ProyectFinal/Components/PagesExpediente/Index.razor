@@ -45,8 +45,15 @@
                             <td>@item.Comentario</td>
                             <td>@sentencia</td>
                             <td>
-                                <a href="/EditExpediente/@item.ExpedienteId" class="btn btn-primary bi-box-arrow-up-right"></a>
-                                <a href="/ViewExpediente/@item.ExpedienteId" class="btn btn-warning bi bi-info-square"></a>
+                                <a href="/EditExpediente/@item.ExpedienteId">
+                                    <img src="Edit.svg" style="width: 30px;" />
+                                </a>
+                                <a href="/DeleteExpediente/@item.ExpedienteId">
+                                    <img src="Delete.svg" style="width: 35px;" />
+                                </a>
+                                <a href="/ViewExpediente/@item.ExpedienteId">
+                                    <img src="Info.svg" style="width: 35px;" />
+                                </a>
                             </td>
                         </tr>
                     }

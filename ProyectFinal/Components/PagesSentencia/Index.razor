@@ -43,8 +43,15 @@
                             <td>@item.FechaCreacion.ToString("dd/MM/yyyy")</td>
 
                             <td>
-                                <a href="/EditSentencia/@item.SentenciaId" class="btn btn-primary bi-box-arrow-up-right"></a>
-                                <a href="/ViewSentencia/@item.SentenciaId" class="btn btn-warning bi bi-info-square"></a>
+                                <a href="/EditSentencia/@item.SentenciaId">
+                                    <img src="Edit.svg" style="width: 30px;" />
+                                </a>
+                                <a href="/DeleteSentencia/@item.SentenciaId">
+                                    <img src="Delete.svg" style="width: 35px;" />
+                                </a>
+                                <a href="/ViewSentencia/@item.SentenciaId">
+                                    <img src="Info.svg" style="width: 35px;" />
+                                </a>
                             </td>
                         </tr>
                     }
