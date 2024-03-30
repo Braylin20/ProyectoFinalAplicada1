@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectFinal.Data;
 
@@ -11,9 +12,11 @@ using ProyectFinal.Data;
 namespace ProyectFinal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240330051111_TipoTelefono")]
+    partial class TipoTelefono
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -216,6 +219,9 @@ namespace ProyectFinal.Migrations
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Telefono")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -488,7 +494,7 @@ namespace ProyectFinal.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DetalleId"));
 
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Telefono")
                         .IsRequired()
@@ -498,8 +504,6 @@ namespace ProyectFinal.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("DetalleId");
-
-                    b.HasIndex("Id");
 
                     b.HasIndex("TipoId");
 
@@ -758,10 +762,6 @@ namespace ProyectFinal.Migrations
 
             modelBuilder.Entity("Share.Models.TelefonoDetalles", b =>
                 {
-                    b.HasOne("ProyectFinal.Data.ApplicationUser", null)
-                        .WithMany("TelefonoDetalles")
-                        .HasForeignKey("Id");
-
                     b.HasOne("Share.Models.TipoTelefonos", "TipoTelefono")
                         .WithMany()
                         .HasForeignKey("TipoId")
@@ -801,8 +801,6 @@ namespace ProyectFinal.Migrations
 
             modelBuilder.Entity("ProyectFinal.Data.ApplicationUser", b =>
                 {
-                    b.Navigation("TelefonoDetalles");
-
                     b.Navigation("UsuarioDetalle");
                 });
 
