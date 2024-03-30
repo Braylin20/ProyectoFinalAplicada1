@@ -5,44 +5,41 @@
 @inject TiposResolucionServices resolucionService
 @inject TipoDemandaServices demandasServices
 @inject UserManager<ApplicationUser> UserManager
+@inject NotificationService notificationService
 @rendermode InteractiveServer
 <PageTitle>Ticket</PageTitle>
 
+<RadzenNotification/>
 <EditForm Model="expediente" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
 
     <div class="container">
-        <div class="card shadow-lg">
-            <div class="card-header">
-                <h3>Registro de Expediente.</h3>
+        <div class="card shadow-lg" >
+            <div class="card-header" style=" background-color: #012E40">
+                <h3 class="text-white text-center">Registro de Expediente.</h3>
             </div>
             <div class=card-body>
-
                 <div class="row">
                     <div class="col-6 mb-3">
-                        <label class="form-label" for="Nombre">C&eacute;dula:</label>
+                        <label class="form-label" for="Nombre">C&eacute;dula del usuario:</label>
                         <div class="input-group">
-                            <InputNumber type="number" @bind-Value="@Usuario.Cedula" class="form-control" />
+                            <InputNumber type="number" @bind-Value="@Usuario.Cedula" class="form-control" min="0" />
                             <button type="button"class="btn btn-outline-primary" @onclick="BuscarUsuario">Buscar</button>
                         </div>
-                        
                     </div>
                     <div class="col-6 mb-3">
                         <label class="form-label" for="Nombre">Nombre:</label>
-                        <InputText @bind-Value="Usuario.Nombre" class="form-control" readonly />
+                        <InputText @bind-Value="Usuario.Nombre" class="form-control" disabled />
                     </div>
                 </div>
-                
                 <div class="row">
                     <div class="col-6 mb-3">
                         <label class="form-label" for="Nombre">Apellido:</label>
-                        <InputText @bind-Value="Usuario.Apellido" class="form-control" readonly />
+                        <InputText @bind-Value="Usuario.Apellido" class="form-control" disabled />
                     </div>
                     <div class="col-6 mb-3">
-                        <div class="col-6 mb-3">
-                            <label class="form-label" for="Nombre">Email:</label>
-                            <InputText @bind-Value="Usuario.UserName" class="form-control" readonly />
-                        </div>
+                        <label class="form-label" for="Nombre">Email:</label>
+                        <InputText @bind-Value="Usuario.UserName" class="form-control" disabled />
                     </div>
                 </div>
                 <div class="row">
@@ -58,8 +55,6 @@
                         </InputSelect>
                         <ValidationMessage For="@(() => expediente.SentenciaId)" />
                     </div>
-
-
                     <div class="mb-3 col-6">
                         <label class="form-label" for="Nombre">Tipo Demanda:</label>
                         <InputSelect @bind-Value="expediente.DemandaId" class="form-control">
@@ -78,25 +73,13 @@
                     <InputTextArea @bind-Value="expediente.Comentario" class="form-control" />
                     <ValidationMessage For="@(() => expediente.Comentario)" />
                 </div>
-
-               
             </div>
             <div class="card-footer d-flex justify-content-between">
-
-                <div class="btn">
-                    <a href="" class="bi bi-arrow-return-left btn btn-outline-primary">Volver</a>
+                <div class="input-group">
+                    <a href="" class="bi bi-arrow-return-left btn btn-primary">Volver</a>
+                    <button type="submit" class="bi bi-floppy btn btn-success">Guardar</button>
                 </div>
-
-                <div class="btn align-self-center">
-                    <button type="submit" class="bi bi-floppy btn btn-outline-success">Guardar <i class="oi oi-document" /></button>
-                
-                </div>
-
-                <div>
-                </div>
-
             </div>
-
         </div>
     </div>
 </EditForm>
@@ -113,45 +96,74 @@
     { 
         sentencias = await sentenciaService.Listar(p => true);
         demandas = await demandaService.Listar(p => true);
-
     }
 
     public async Task BuscarUsuario()
     {
-        
-        if (string.IsNullOrEmpty(Usuario.Cedula.ToString()))
+        var users = UserManager.Users.ToList();
+        var user = users.FirstOrDefault(u => u.Cedula == Usuario.Cedula);
+        if ( user is null)
         {
             Usuario.Nombre = string.Empty;
             Usuario.Apellido = string.Empty;
             Usuario.UserName = string.Empty;
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "No se encuentra ese usuario",
+                    Duration = 3_000
+                };
+            notificationService.Notify(mensaje);
             return;
         }
-        var users = UserManager.Users.ToList();
-        var user = users.FirstOrDefault(u => u.Cedula == Usuario.Cedula);
-        
-        Usuario = new ApplicationUser
+        else
         {
-            Cedula = user.Cedula,
-            Nombre = user.Nombre,
-            Apellido = user.Apellido,
-            UserName = user.UserName
-        };
-        
+            expediente.Id = user.Id;
+            Usuario = new ApplicationUser
+                {
+                    Cedula = user.Cedula,
+                    Nombre = user.Nombre,
+                    Apellido = user.Apellido,
+                    UserName = user.UserName
+                };
+            var mensaje2 = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Error",
+                    Detail = "Encontrado Correctamente",
+                    Duration = 3_000
+                };
+            notificationService.Notify(mensaje2);
+        }
     }
-    
+
     public async Task Guardar()
     {
         var guardo = await expedienteService.Save(expediente);
-
-        var users = UserManager.Users.ToList();
-        var user = users.FirstOrDefault(u => u.Cedula == Usuario.Cedula);
-        // user.ExpedienteId = expediente.ExpedienteId;
-        await UserManager.UpdateAsync(user);
-
-        if (guardo)
+        if (!guardo)
         {
-            Nuevo();  
-            Usuario= new ApplicationUser();
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "No se ha guardado correctamente",
+                    Duration = 3_000
+                };
+            notificationService.Notify(mensaje);
+        }
+        else
+        {
+            var mensaje2 = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Error",
+                    Detail = "Se ha guardado correctamente",
+                    Duration = 3_000
+                };
+            notificationService.Notify(mensaje2);
+            Nuevo();
+            Usuario = new ApplicationUser();
         }
     }
 
