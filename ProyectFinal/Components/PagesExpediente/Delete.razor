@@ -6,7 +6,7 @@
 @inject TipoDemandaServices demandasServices
 @rendermode InteractiveServer
 <PageTitle>Ticket</PageTitle>
-<EditForm Model="expediente" OnValidSubmit="Guardar">
+<EditForm Model="expediente" OnValidSubmit="Eliminar">
     <DataAnnotationsValidator />
 
     <div class="container">
@@ -98,7 +98,7 @@
         demandas = await demandaService.Listar(p => true);
     }
 
-    public async Task Guardar()
+    public async Task Eliminar()
     {
         var guardo = await expedienteService.DeleteExpediente(ExpedienteId);
         if (guardo)

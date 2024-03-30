@@ -15,5 +15,8 @@ namespace Share.Models
         public string? Nombre { get; set; }
         [Required(ErrorMessage = "Introduce un Apellido")]
         public string? Apellido { get; set; }
+
+        
+        public DateTime FechaCreacion { get; set; }
     }
 }

@@ -1,0 +1,99 @@
+﻿@page "/DeleteAlguacil/{AlguacilId:int}"
+
+@rendermode InteractiveServer
+@inject NotificationService notificationService
+@inject AlguacilServices alguacilService
+@attribute [StreamRendering]
+
+<RadzenNotification />
+
+<EditForm Model="Alguacil" OnValidSubmit="Eliminar">
+    <DataAnnotationsValidator />
+
+
+
+    <div class="container-fluid">
+        <div class="card shadow-lg w-50 mx-auto">
+            <div class="card-header" style="background-color: #012E40;">
+                <h3 class="text-center text-white">Registro Alguacil</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="fw-bold" for="Nombre">Nombre:</label>
+                                <InputText @bind-Value="Alguacil.Nombre" class="form-control" readonly />
+                                <ValidationMessage For="@(()=>Alguacil.Nombre)" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="fw-bold" for="Apellido">Apellido:</label>
+                                <InputText @bind-Value="Alguacil.Apellido" class="form-control" readonly />
+                                <ValidationMessage For="@(()=>Alguacil.Apellido)" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="fw-bold" for="FechaCreacion">Fecha Creación:</label>
+                                <InputDate @bind-Value="Alguacil.FechaCreacion" class="form-control" readonly />
+                                <ValidationMessage For="@(()=>Alguacil.FechaCreacion)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="IndexAudiencia" class="btn btn-secondary">Atrás</a>
+                    <button type="submit" class="bi bi-floppy btn btn-outline-danger">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+
+@code {
+
+    [Parameter]
+    public int AlguacilId { get; set; }
+    public Alguaciles Alguacil { get; set; } = new Alguaciles();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Alguacil = await alguacilService.GetAlguacil(AlguacilId);
+        
+    }
+
+    public async Task Eliminar()
+    {
+        var guardado = await alguacilService.DeleteAlguacil(AlguacilId);
+        if (!guardado)
+        {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "No se ha guardado correctamente",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensaje);
+        }
+        else
+        {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Éxito",
+                    Detail = "Se ha Elimnado correctamente",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensaje);
+            Alguacil = new Alguaciles();
+        }
+
+    }
+}

@@ -1,19 +1,21 @@
-﻿@page "/CreateAlguacil"
+﻿@page "/EditAlguacil/{AlguacilId:int}"
 
+@rendermode InteractiveServer
 @inject NotificationService notificationService
 @inject AlguacilServices alguacilService
 @attribute [StreamRendering]
-@rendermode InteractiveServer
 
 <RadzenNotification />
 
-<EditForm Model="Alguacil" OnValidSubmit="Guardar">
+<EditForm Model="Alguacil" OnValidSubmit="Editar">
     <DataAnnotationsValidator />
+
+
 
     <div class="container-fluid">
         <div class="card shadow-lg w-75 mx-auto mt-5">
             <div class="card-header bg-primary text-white">
-                <h3 class="text-center">Registro de Alguacil</h3>
+                <h3 class="text-center">Editar Alguacil</h3>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -43,7 +45,7 @@
             <div class="card-footer">
                 <div class="d-flex justify-content-end">
                     <a href="IndexAudiencia" class="btn btn-secondary me-2">Atrás</a>
-                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <button type="submit" class="btn btn-success">Editar</button>
                 </div>
             </div>
         </div>
@@ -51,23 +53,30 @@
 </EditForm>
 
 
+
 @code {
+
+    [Parameter]
+    public int AlguacilId { get;set; }
     public Alguaciles Alguacil { get; set; } = new Alguaciles();
+
 
     protected override async Task OnInitializedAsync()
     {
-        Alguacil.FechaCreacion = DateTime.Now;
+        Alguacil = await alguacilService.GetAlguacil(AlguacilId);
+
     }
-        public async Task Guardar()
+
+    public async Task Editar()
     {
-        var guardado = await alguacilService.Save(Alguacil);
+        var guardado = await alguacilService.Edit(Alguacil);
         if (!guardado)
         {
             var mensaje = new NotificationMessage
                 {
                     Severity = NotificationSeverity.Error,
                     Summary = "Error",
-                    Detail = "No se ha guardado correctamente",
+                    Detail = "No se ha Editado correctamente",
                     Duration = 4_000
                 };
             notificationService.Notify(mensaje);
@@ -78,7 +87,7 @@
                 {
                     Severity = NotificationSeverity.Success,
                     Summary = "Éxito",
-                    Detail = "Se ha guardado correctamente",
+                    Detail = "Se ha Editado correctamente",
                     Duration = 4_000
                 };
             notificationService.Notify(mensaje);
