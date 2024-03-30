@@ -1,0 +1,101 @@
+﻿@page "/DeleteSentencia/{SentenciaId:int}"
+
+@inject NotificationService notificationService
+@inject SentenciaServices sentenciaService
+@inject TiposResolucionServices resolucionService
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+
+<RadzenNotification />
+
+<EditForm Model="sentencia" OnValidSubmit="Eliminar">
+    <DataAnnotationsValidator />
+
+    <div class="container-fluid">
+        <div class="card shadow-lg w-75 mx-auto mt-5">
+            <div class="card-header bg-primary text-white">
+                <h3 class="text-center">Eliminar sentencia</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="fw-bold" for="Nombre">Nombre Ministerio:</label>
+                            <InputText @bind-Value="sentencia.NombreMinisterio" class="form-control" readonly />
+                            <ValidationMessage For="@(()=>sentencia.NombreMinisterio)" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="fw-bold" for="Apellido"> Tipo Resolucion:</label>
+                            <InputSelect @bind-Value="sentencia.ResolucionId" class="form-control" readonly>
+                                <option value="">Seleccione una opcion</option>
+                                @foreach (var item in ListaResolucion)
+                                {
+                                    var tipoResolucion = resolucionService.GetResolucion(item.ResolucionId);
+                                    <option value="@item.ResolucionId">@tipoResolucion</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="fw-bold" for="FechaCreacion">Fecha Creación:</label>
+                            <InputDate @bind-Value="sentencia.FechaCreacion" class="form-control" readonly />
+                            <ValidationMessage For="@(()=>sentencia.FechaCreacion)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-end">
+                    <a href="IndexAudiencia" class="btn btn-secondary me-2">Atrás</a>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+    [Parameter]
+    public int SentenciaId { set; get; }
+    public Sentencias sentencia { get; set; } = new Sentencias();
+    public List<TipoResoluciones> ListaResolucion = new List<TipoResoluciones>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        sentencia = await sentenciaService.GetSentencia(SentenciaId);
+        ListaResolucion = await resolucionService.GetResoluciones();
+    }
+    public async Task Eliminar()
+    {
+        var guardado = await sentenciaService.Delete(SentenciaId);
+        if (!guardado)
+        {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "No se ha guardado correctamente",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensaje);
+        }
+        else
+        {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Éxito",
+                    Detail = "Se ha Eliminado correctamente",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensaje);
+            sentencia = new Sentencias();
+        }
+
+    }
+}
