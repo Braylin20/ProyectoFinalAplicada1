@@ -2,15 +2,23 @@
 .navbar-brand {
     width: 200px;
 }
+.LogoutImagen {
+    width: 37px;
+}
+.UserImagen,.ConfigImagen {
+    width: 37px;
+    margin: 0 8px;
+}
+.Icon {
+    width: 30px;
+    height: 28px;
+}
 
-/*
-.custom-dropdown {
-    border: none;
-    box-shadow: none;
-    padding: 0.5rem 1rem;
+.nav-item{
+    padding: 0px 0px 0px 0px;
+    margin: 0px;
 
-}*/
-
+}
 
 .navbar {
     background-color: #012E40;
@@ -47,7 +55,7 @@
     position: relative;
 }
 
-    .nav-link:hover {
+    .nav-link:hover{
         color: #000;
     }
 

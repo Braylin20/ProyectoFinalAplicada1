@@ -1,0 +1,206 @@
+﻿@page "/EditUser/{Id:guid}"
+@inject EmpleadoServices empleadosServices
+@inject TiposTelefonosServices TiposTelefonosServices
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ApplicationDbContext context
+@inject NotificationService notificationService
+@inject UserManager<ApplicationUser> userManager
+@inject ApplicationUserServices ApplicationUserServices
+@rendermode InteractiveServer
+<RadzenNotification />
+
+<EditForm Model="User" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    
+    <div class="container-fluid ">
+        <div class="card shadow-lg w-50 mx-auto ">
+            <div class="card-header" style="background-color: #012E40">
+                <h3 class="text-center text-white">Editar Tel&eacute;fono</h3>
+            </div>
+            <div class="row">
+               
+                <div class="card-body">
+                    <div class="row">
+                        <div class="">
+                            <div class="card-body border border-primary">
+                                <div>
+                                    <h3>Registro Tel&eacute;fono</h3>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 ">
+                                        <label>Tipos de Tel&eacute;fono</label>
+                                        <div class="input-group">
+                                            <InputSelect @bind-Value="TelefonoDetalle.TipoId" class="form-select">
+                                                <option value="">Seleccione un tipo</option>
+                                                @foreach(var item in TiposTelefonos)
+                                                {
+                                                    <option value="@item.TipoTelefonoId">@item.Descripcion</option>
+                                                }
+                                            </InputSelect>
+                                            <button type="button" class="btn btn-success bi-floppy-fill" @onclick="AgregarTelefono">Agregar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-8">
+                                        <label class="mt-3">Numero de cedula</label>
+                                        <InputText @bind-Value="TelefonoDetalle.Telefono" class="form-control" />
+                                    </div>
+                                </div>
+                                <hr clas="border-bottom" />
+                                <div>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>N&uacute;mero</th>
+                                                <th>Tipo</th>
+                                                <th>Eliminar</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in User.TelefonoDetalles)
+                                            {
+                                                Task.Delay(4000);
+                                                var tipo = User.TelefonoDetalles.FirstOrDefault(t=>t.TipoId == item.TipoId);
+                                                tipo.TipoTelefono = TiposTelefonos.FirstOrDefault(t=>t.TipoTelefonoId == tipo.TipoId);
+                                                var tipoTelefono = tipo.TipoTelefono;
+                                                <tr>
+                                                    <td>@item.Telefono</td>
+
+                                                    @if(tipoTelefono != null)
+                                                    {
+                                                        <td>@tipoTelefono.Descripcion</td>
+                                                    }
+                                                    
+                                                    <td>
+                                                        <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverTelefono(item))" />
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="btn-group">
+                    <a href="IndexDemanda" class="btn btn-secondary">Atr&aacute;s</a>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+    public TelefonoDetalles TelefonoDetalle { get; set; } = new();
+    public List<TipoTelefonos> TiposTelefonos { get; set; } = new List<TipoTelefonos>();
+    public ApplicationUser User { get; set; } = new ApplicationUser();
+    private AuthenticationState authenticationState;
+    protected override async Task OnInitializedAsync()
+    {
+        User = await ApplicationUserServices.GetUser(Id.ToString());
+        TiposTelefonos = await TiposTelefonosServices.Listar(t => true);
+        authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+    }
+    public async Task RemoverTelefono(TelefonoDetalles detalle)
+    {
+        var detalleEncontrado = User.TelefonoDetalles.FirstOrDefault(v => v.DetalleId == detalle.DetalleId);
+        if (detalleEncontrado != null)
+        {
+            User.TelefonoDetalles.Remove(detalle);
+        }
+    }
+    public async Task AgregarTelefono()
+    {
+
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+
+        var user = authenticationState.User;
+
+
+        if (user.Identity.IsAuthenticated)
+        {
+
+            var applicationUser = user.Identity.Name;
+            var usuarioAutenticado = context.Users.FirstOrDefault(u => u.UserName == applicationUser);
+
+            var nuevoTelefono = new TelefonoDetalles
+                {
+
+                    TipoId = TelefonoDetalle.TipoId,
+                    Telefono = TelefonoDetalle.Telefono,
+
+                    Id = applicationUser
+                };
+
+            if (User.TelefonoDetalles == null)
+            {
+                User.TelefonoDetalles = new List<TelefonoDetalles>();
+            }
+            if (usuarioAutenticado.TelefonoDetalles.FirstOrDefault(u => u.Telefono == TelefonoDetalle.Telefono) == null)
+            {
+                User.TelefonoDetalles.Add(nuevoTelefono);
+            }
+            else
+            {
+                var mensaje = new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Error,
+                        Summary = "Error",
+                        Detail = "El teléfono ya existe",
+                        Duration = 4_000
+                    };
+                notificationService.Notify(mensaje);
+                TelefonoDetalle = new TelefonoDetalles();
+            }
+
+        }
+
+    }
+    public async Task Guardar()
+    {
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authenticationState.User;
+        var applicationUser = user.Identity.Name;
+        var usuarioActualizar = context.Users.FirstOrDefault(u => u.UserName == applicationUser);
+        usuarioActualizar.TelefonoDetalles = User.TelefonoDetalles;
+        var guardado = await ApplicationUserServices.Update(usuarioActualizar);
+        if (!guardado)
+        {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "No se ha guardado correctamente",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensaje);
+        }
+        else
+        {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Éxito",
+                    Detail = "Se ha guardado correctamente",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensaje);
+            User = new ApplicationUser();
+            TelefonoDetalle = new TelefonoDetalles();
+        }
+    }
+    public bool Validar()
+    {
+        return User.TelefonoDetalles
+        .Any(t => t.Telefono == TelefonoDetalle.Telefono);
+    }
+}

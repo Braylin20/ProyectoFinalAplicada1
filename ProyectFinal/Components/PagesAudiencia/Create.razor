@@ -9,7 +9,7 @@
 <RadzenNotification />
 
 
-@if(ListaDemandas is null)
+@if(ListaAudiencias is null)
 {
     <p>Cargando...</p>
 }
@@ -43,8 +43,13 @@ else
                 </div>
                 <div class="card-footer">
                     <div class="btn-group">
-                        <a href="IndexAudiencia" class="btn btn-secondary">Atr&aacute;s</a>
-                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <a href="IndexAudiencia" class="btn text-white" style=" background-color: #012E40">
+                            <img src="Back.svg" style="width:25px; " />Atr&aacute;s
+                        </a>
+                        
+                        <button type="submit" class="btn btn-success">
+                           <img src="Save.svg" style="width:25px"/> Guardar
+                        </button>
                     </div>
                 </div>
             </div>
@@ -56,16 +61,27 @@ else
 
 @code {
     public Audiencias Audiencia { get; set; } = new Audiencias();
-    private List<Demandas>? ListaDemandas { get; set; } = new List<Demandas>();
+    private List<Audiencias>? ListaAudiencias { get; set; } = new List<Audiencias>();
 
     protected override async Task OnInitializedAsync()
     {
-        // await Task.Delay(1000);
-        // ListaDemandas = await demandaServices.GetDemandas();
+        ListaAudiencias = await audienciaServices.Listar(a => true);
         Audiencia.FechaAudiencia = DateTime.Now;
     }
     public async Task Guardar()
     {
+        if (ListaAudiencias!.FirstOrDefault(a => a.FechaAudiencia.ToString("dd/MM/yyyy") == Audiencia.FechaAudiencia.ToString("dd/MM/yyyy")) != null)
+        {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "Ya existe una audiencia en esa fecha",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensaje);
+            return;
+        }
         var guardado = await audienciaServices.Save(Audiencia);
         if(!guardado)
         {
@@ -89,6 +105,7 @@ else
                 };
             notificationService.Notify(mensaje);
             Audiencia = new Audiencias();
+            Audiencia.FechaAudiencia = DateTime.Now;
         }
 
     }

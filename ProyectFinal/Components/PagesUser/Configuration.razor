@@ -1,0 +1,29 @@
+﻿@page "/Configuration"
+
+@inject NavigationManager NavigationManager
+
+<a href="/EditUser/@User.Id" class="btn btn-primary">presiona</a>
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ApplicationDbContext context
+@code {
+    private AuthenticationState authenticationState;
+    public ApplicationUser User { get; set; } = new ApplicationUser();
+
+    protected override async Task OnInitializedAsync()
+    {
+        authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authenticationState.User;
+        var applicationUser = user.Identity.Name;
+        var usuarioAutenticado = context.Users.FirstOrDefault(u => u.UserName == applicationUser);
+        User.Id = usuarioAutenticado.Id;
+    }
+
+    public void SetUser()
+    {
+        
+
+    }
+}
+
+

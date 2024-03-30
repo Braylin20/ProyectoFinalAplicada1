@@ -1,12 +1,16 @@
 ﻿@implements IDisposable
 
 @inject NavigationManager NavigationManager
-
+@inject AuthenticationStateProvider AuthenticationStateProvider
 <AuthorizeView>
     <Authorized>
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
-                <img class="navbar-brand me-auto" src="Logo.png">
+                <a href="">
+                    <img class="navbar-brand me-auto" type="button"  src="LogoEmpresa.png">
+                </a>
+
+                
                 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
                     <div class="offcanvas-header">
                         <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
@@ -15,28 +19,42 @@
                     <div class="offcanvas-body">
                         <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
                             <li class="nav-item ">
-                                <a class="nav-link  text-white" href="" role="button">Home</a>
+                                    
+                                <a class="nav-link  text-white" href="" role="button">
+                                    <img src="Home.svg" class="Icon" type="button" href="" />Home
+                                </a>
+
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mx-lg-2 text-white" href="/IndexDemanda">Demandas</a>
+                                <a class="nav-link text-white" href="/IndexDemanda">
+                                    <img src="Demanda.svg" class="Icon" type="button" href="/IndexDemanda" />Demandas
+                                </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link mx-lg-2 text-white" href="IndexAudiencia">Audiencia</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mx-lg-2 text-white" href="IndexEmpleado">Empleado</a>
+                                <a class="nav-link text-white" href="IndexEmpleado">
+                                    <img src="Empleado.svg" class="Icon" type="button" href="/IndexDemanda" />Empleado
+                                </a>
                             </li>
                         </ul>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Launch demo modal
-                </button>
+                <AntiforgeryToken />
+                <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                <a href="Configuration">
+
+                    <img type="button" src="Configuration.svg" class="ConfigImagen" />
+                </a>
+                <img type="button" src="User.svg" class="UserImagen" data-bs-toggle="modal" data-bs-target="#exampleModal" />
+               
             </div>
         </nav>
     </Authorized>
 </AuthorizeView>
 
+<h3>@User</h3>
 
 
 <!-- Modal -->
@@ -44,19 +62,18 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <h3 class="modal-title fs-5" id="exampleModalLabel">Cerrar Sesi&oacute;n</h3>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <form action="Account/Logout" method="post">
                     <AntiforgeryToken />
                     <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                    <button type="submit" class="nav-link login-button">
-                        <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span>  Logout
+                    <button type="submit"  class="nav-link btn">
+                        <img src="Logout.svg" type="submit" class="LogoutImagen" />
                     </button>
                 </form>
             </div>
@@ -66,12 +83,17 @@
 
 @code {
     private string? currentUrl;
-
-    protected override void OnInitialized()
+    public string? User { get; set; }
+    private AuthenticationState authenticationState;
+    protected async Task OnInitializedAsync()
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
+        authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        SetUser();
     }
+    public void SetUser() => User = authenticationState!.User.Identity!.Name;
+    
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
     {

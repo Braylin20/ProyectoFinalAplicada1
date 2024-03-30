@@ -40,8 +40,11 @@
                             <td>@item.FechaAudiencia.ToString("dd/MM/yyyy")</td>
                             <td>@item.Comentario</td>
                             <td>
-                                <a href="/EditAudiencia/@item.AudienciaId" class="btn btn-primary bi-box-arrow-up-right"></a>
-                                <a href="/ViewAudiencia/@item.AudienciaId" class="btn btn-warning bi bi-info-square"></a>
+                                <a href="/EditAudiencia/@item.AudienciaId" >
+                                    <img src="Edit.svg" style="width: 20px;"/>
+                                </a>
+                                <a href="/DeleteAudiencia/@item.AudienciaId" class="btn btn-danger "></a>
+                                <a href="/ViewAudiencia/@item.AudienciaId" class="btn btn-warning "></a>
                             </td>
                         </tr>
                     }

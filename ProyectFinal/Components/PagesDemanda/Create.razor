@@ -171,7 +171,6 @@
     public DemandasDetalle demandasDetalle = new DemandasDetalle();
     public NinoDetalle NinoDetalle = new NinoDetalle();
     public ApplicationUser User = new ApplicationUser();
-    // public Niños Nino = new Niños();
     public List<Alguaciles> Alguaciles { get; set; } = new List<Alguaciles>();
     public List<EstadosDemandas> EstadoDemandas { get; set; } = new List<EstadosDemandas>();
     public List<Audiencias> Audiencias { get; set; } = new List<Audiencias>();
@@ -185,7 +184,6 @@
         EstadoDemandas = await estadoServices.Listar(e =>true);
         Audiencias = await audienciaServices.Listar(e =>true);
         TiposDemandas = await tipoDemandaServices.Listar(e => true);
-        // Nino.FechaNacimiento = DateTime.Now;
         authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
     }
