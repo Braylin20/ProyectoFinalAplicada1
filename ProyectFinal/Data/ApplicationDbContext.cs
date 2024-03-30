@@ -20,9 +20,7 @@ namespace ProyectFinal.Data
         public DbSet<Alguaciles> Alguaciles { get; set; }
         public DbSet<UsuarioDetalle> UsuarioDetalles { get; set; }
         public DbSet<NinoDetalle> NinoDetalles { get; set; }
-        
-
-
-
+        public DbSet<TelefonoDetalles> TelefonoDetalles { get; set; }
+        public DbSet<TipoTelefonos> TipoTelefonos { get; set; }
     }
 }
