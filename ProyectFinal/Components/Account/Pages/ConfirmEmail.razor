@@ -48,8 +48,25 @@
             var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(Code));
             var result = await UserManager.ConfirmEmailAsync(user, code);
             statusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
-            await Task.Delay(3000);
-            RedirectManager.RedirectTo("Account/Login");
+            var rol = await UserManager.GetRolesAsync(user);
+
+            foreach (var item in rol)
+            {
+                if (item == "Empleado" || item == "Juez")
+                {
+                    
+                    await Task.Delay(3000);
+                    RedirectManager.RedirectTo("CreateEmpleado");
+                }
+
+                else
+                    {
+                        await Task.Delay(3000);
+                        RedirectManager.RedirectTo("Account/Login");
+                    }
+
+            }
+           
         }
     }
 }
