@@ -1,5 +1,5 @@
 ﻿@page "/DeleteAlguacil/{AlguacilId:int}"
-
+@attribute [Authorize(Roles = "Admin,Empleado")]
 @rendermode InteractiveServer
 @inject NotificationService notificationService
 @inject AlguacilServices alguacilService
