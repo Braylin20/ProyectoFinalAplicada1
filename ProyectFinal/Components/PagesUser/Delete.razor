@@ -10,7 +10,7 @@
 @rendermode InteractiveServer
 <RadzenNotification />
 
-<EditForm Model="User" OnValidSubmit="Guardar">
+<EditForm Model="User" OnValidSubmit="DeleteUser">
     <DataAnnotationsValidator />
 
     <div class="container-fluid ">
@@ -23,10 +23,10 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6 ">
-                            <p class="fw-bold">@User.Nombre</p>
-                            <p class="fw-bold">@User.Apellido</p>
-                            <p class="fw-bold">@User.Cedula</p>
-                            <p class="fw-bold">@User.UserName</p>
+                            <p class="fw-bold">Nombre: @User.Nombre</p>
+                            <p class="fw-bold">Apellido @User.Apellido</p>
+                            <p class="fw-bold">C&eacute;dula @User.Cedula</p>
+                            <p class="fw-bold">Gmail: @User.UserName</p>
                         </div>
                     </div>
                     <div class="row">
@@ -43,8 +43,6 @@
                                             <tr>
                                                 <th>N&uacute;mero</th>
                                                 <th>Tipo</th>
-                                                <th>Eliminar</th>
-
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -61,10 +59,6 @@
                                                     {
                                                         <td>@tipoTelefono.Descripcion</td>
                                                     }
-
-                                                    <td>
-                                                        <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverTelefono(item))" />
-                                                    </td>
                                                 </tr>
                                             }
                                         </tbody>
@@ -84,8 +78,7 @@
                                         <thead>
                                             <tr>
                                                 <th>N&uacute;mero</th>
-                                                <th>Tipo</th>
-                                                <th>Eliminar</th>
+                                                <th>G&aacute;nero</th>
 
                                             </tr>
                                         </thead>
@@ -97,9 +90,9 @@
                                                 {
                                                     <tr>
                                                         <td>@nombre.NombreNino</td>
+                                                        <td>@nombre.Genero</td>
                                                     </tr>
                                                 }
-                                                
                                             }
                                         </tbody>
                                     </table>
@@ -112,7 +105,7 @@
             <div class="card-footer">
                 <div class="btn-group">
                     <a href="IndexUser" class="btn btn-secondary">Atr&aacute;s</a>
-                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
                 </div>
             </div>
         </div>
@@ -129,39 +122,53 @@
     public ApplicationUser User { get; set; } = new ApplicationUser();
     private AuthenticationState authenticationState;
     public Demandas Demanda { get; set; } = new Demandas();
+
     protected override async Task OnInitializedAsync()
     {
         ListaDemandas = await DemandaServices.GetDemandas();
         User = await ApplicationUserServices.GetUser(Id.ToString());
 
-        var demandas = ListaDemandas.Where(d => d.Cedula == User.Cedula).ToList();
+        var demandas =ListaDemandas.Where(d => d.Cedula == User.Cedula).ToList();
         ListaDemandas = demandas;
         TiposTelefonos = await TiposTelefonosServices.Listar(t => true);
         authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
     }
-    public async Task RemoverTelefono(TelefonoDetalles detalle)
+    public async Task DeleteUser()
     {
-        var detalleEncontrado = User.TelefonoDetalles.FirstOrDefault(v => v.DetalleId == detalle.DetalleId);
-        if (detalleEncontrado != null)
+
+        var userRemover = await ApplicationUserServices.Delete(User.Id);
+        if (!userRemover)
         {
-            User.TelefonoDetalles.Remove(detalle);
+            var mensaje = new NotificationMessage
+            {
+                Severity = NotificationSeverity.Error,
+                Summary = "Error",
+                Detail = "No se ha eliminado correctamente",
+                Duration = 4_000
+            };
+            notificationService.Notify(mensaje);
+        }
+        else
+        {
+            var mensaje = new NotificationMessage
+            {
+                Severity = NotificationSeverity.Success,
+                Summary = "Éxito",
+                Detail = "Elimiando correctamente",
+                Duration = 4_000
+            };
+            notificationService.Notify(mensaje);
+            User = new ApplicationUser();
         }
     }
     public async Task AgregarTelefono()
     {
-
         var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-
-
         var user = authenticationState.User;
-
-
         if (user.Identity.IsAuthenticated)
         {
-
             var applicationUser = user.Identity.Name;
             var usuarioAutenticado = context.Users.FirstOrDefault(u => u.UserName == applicationUser);
-
             var nuevoTelefono = new TelefonoDetalles
                 {
 
@@ -191,45 +198,43 @@
                 notificationService.Notify(mensaje);
                 TelefonoDetalle = new TelefonoDetalles();
             }
-
-        }
-
-    }
-    public async Task Guardar()
-    {
-        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authenticationState.User;
-        var applicationUser = user.Identity.Name;
-        var usuarioActualizar = context.Users.FirstOrDefault(u => u.UserName == applicationUser);
-        var guardado = await ApplicationUserServices.Delete(usuarioActualizar.Id);
-        if (!guardado)
-        {
-            var mensaje = new NotificationMessage
-                {
-                    Severity = NotificationSeverity.Error,
-                    Summary = "Error",
-                    Detail = "No se ha guardado correctamente",
-                    Duration = 4_000
-                };
-            notificationService.Notify(mensaje);
-        }
-        else
-        {
-            var mensaje = new NotificationMessage
-                {
-                    Severity = NotificationSeverity.Success,
-                    Summary = "Éxito",
-                    Detail = "Se ha guardado correctamente",
-                    Duration = 4_000
-                };
-            notificationService.Notify(mensaje);
-            User = new ApplicationUser();
-            TelefonoDetalle = new TelefonoDetalles();
         }
     }
-    public bool Validar()
-    {
-        return User.TelefonoDetalles
-        .Any(t => t.Telefono == TelefonoDetalle.Telefono);
-    }
+    // public async Task Guardar()
+    // {
+    //     var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+    //     var user = authenticationState.User;
+    //     var applicationUser = user.Identity.Name;
+    //     var usuarioActualizar = context.Users.FirstOrDefault(u => u.UserName == applicationUser);
+    //     var guardado = await ApplicationUserServices.Delete(usuarioActualizar.Id);
+    //     if (!guardado)
+    //     {
+    //         var mensaje = new NotificationMessage
+    //             {
+    //                 Severity = NotificationSeverity.Error,
+    //                 Summary = "Error",
+    //                 Detail = "No se ha guardado correctamente",
+    //                 Duration = 4_000
+    //             };
+    //         notificationService.Notify(mensaje);
+    //     }
+    //     else
+    //     {
+    //         var mensaje = new NotificationMessage
+    //             {
+    //                 Severity = NotificationSeverity.Success,
+    //                 Summary = "Éxito",
+    //                 Detail = "Se ha guardado correctamente",
+    //                 Duration = 4_000
+    //             };
+    //         notificationService.Notify(mensaje);
+    //         User = new ApplicationUser();
+    //         TelefonoDetalle = new TelefonoDetalles();
+    //     }
+    // }
+    // public bool Validar()
+    // {
+    //     return User.TelefonoDetalles
+    //     .Any(t => t.Telefono == TelefonoDetalle.Telefono);
+    // }
 }
