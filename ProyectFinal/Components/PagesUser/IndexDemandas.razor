@@ -1,0 +1,125 @@
+﻿@page "/IndexDemandaUser"
+
+@rendermode InteractiveServer
+@inject DemandaServices demandaServices
+@inject TipoDemandaServices tipoDemandaServices
+@inject AlguacilServices alguacilServices
+@inject AudienciasServices audienciasServices
+@inject UserManager<ApplicationUser> userManager
+@inject EstadoServices estadosDemandasServices
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime JSRuntime
+<div class="card shadow-lg">
+    <div class="card-header" style="background-color: #012E40">
+        <h3 class="text-white text-center">Index Demanda</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-4">
+                <label>Filtrar Por</label>
+                <InputSelect @bind-Value="Opcion" class="form-select">
+                    <option value="1">DemandaId</option>
+                    <option value="2">Fecha</option>
+                    <option value="4">Todo</option>
+                </InputSelect>
+            </div>
+
+            <div class="justify-content-end d-flex mb-4">
+                <a href="CreateDemanda" class="btn btn-primary bi-floppy-fill"><img src="/Create.svg" style="width: 30px;" />Create</a>
+               
+            </div>
+
+            <table class="table table-bordered text-center">
+                <thead>
+                    <tr>
+                        <th class="table-head text-white" style="background-color: #012E40">Id</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Tipo de Demanda</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Estado</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Fecha de Audiencia</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Archivo</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Foto de C&eacute;dula</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ListaDemandasUser)
+                    {
+                         TipoDemanda= TiposDemadas.FirstOrDefault(t=> t.TiposDemandasId == item.TiposDemandasId);
+                         Audiencia = Audiencias.FirstOrDefault(t=> t.AudienciaId == item.AudienciaId);
+                         Estado = Estados.FirstOrDefault(t=> t.EstadoId == item.EstadoId);
+
+                        <tr>
+                            <td>@item.DemandaId</td>
+                            <td>
+                                @if(TipoDemanda != null)
+                                    @TipoDemanda.TipoDemanda
+                            </td>
+                            <td>
+                                @if (Estado != null)
+                                    @Estado.Estado
+                            </td>
+                            <td>
+                                @if (Audiencia != null)
+                                    @Audiencia.FechaAudiencia.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                @if (item.Documento != null && item.Documento.Length > 0)
+                                {
+                                   
+                                    <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.Documento)" download="Archivo.pdf" ><img src="/Download.svg" style="width: 35px;" /></a>
+                                }
+                            </td>
+                            <td>
+                                @if (item.FotoCedula != null && item.FotoCedula.Length > 0)
+                                {
+                                   
+                                    <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.FotoCedula)" download="Foto.png" ><img src="/Download.svg" style="width: 35px;" /></a>
+                                }                        
+                            </td>
+                            <td>
+                                <a href="/EditDemanda/@item.DemandaId">
+                                    <img src="Edit.svg" style="width: 30px;" />
+                                </a>
+                                <a href="/DeleteDemanda/@item.DemandaId">
+                                    <img src="Delete.svg" style="width: 35px;" />
+                                </a>
+                             
+                               
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    public TiposDemandas? TipoDemanda { get; set; } = new TiposDemandas();
+    public Audiencias? Audiencia { get; set; } = new Audiencias();
+    public EstadosDemandas? Estado { get; set; } = new EstadosDemandas();
+    public Demandas? demandas = new Demandas();
+    public List<Demandas>? ListaDemandas = new List<Demandas>();
+    public List<Demandas>? ListaDemandasUser = new List<Demandas>();
+    public List<TiposDemandas>? TiposDemadas = new List<TiposDemandas>();
+    public List<Audiencias>? Audiencias = new List<Audiencias>();
+    public List<EstadosDemandas>? Estados = new List<EstadosDemandas>();
+    public int Opcion { get; set; }
+    private AuthenticationState authenticationState;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        ListaDemandas = await demandaServices.GetDemandas();
+        TiposDemadas = await tipoDemandaServices.Listar(t => true);
+        Audiencias = await audienciasServices.Listar(t => true);
+        Estados = await estadosDemandasServices.Listar(t => true);
+        authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await userManager.FindByEmailAsync(authenticationState.User.Identity.Name);
+        ListaDemandasUser = ListaDemandas.Where(d => d.Cedula == user.Cedula).ToList();
+
+
+    }
+    
+
+}
