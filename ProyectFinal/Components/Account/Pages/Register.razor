@@ -1,7 +1,4 @@
 ﻿@page "/Account/Register"
-@using System.Collections.ObjectModel
-
-
 @attribute [AllowAnonymous]
 @inject UserManager<ApplicationUser> UserManager
 @inject RoleManager<IdentityRole> RoleManager
@@ -11,171 +8,121 @@
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
-@inject EmpleadoServices empleadosServices
-@inject TiposTelefonosServices TiposTelefonosServices
-@* @rendermode InteractiveServer *@
 <PageTitle>Register</PageTitle>
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
-                <DataAnnotationsValidator/>
-                <div class="card shadow-lg border-0 rounded-3">
-                    <div class="card-header bg-primary text-white text-center">
-                        <h2 class="fw-bold">Register</h2>
-                        <img src="PoderJudicial.png" class="img-fluid" style="width:150px;" />
-                    </div>
-                    <div class="card-body">
-                            @if (Message != null)
-                            {
-                                <div class="alert alert-danger" role="alert">
-                                @Message
-                                </div>
-                            }
-                            <div class="mb-3">
-                                <label for="inputNombre" class="form-label">Nombre</label>
-                                <InputText @bind-Value="Input.Nombre" class="form-control" id="inputNombre" placeholder="Nombre" />
-                                <ValidationMessage For="() => Input.Nombre" class="text-danger" />
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="inputApellido" class="form-label">Apellido</label>
-                                <InputText @bind-Value="Input.Apellido" class="form-control" id="inputApellido" placeholder="Apellido" />
-                                <ValidationMessage For="() => Input.Apellido" class="text-danger" />
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="inputCedula" class="form-label">Cedula</label>
-                                <InputNumber @bind-Value="Input.Cedula" class="form-control" id="inputCedula" placeholder="C&eacute;dula" />
-                                <ValidationMessage For="() => Input.Cedula" class="text-danger" />
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="inputEmail" class="form-label">Email</label>
-                                <InputText @bind-Value="Input.Email" class="form-control" id="inputEmail" placeholder="name@example.com" />
-                                <ValidationMessage For="() => Input.Email" class="text-danger" />
-                            </div>
-                            <div class="mb-3">
-                                <label for="inputPassword" class="form-label">Password</label>
-                                <InputText type="password" @bind-Value="Input.Password" class="form-control" id="inputPassword" placeholder="Password" />
-                                <ValidationMessage For="() => Input.Password" class="text-danger" />
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="inputConfirmPassword" class="form-label">Confirm Password</label>
-                                <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" id="inputConfirmPassword" placeholder="Confirm Password" />
-                                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
-                            </div>
-
-                            
-                       @*  <div class="card-body border border-primary mb-4">
-                            <div>
-                                <h3>Registro Demandado</h3>
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <label class="fw-bold mb-2">Tippo de tel&eacute;fono</label>
-                                    <div class="input-group">
-                                        <InputSelect @bind-Value="TelefonoDetalle.TipoId" class="form-select mb-2">
-                                            <option value="">Elija una opci&oacute;n</option>
-                                            @foreach (var item in TiposTelefonos)
-                                            {
-                                                <option value="@item.TipoTelefonoId">@item.Descripcion</option>
-                                            }
-                                        </InputSelect>
-                                        <button type="button" class="btn btn-success bi-floppy-fill" @onclick="AgregarTelefono">Agregar</button>
-                                    </div>
-                                   
-                                </div>
-                                
-                            </div>
-                            <div class="row">
-                                <div class="col-6 ">
-                                    <label>Nombre</label>
-                                    <div class="input-group">
-                                        <InputText @bind-Value="TelefonoDetalle.Telefono" class="form-control " />
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <hr clas="border-bottom" />
-                            <div>
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Tipo de </th>
-                                            <th>Valor</th>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var item in Input.TelefonoDetalles)
-                                        {
-                                            <tr>
-                                                <td>@item.TipoTelefono</td>
-                                                <td>@item.Telefono</td>
-                                                <td>
-                                                    <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverTelefono(item))" />
-                                                </td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div> *@
-                        <button type="submit" class="btn btn-primary w-100">Register</button>
-                    </div>
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2 class="fw-bold">Register</h2>
+                    <img src="PoderJudicial.png" class="img-fluid" style="width:150px;" />
                 </div>
-            </EditForm>
+                <div class="card-body">
+                    <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
+                        <ValidationSummary class="alert alert-danger" />
+                        <div class="mb-3">
+                            <label for="inputNombre" class="form-label">Nombre</label>
+                            <InputText @bind-Value="Input.Nombre" class="form-control" id="inputNombre" placeholder="Nombre" />
+                            <ValidationMessage For="() => Input.Nombre" class="text-danger" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputApellido" class="form-label">Apellido</label>
+                            <InputText @bind-Value="Input.Apellido" class="form-control" id="inputApellido" placeholder="Apellido" />
+                            <ValidationMessage For="() => Input.Apellido" class="text-danger" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputCedula" class="form-label">Cedula</label>
+                            <InputNumber @bind-Value="Input.Cedula" class="form-control" id="inputCedula" placeholder="C&eacute;dula" />
+                            <ValidationMessage For="() => Input.Cedula" class="text-danger" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputEmail" class="form-label">Email</label>
+                            <InputText @bind-Value="Input.Email" class="form-control" id="inputEmail" placeholder="name@example.com" />
+                            <ValidationMessage For="() => Input.Email" class="text-danger" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputPassword" class="form-label">Password</label>
+                            <InputText type="password" @bind-Value="Input.Password" class="form-control" id="inputPassword" placeholder="Password" />
+                            <ValidationMessage For="() => Input.Password" class="text-danger" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputConfirmPassword" class="form-label">Confirm Password</label>
+                            <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" id="inputConfirmPassword" placeholder="Confirm Password" />
+                            <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Register</button>
+                    </EditForm>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+@* <div class="row">
+    <div class="col-md-4">
+        <StatusMessage Message="@Message" />
+        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
+            <DataAnnotationsValidator />
+            <h2>Create a new account.</h2>
+            <hr />
+            <ValidationSummary class="text-danger" role="alert" />
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <label for="email">Email</label>
+                <ValidationMessage For="() => Input.Email" class="text-danger" />
+            </div>
+            <div class="form-floating mb-3">
+                <InputNumber type="password" @bind-Value="Input.Cedula" class="form-control" autocomplete="new-password" aria-required="true" placeholder="C&eacute;dula" />
+                <label for="confirm-password">Cedula</label>
+                <ValidationMessage For="() => Input.Cedula" class="text-danger" />
+            </div>
+            <div class="form-floating mb-3">
+                <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <label for="password">Password</label>
+                <ValidationMessage For="() => Input.Password" class="text-danger" />
+            </div>
+            <div class="form-floating mb-3">
+                <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <label for="confirm-password">Confirm Password</label>
+                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+            </div>
 
-
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+        </EditForm>
+    </div>
+    <div class="col-md-6 col-md-offset-2">
+        <section>
+            <h3>Use another service to register.</h3>
+            <hr />
+            <ExternalLoginPicker />
+        </section>
+    </div>
+</div> *@
 @code {
     private IEnumerable<IdentityError>? identityErrors;
-    // public TelefonoDetalles TelefonoDetalle { get; set; } = new();
-    // public List<TipoTelefonos> TiposTelefonos { get; set; } = new List<TipoTelefonos>();
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
-
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
-
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
-
-
-    // protected override async Task OnInitializedAsync()
-    // {
-    //     TiposTelefonos = await TiposTelefonosServices.Listar(t => true);
-    // }
-   
-    
-   
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
         user.Cedula = Input.Cedula;
         user.Nombre = Input.Nombre;
         user.Apellido = Input.Apellido;
+
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         var emailStore = GetEmailStore();
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
         var result = await UserManager.CreateAsync(user, Input.Password);
-        
+
         if (!result.Succeeded)
         {
             identityErrors = result.Errors;
             return;
         }
 
-        var users = UserManager.Users.ToList();
-        if(users.FirstOrDefault(u => u.Cedula == Input.Cedula) != null)
-        {
-            identityErrors = new List<IdentityError> { new IdentityError { Code = "Cédula", Description = "La cédula ya se encuentra registrada" } };
-            return;
-        }
-        await UserManager.AddToRoleAsync(user, "Admin");
+        await UserManager.AddToRoleAsync(user, "User");
 
         Logger.LogInformation("User created a new account with password.");
 
@@ -185,48 +132,16 @@
         var callbackUrl = NavigationManager.GetUriWithQueryParameters(
             NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
-
         await EmailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
-
         if (UserManager.Options.SignIn.RequireConfirmedAccount)
         {
             RedirectManager.RedirectTo(
                 "Account/RegisterConfirmation",
                 new() { ["email"] = Input.Email, ["returnUrl"] = ReturnUrl });
         }
-
         await SignInManager.SignInAsync(user, isPersistent: false);
         RedirectManager.RedirectTo(ReturnUrl);
     }
-
-    // public async Task RemoverTelefono(TelefonoDetalles detalle)
-    // {
-    //     var detalleEncontrado = Input.TelefonoDetalles.FirstOrDefault(v => v.DetalleId == detalle.DetalleId);
-    //     if (detalleEncontrado != null)
-    //     {
-    //         Input.TelefonoDetalles.Remove(detalle);
-    //     }
-    // }
-    // public async Task AgregarTelefono()
-    // {
-    //     // if (Validar())
-    //     // {
-    //     //     return;
-    //     // }
-    //     // if (VehiculoDetalle.AccesorioId == 0)
-    //     // {
-    //     //     Mensaje = "Debe llenar los campos del detalle o está agregando valores negativos";
-    //     //     return;
-    //     // }
-    //     Input.TelefonoDetalles.Add(TelefonoDetalle);
-    //     TelefonoDetalle = new TelefonoDetalles();
-        
-    // }
-    // public bool Validar()
-    // {
-    //     return Input.TelefonoDetalles
-    //     .Any(t => t.Telefono == TelefonoDetalle.Telefono);
-    // }
     private ApplicationUser CreateUser()
     {
         try
@@ -239,7 +154,6 @@
                 $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
         }
     }
-
     private IUserEmailStore<ApplicationUser> GetEmailStore()
     {
         if (!UserManager.SupportsUserEmail)
@@ -248,33 +162,25 @@
         }
         return (IUserEmailStore<ApplicationUser>)UserStore;
     }
-
     private sealed class InputModel
     {
-        [Required(ErrorMessage ="Este campo es requerido")]
+        [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; } = "";
-
-        [Required(ErrorMessage = "Este campo es requerido")]
-        [StringLength(100, ErrorMessage = "El {0} debe tener al menos {2} y un máximo de {1} caracteres", MinimumLength = 6)]
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Contraseña")]
+        [Display(Name = "Password")]
         public string Password { get; set; } = "";
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirmar contraseña")]
-        [Compare("Contraseña", ErrorMessage = "LAs contraseñas no coinciden")]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
-        
-        // public ICollection<TelefonoDetalles> TelefonoDetalles { get; set; } = new List<TelefonoDetalles>();
-        [Required(ErrorMessage = "Este campo es requerido")]
-        [RegularExpression(@"^\d{10}$", ErrorMessage = "La cédula debe tener 10 dígitos.")]
+        [Required]
         public long Cedula { get; set; }
-        [Required(ErrorMessage = "Este campo es requerido")]
-        public string Apellido{ get; set; }
-        [Required(ErrorMessage = "Este campo es requerido")]
-        public string Nombre{ get; set; }
-        
+        public string Apellido { get; set; }
+        public string Nombre { get; set; }
     }
 }
