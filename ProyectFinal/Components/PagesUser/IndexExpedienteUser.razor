@@ -1,0 +1,107 @@
+﻿@page "/IndexExpedienteUser"
+@rendermode InteractiveServer
+@inject ExpedienteServices expedienteService
+@inject NotificationService notificationService
+@inject SentenciaServices sentenciaService
+@inject DemandaServices demandaService
+@inject TiposResolucionServices resolucionService
+@inject TipoDemandaServices demandasServices
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> userManager
+@attribute [Authorize(Roles = "User")]
+<RadzenNotification />
+<div class="card shadow-lg">
+    <div class="card-header">
+        <h3 class="text-white text-center">Index Expediente</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-4">
+                <label>Filtrar Por</label>
+                <InputSelect @bind-Value="Opcion" class="form-select">
+                    <option value="1">ExpedienteId</option>
+                    <option value="2">Fecha</option>
+                    <option value="4">Todo</option>
+                </InputSelect>
+            </div>
+            <div class="justify-content-end d-flex mb-4">
+                <a href="CreateExpediente" class="btn btn-primary bi-floppy-fill"> <img src="/Create.svg" style="width: 30px;" /> Create</a>
+
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="table-head text-white" style="background-color: #012E40">ExpedienteId</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Fecha</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Comentario</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Sentencia</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Tipo Demanda</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ListaExpedienteUser)
+                    {
+                        var sentencia = BuscarResolucion(item);
+                        <tr>
+                            <td>@item.ExpedienteId</td>
+                            <td>@item.FechaCreacion</td>
+                            <td>@item.Comentario</td>
+                            <td>@sentencia</td>
+                            <td>
+                                <a href="/EditExpedienteUser/@item.ExpedienteId">
+                                    <img src="Edit.svg" style="width: 30px;" />
+                                </a>
+                                <a href="/DeleteExpediente/@item.ExpedienteId">
+                                    <img src="Delete.svg" style="width: 35px;" />
+                                </a>
+                                <a href="/ViewExpediente/@item.ExpedienteId">
+                                    <img src="Info.svg" style="width: 35px;" />
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    public Expedientes expediente { get; set; } = new Expedientes();
+    public List<Expedientes>? ListaExpedientes = new List<Expedientes>();
+    public List<Demandas> ListaDemandas = new List<Demandas>();
+    public int Opcion { get; set; }
+    public Demandas? demandas = new Demandas();
+    public List<Demandas>? ListaDemandasUser = new List<Demandas>();
+    public List<TipoResoluciones> ListaResolucion { get; set; } = new List<TipoResoluciones>();
+    public List<Sentencias> ListaSentencias { get; set; } = new List<Sentencias>();
+    public int contador = 0;
+    public TipoResoluciones resolucion { get; set; } = new TipoResoluciones();
+
+
+    public List<Expedientes>? ListaExpedienteUser = new List<Expedientes>();
+
+    private AuthenticationState authenticationState;
+    protected override async Task OnInitializedAsync()
+    {
+        ListaExpedientes = await expedienteService.GetExpedientes();
+        ListaResolucion = await resolucionService.GetResoluciones();
+        ListaDemandas = await demandaService.GetDemandas();
+        ListaSentencias = await sentenciaService.Listar(p => true);
+
+
+        authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await userManager.FindByEmailAsync(authenticationState.User.Identity.Name);
+        ListaExpedienteUser = ListaExpedientes.Where(e => e.Id == user.Id).ToList();
+
+        ListaDemandasUser = ListaDemandas.Where(d => d.Cedula == user.Cedula).ToList();
+    }
+    public string BuscarResolucion(Expedientes item)
+    {
+        var sen = ListaSentencias.FirstOrDefault(s => s.SentenciaId == item.SentenciaId);
+        sen.TipoResoluciones = ListaResolucion.FirstOrDefault(r => r.ResolucionId == sen.ResolucionId);
+        return sen.TipoResoluciones.TipoResolcion;
+    }
+}
