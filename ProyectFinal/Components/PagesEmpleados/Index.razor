@@ -4,6 +4,7 @@
 @rendermode InteractiveServer
 @inject NotificationService notificationService
 @attribute [StreamRendering]
+@attribute [Authorize(Roles = "Admin")]
 <RadzenNotification />
 
 <div class="card shadow-lg">
