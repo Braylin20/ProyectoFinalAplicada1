@@ -1,0 +1,135 @@
+﻿@page "/DeleteDemanda/{DemandaId:int}"
+@inject ExpedienteServices expedienteService
+@inject SentenciaServices sentenciaService
+@inject DemandaServices demandaService
+@inject TiposResolucionServices resolucionService
+@inject TipoDemandaServices demandasServices
+@rendermode InteractiveServer
+<PageTitle>Ticket</PageTitle>
+<EditForm Model="demanda">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header">
+                <h3 style="color:red">Eliminar Expediente.</h3>
+            </div>
+            <div class=card-body>
+
+
+
+                <div class="mb-3">
+                    <label class="form-label" for="Nombre">Fecha:</label>
+                    <InputDate @bind-Value="demanda.Fecha" class="form-control" min="2024-01-01" Readonly />
+                    <ValidationMessage For="@(() => demanda.Fecha)" />
+                </div>
+
+
+
+                <div class="mb-3">
+                    <label class="form-label" for="SolicitadoPor">Resolucion Sentencia</label>
+                    <InputText @bind-Value="demanda.Descripcion" class="form-control" Readonly> 
+                    </InputText>
+                    <ValidationMessage For="@(() => demanda.Descripcion)" />
+                </div>
+
+
+
+
+                <div class="mb-3">
+                    <label class="form-label" for="Nombre">Tipo Demanda:</label>
+                    <InputSelect @bind-Value="demanda.DemandaId" class="form-control" Readonly>
+                        <option value="">Seleccione una opcion</option>
+                        @foreach (var item in demandas)
+                        {
+                            var tipoDemanda = demandasServices.GetTipoDemanda(item.TiposDemandasId);
+                            <option value="@item.DemandaId">@tipoDemanda</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => demanda.DemandaId)" />
+                </div>
+
+
+             
+
+
+            </div>
+
+            <AuthorizeView Roles="Admin,Empleado">
+                <ChildContent Context="formContext">
+
+                    <div class="card-footer">
+                        <div class="btn-group">
+                            <a href="IndexDemanda" class="btn text-white" style=" background-color: #012E40">
+                                <img src="Back.svg" style="width:25px; " />Atr&aacute;s
+                            </a>
+                            <button class="btn btn-danger" @onclick="Eliminar">
+
+                                <img src="DeleteBlack.svg" type="button" style="width: 25px;" />Delete
+                            </button>
+
+                        </div>
+                    </div>
+                </ChildContent>
+            </AuthorizeView>
+
+
+            <AuthorizeView Roles="User">
+                <ChildContent Context="formContext">
+
+                    <div class="card-footer">
+                        <div class="btn-group">
+                            <a href="IndexDemandaUser" class="btn text-white" style=" background-color: #012E40">
+                                <img src="Back.svg" style="width:25px; " />Atr&aacute;s
+                            </a>
+                            <button class="btn btn-danger" @onclick="Eliminar">
+
+                                <img src="DeleteBlack.svg" type="button" style="width: 25px;" />Delete
+                            </button>
+
+                        </div>
+                    </div>
+                </ChildContent>
+            </AuthorizeView>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public int DemandaId { get; set; }
+    public Demandas demanda = new Demandas();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        demanda = await demandaService.GetDemanda(DemandaId);
+       
+    }
+
+    public async Task Eliminar()
+    {
+        var guardo = await demandaService.DeleteDemanda(DemandaId);
+        if (guardo)
+        {
+            Nuevo();
+
+        }
+
+
+    }
+
+    public void Nuevo()
+    {
+        demanda = new Demandas();
+
+    }
+
+
+    public List<Sentencias> sentencias { get; set; } = new List<Sentencias>();
+    public List<Demandas> demandas { get; set; } = new List<Demandas>();
+
+
+
+}
