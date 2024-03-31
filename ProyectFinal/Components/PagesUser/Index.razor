@@ -79,10 +79,10 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
+                    <th class="table-head text-white" style="background-color: #012E40">C&eacute;dula</th>
                     <th class="table-head text-white" style="background-color: #012E40">Nombre</th>
                     <th class="table-head text-white" style="background-color: #012E40">Apellido</th>
                     <th class="table-head text-white" style="background-color: #012E40">Fecha Creaci&oacute;n</th>
-                    <th class="table-head text-white" style="background-color: #012E40">Tel&eacute;fono</th>
                     <th class="table-head text-white" style="background-color: #012E40">Email</th>
                     <th class="table-head text-white" style="background-color: #012E40">Opciones</th>
                 </tr>
@@ -103,6 +103,7 @@
                     @foreach (var item in ListaUser)
                     {
                         <tr>
+                            <td>@item.Cedula</td>
                             <td>@item.Nombre</td>
                             <td>@item.Apellido</td>
                             <td>@item.FechaCreacion.ToString("dd/MM/yyyy")</td>
@@ -138,6 +139,8 @@
     protected override async Task OnInitializedAsync()
     {
         ListaUser = await userManager.GetUsersInRoleAsync("User");
+        FechaFinal = DateTime.Now;
+        FechaInicio = DateTime.Now;
     }
 
     public async Task FiltrarPorfecha()
