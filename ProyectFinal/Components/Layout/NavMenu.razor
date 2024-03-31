@@ -26,18 +26,28 @@
 
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="/IndexDemanda">
-                                    <img src="Demanda.svg" class="Icon" type="button" href="/IndexDemanda" />Demandas
+                                <a class="nav-link text-white" href="/IndexDemandaUser">
+                                    <img src="Demanda.svg" class="Icon" type="button" href="/IndexDemandaUser" />Demandas
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link mx-lg-2 text-white" href="IndexAudiencia">Audiencia</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="IndexEmpleado">
-                                    <img src="Empleado.svg" class="Icon" type="button" href="/IndexDemanda" />Empleado
-                                </a>
-                            </li>
+
+                            <AuthorizeView Roles="Admin,Empleado">
+                                  <ChildContent Context="formContext">
+                                    <li class="nav-item">
+                                        <a class="nav-link text-white" href="/IndexDemanda">
+                                            <img src="Demanda.svg" class="Icon" type="button" href="/IndexDemanda" />Demandas
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link mx-lg-2 text-white" href="IndexAudiencia">Audiencia</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-white" href="IndexEmpleado">
+                                            <img src="Empleado.svg" class="Icon" type="button" href="/IndexEmpleado" />Empleado
+                                        </a>
+                                    </li>
+                                </ChildContent>
+                            </AuthorizeView>
                         </ul>
                     </div>
                 </div>

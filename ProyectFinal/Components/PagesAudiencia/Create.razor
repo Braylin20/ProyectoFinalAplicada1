@@ -1,5 +1,5 @@
 ﻿@page "/CreateAudiencia"
-
+@attribute [Authorize(Roles = "Admin,Empleado")]
 @rendermode InteractiveServer
 @inject NotificationService notificationService
 @inject AudienciasServices audienciaServices

@@ -2,7 +2,7 @@
 @inject NotificationService notificationService
 @inject AudienciasServices audienciaServices
 @rendermode InteractiveServer
-
+@attribute [Authorize(Roles = "Admin,Empleado")]
 
 <RadzenNotification />
 <div class="container-fluid">

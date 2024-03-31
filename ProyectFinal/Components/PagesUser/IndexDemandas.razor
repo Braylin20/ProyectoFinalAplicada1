@@ -1,11 +1,13 @@
-﻿@page "/IndexDemanda"
-@attribute [Authorize(Roles = "Admin,Empleado")]
+﻿@page "/IndexDemandaUser"
+
 @rendermode InteractiveServer
 @inject DemandaServices demandaServices
 @inject TipoDemandaServices tipoDemandaServices
 @inject AlguacilServices alguacilServices
 @inject AudienciasServices audienciasServices
+@inject UserManager<ApplicationUser> userManager
 @inject EstadoServices estadosDemandasServices
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IJSRuntime JSRuntime
 <div class="card shadow-lg">
     <div class="card-header" style="background-color: #012E40">
@@ -40,7 +42,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in ListaDemandas)
+                    @foreach (var item in ListaDemandasUser)
                     {
                          TipoDemanda= TiposDemadas.FirstOrDefault(t=> t.TiposDemandasId == item.TiposDemandasId);
                          Audiencia = Audiencias.FirstOrDefault(t=> t.AudienciaId == item.AudienciaId);
@@ -98,10 +100,12 @@
     public EstadosDemandas? Estado { get; set; } = new EstadosDemandas();
     public Demandas? demandas = new Demandas();
     public List<Demandas>? ListaDemandas = new List<Demandas>();
+    public List<Demandas>? ListaDemandasUser = new List<Demandas>();
     public List<TiposDemandas>? TiposDemadas = new List<TiposDemandas>();
     public List<Audiencias>? Audiencias = new List<Audiencias>();
     public List<EstadosDemandas>? Estados = new List<EstadosDemandas>();
     public int Opcion { get; set; }
+    private AuthenticationState authenticationState;
 
     protected override async Task OnInitializedAsync()
     {
@@ -110,6 +114,11 @@
         TiposDemadas = await tipoDemandaServices.Listar(t => true);
         Audiencias = await audienciasServices.Listar(t => true);
         Estados = await estadosDemandasServices.Listar(t => true);
+        authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await userManager.FindByEmailAsync(authenticationState.User.Identity.Name);
+        ListaDemandasUser = ListaDemandas.Where(d => d.Cedula == user.Cedula).ToList();
+
+
     }
     
 

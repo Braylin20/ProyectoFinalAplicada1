@@ -187,17 +187,39 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer">
-                <div class="btn-group">
-                    <a href="IndexDemanda" class="btn text-white" style=" background-color: #012E40">
-                        <img src="Back.svg" style="width:25px; " />Atr&aacute;s
-                    </a>
+            <AuthorizeView Roles="Admin,Empleado">
+                <ChildContent Context="formContext">
 
-                    <button type="submit" class="btn btn-success">
-                        <img src="Save.svg" style="width:25px" /> Guardar
-                    </button>
-                </div>
-            </div>
+                    <div class="card-footer">
+                        <div class="btn-group">
+                            <a href="IndexDemanda" class="btn text-white" style=" background-color: #012E40">
+                                <img src="Back.svg" style="width:25px; " />Atr&aacute;s
+                            </a>
+
+                            <button type="submit" class="btn btn-success">
+                                <img src="Save.svg" style="width:25px" /> Guardar
+                            </button>
+                        </div>
+                    </div>
+                </ChildContent>
+            </AuthorizeView>
+
+            <AuthorizeView Roles="User">
+                <ChildContent Context="formContext">
+
+                    <div class="card-footer">
+                        <div class="btn-group">
+                            <a href="IndexDemandaUser" class="btn text-white" style=" background-color: #012E40">
+                                <img src="Back.svg" style="width:25px; " />Atr&aacute;s
+                            </a>
+
+                            <button type="submit" class="btn btn-success">
+                                <img src="Save.svg" style="width:25px" /> Guardar
+                            </button>
+                        </div>
+                    </div>
+                </ChildContent>
+            </AuthorizeView>
         </div>
     </div>
 

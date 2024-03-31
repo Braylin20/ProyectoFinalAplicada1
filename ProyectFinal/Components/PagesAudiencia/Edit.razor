@@ -3,7 +3,7 @@
 @inject NotificationService notificationService
 @inject DemandaServices demandaServices
 @inject AudienciasServices audienciaServices
-
+@attribute [Authorize(Roles = "Admin,Empleado")]
 <RadzenNotification />
 
 <EditForm Model="Audiencia" OnValidSubmit="Guardar">

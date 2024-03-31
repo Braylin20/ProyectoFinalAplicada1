@@ -1,4 +1,4 @@
-﻿@page "/IndexExpediente"
+﻿@page "/IndexExpedienteUser"
 @rendermode InteractiveServer
 @inject ExpedienteServices expedienteService
 @inject NotificationService notificationService
@@ -6,7 +6,9 @@
 @inject DemandaServices demandaService
 @inject TiposResolucionServices resolucionService
 @inject TipoDemandaServices demandasServices
-@attribute [Authorize(Roles = "Admin,Empleado")]
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> userManager
+@attribute [Authorize(Roles = "User")]
 <RadzenNotification />
 <div class="card shadow-lg">
     <div class="card-header">
@@ -24,7 +26,7 @@
             </div>
             <div class="justify-content-end d-flex mb-4">
                 <a href="CreateExpediente" class="btn btn-primary bi-floppy-fill"> <img src="/Create.svg" style="width: 30px;" /> Create</a>
-               
+
             </div>
             <table class="table table-bordered">
                 <thead>
@@ -37,16 +39,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in ListaExpedientes)
+                    @foreach (var item in ListaExpedienteUser)
                     {
-                        var sentencia =BuscarResolucion(item);
-                        <tr> 
+                        var sentencia = BuscarResolucion(item);
+                        <tr>
                             <td>@item.ExpedienteId</td>
                             <td>@item.FechaCreacion</td>
                             <td>@item.Comentario</td>
                             <td>@sentencia</td>
                             <td>
-                                <a href="/EditExpediente/@item.ExpedienteId">
+                                <a href="/EditExpedienteUser/@item.ExpedienteId">
                                     <img src="Edit.svg" style="width: 30px;" />
                                 </a>
                                 <a href="/DeleteExpediente/@item.ExpedienteId">
@@ -72,11 +74,16 @@
     public List<Demandas> ListaDemandas = new List<Demandas>();
     public int Opcion { get; set; }
     public Demandas? demandas = new Demandas();
+    public List<Demandas>? ListaDemandasUser = new List<Demandas>();
     public List<TipoResoluciones> ListaResolucion { get; set; } = new List<TipoResoluciones>();
     public List<Sentencias> ListaSentencias { get; set; } = new List<Sentencias>();
     public int contador = 0;
     public TipoResoluciones resolucion { get; set; } = new TipoResoluciones();
 
+
+    public List<Expedientes>? ListaExpedienteUser = new List<Expedientes>();
+
+    private AuthenticationState authenticationState;
     protected override async Task OnInitializedAsync()
     {
         ListaExpedientes = await expedienteService.GetExpedientes();
@@ -84,6 +91,12 @@
         ListaDemandas = await demandaService.GetDemandas();
         ListaSentencias = await sentenciaService.Listar(p => true);
 
+
+        authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await userManager.FindByEmailAsync(authenticationState.User.Identity.Name);
+        ListaExpedienteUser = ListaExpedientes.Where(e => e.Id == user.Id).ToList();
+
+        ListaDemandasUser = ListaDemandas.Where(d => d.Cedula == user.Cedula).ToList();
     }
     public string BuscarResolucion(Expedientes item)
     {
