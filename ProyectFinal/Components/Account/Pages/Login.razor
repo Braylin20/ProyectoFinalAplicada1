@@ -30,8 +30,8 @@
                 <div class="featured-image mb-3 mt-3">
                     <img src="PoderJudicial.png" class="img-fluid" style="width:250px;" />
                 </div>
-                <p class="text-white fs-2" style="font-family: Courier New, Courier, monospace; font-weight:600;">Be Verified</p>
-                <small class="text-white text-wrap text-center" style="width: 17rem; font-family:Courier New, Courier, monospace">Join experienced Designers on this platform</small>
+                <p class="text-white fs-2" style="font-family: Courier New, Courier, monospace; font-weight:600;">UN MEJOR FUTURO</p>
+                <small class="text-white text-wrap text-center" style="width: 17rem; font-family:Courier New, Courier, monospace">El Tribunal de Niños y Niñas protege el bienestar de los menores.</small>
             </div>
 
 
@@ -61,7 +61,9 @@
                         <button type="submit" class="btn btn-lg btn-primary w-100  fs-6">Login</button>
                     </div>
                     <div class="row">
-                        <p>Don't have account?<a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Sign up</a></p>
+                        <p>
+                            ¿No tienes una cuenta?<a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))"> Regirtrarse</a>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -118,7 +120,7 @@
                 {
                     Severity = NotificationSeverity.Error,
                     Summary = "Error",
-                    Detail = "No se ha guardado correctamente",
+                    Detail = "Usuario o Contraseña Incorrecta",
                     Duration = 4_000
                 };
             notificationService.Notify(mensaje);
