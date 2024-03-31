@@ -23,22 +23,19 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="fw-bold" for="Nombre">Nombre:</label>
-                                <InputText @bind-Value="Alguacil.Nombre" class="form-control" readonly />
-                                <ValidationMessage For="@(()=>Alguacil.Nombre)" />
+                                <InputText @bind-Value="Alguacil.Nombre" class="form-control-plaintext" readonly />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="fw-bold" for="Apellido">Apellido:</label>
-                                <InputText @bind-Value="Alguacil.Apellido" class="form-control" readonly />
-                                <ValidationMessage For="@(()=>Alguacil.Apellido)" />
+                                <InputText @bind-Value="Alguacil.Apellido" class="form-control-plaintext" readonly />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="fw-bold" for="FechaCreacion">Fecha Creación:</label>
-                                <InputDate @bind-Value="Alguacil.FechaCreacion" class="form-control" readonly />
-                                <ValidationMessage For="@(()=>Alguacil.FechaCreacion)" />
+                                <InputDate @bind-Value="Alguacil.FechaCreacion" class="form-control-plaintext" readonly />
                             </div>
                         </div>
                     </div>
