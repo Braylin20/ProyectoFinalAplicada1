@@ -24,6 +24,12 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label class="fw-bold mb-2">Instancia:</label>
+                                <InputNumber  @bind-Value="Demanda.Cedula" class="form-control"  />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="fw-bold mb-2">Instancia:</label>
                                 <InputFile accept=".pdf" class="form-control" OnChange="agregarArchivo" />
                             </div>
                         </div>

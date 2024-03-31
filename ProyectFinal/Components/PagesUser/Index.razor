@@ -1,13 +1,14 @@
-﻿@page "/IndexAudiencia"
+﻿@page "/IndexUser"
+@inject EmpleadoServices empleadoServices
+@inject UserManager<ApplicationUser> userManager
 @rendermode InteractiveServer
-@inject AudienciasServices audienciaServices
 @inject NotificationService notificationService
-
-
+@attribute [StreamRendering]
 <RadzenNotification />
+
 <div class="card shadow-lg">
-    <div class="card-header">
-        <h3 class="text-white text-center">Index Audiencia</h3>
+    <div class="card-header" style="background-color: #012E40">
+        <h3 class="text-white text-center">Index Usuarios</h3>
     </div>
     <div class="card-body">
         <div class="row">
@@ -27,6 +28,7 @@
 
                     </div>
                 </div>
+
             </div>
         </div>
         <div class="row">
@@ -35,8 +37,8 @@
                 <div class="input-group">
 
                     <InputSelect @bind-Value="Opcion" class="form-select mb-3">
-                        <option value="1">Id</option>
-                        <option value="2">Comentario</option>
+                        <option value="1">C&eacute;dula</option>
+                        <option value="2">Nombre</option>
                         <option value="3">Todo</option>
                     </InputSelect>
                     @if (Opcion == 3)
@@ -51,7 +53,7 @@
                     <div class="col-3">
                         <label class="fw-bold">C&eacute;dula</label>
                         <div class="input-group">
-                            <InputNumber @bind-Value="Audiencias.AudienciaId" class="form-control"></InputNumber>
+                            <InputNumber @bind-Value="User.Cedula" class="form-control"></InputNumber>
                             <button type="button" class="btn btn-primary bi bi-search" @onclick="Filtrar"></button>
                         </div>
                     </div>
@@ -61,27 +63,31 @@
                     <div class="col-3">
                         <label class="fw-bold">Nombre</label>
                         <div class="input-group">
-                            <InputText @bind-Value="Audiencias.Comentario" class="form-control"></InputText>
+                            <InputText @bind-Value="User.Nombre" class="form-control"></InputText>
                             <button type="button" class="btn btn-primary bi bi-search" @onclick="Filtrar"></button>
                         </div>
                     </div>
                     break;
             }
         </div>
-        <div class="justify-content-end d-flex mb-4">
-            <a href="CreateAudiencia" class="btn btn-primary bi-floppy-fill"> <img src="/Create.svg" style="width: 30px;" />Create</a>
-        </div>
-        <table class="table table-bordered text-center">
+        <AuthorizeView Roles="Admin">
+            <div class="justify-content-end d-flex mb-4">
+                <a href="CreateEmpleado" class="btn btn-primary bi-floppy-fill"> <img src="/Create.svg" style="width: 30px;" />Create</a>
+
+            </div>
+        </AuthorizeView>
+        <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th class="table-head text-white" style="background-color: #012E40">AudienciaId</th>
-                    <th class="table-head text-white" style="background-color: #012E40">Fecha</th>
-                    <th class="table-head text-white" style="background-color: #012E40">Comentario</th>
-                    <th class="table-head text-white" style="background-color: #012E40">Opci&oacute;nes</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Nombre</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Apellido</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Fecha Creaci&oacute;n</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Tel&eacute;fono</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Email</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Opciones</th>
                 </tr>
             </thead>
-
-            @if (ListaAudiencias.Count == 0)
+            @if (ListaUser.Count == 0)
             {
                 <tbody>
                     <tr>
@@ -94,20 +100,21 @@
             else
             {
                 <tbody>
-                    @foreach (var item in ListaAudiencias)
+                    @foreach (var item in ListaUser)
                     {
                         <tr>
-                            <td>@item.AudienciaId</td>
-                            <td>@item.FechaAudiencia.ToString("dd/MM/yyyy")</td>
-                            <td>@item.Comentario</td>
+                            <td>@item.Nombre</td>
+                            <td>@item.Apellido</td>
+                            <td>@item.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                            <td>@item.UserName</td>
                             <td>
-                                <a href="/EditAudiencia/@item.AudienciaId">
+                                <a href="/EditUser/@item.Id">
                                     <img src="Edit.svg" style="width: 30px;" />
                                 </a>
-                                <a href="/DeleteAudiencia/@item.AudienciaId">
+                                <a href="/DeleteUser/@item.Id">
                                     <img src="Delete.svg" style="width: 35px;" />
                                 </a>
-                                <a href="/ViewAudiencia/@item.AudienciaId">
+                                <a href="/ViewEmpleado/@item.Id">
                                     <img src="Info.svg" style="width: 35px;" />
                                 </a>
                             </td>
@@ -115,51 +122,47 @@
                     }
                 </tbody>
             }
-
-
         </table>
 
     </div>
 </div>
 
-
-
 @code {
-    public Audiencias Audiencias { get; set; } = new Audiencias();
-    public List<Audiencias>? ListaAudiencias = new List<Audiencias>();
-    public List<Demandas>? ListaDemandas = new List<Demandas>();
+    public ICollection<ApplicationUser> Empleados { get; set; } = new List<ApplicationUser>();
+    public ICollection<ApplicationUser> ListaUser { get; set; } = new List<ApplicationUser>();
+    public ApplicationUser User { get; set; } = new ApplicationUser();
     public int Opcion { get; set; }
-    public Demandas? demandas = new Demandas();
     public DateTime FechaInicio { get; set; }
     public DateTime FechaFinal { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-        ListaAudiencias = await audienciaServices.GetAudiencias();
-        FechaFinal = DateTime.Now;
-        FechaInicio = DateTime.Now;
+        ListaUser = await userManager.GetUsersInRoleAsync("User");
     }
 
     public async Task FiltrarPorfecha()
     {
-        ListaAudiencias = await audienciaServices.GetAudiencias();
-        ListaAudiencias = ListaAudiencias.Where(x => x.FechaAudiencia.Date >= FechaInicio.Date && x.FechaAudiencia.Date <= FechaFinal.Date).ToList();
+        Empleados = await userManager.GetUsersInRoleAsync("Empleado");
+        Empleados = await empleadoServices.ListarPorFecha(Empleados, FechaInicio, FechaFinal);
     }
     public async Task Filtrar()
     {
         if (Opcion == 1)
         {
-            ListaAudiencias = await audienciaServices.GetAudiencias();
-            ListaAudiencias = ListaAudiencias.Where(a => a.AudienciaId == Audiencias.AudienciaId).ToList();
+            Empleados = await userManager.GetUsersInRoleAsync("Empleado");
+            var cedula = await empleadoServices.ListarPorCedula(Empleados, User);
+            Empleados = await empleadoServices.ListarPorCedula(Empleados, User);
+
+
         }
         else if (Opcion == 2)
         {
-            ListaAudiencias = await audienciaServices.GetAudiencias();
-            ListaAudiencias = ListaAudiencias.Where(a => a.Comentario!.ToLower().Contains(Audiencias.Comentario!.ToLower())).ToList();
+            Empleados = await userManager.GetUsersInRoleAsync("Empleado");
+            Empleados = await empleadoServices.Listar(Empleados, User);
         }
 
         else if (Opcion == 3)
-            ListaAudiencias = await audienciaServices.GetAudiencias();
+            Empleados = await userManager.GetUsersInRoleAsync("Empleado");
     }
-
 
 }

@@ -17,8 +17,14 @@
         </div>
         <div class="card-footer">
             <div class="btn-group">
-                <a href="IndexAudiencia" class="btn btn-secondary bi bi-arrow-left-square-fill">Atr&aacute;s</a>
-                <button class="btn btn-danger bi bi-trash-fill" @onclick="Eliminar">Eliminar</button>
+                <a href="IndexAudiencia" class="btn text-white" style=" background-color: #012E40">
+                    <img src="Back.svg" style="width:25px; " />Atr&aacute;s
+                </a>
+                <button class="btn btn-danger" @onclick="Eliminar">
+
+                    <img src="DeleteBlack.svg" type="button" style="width: 25px;" />Delete
+                </button>
+
             </div>
         </div>
     </div>
@@ -52,7 +58,7 @@
         {
             var mensaje = new NotificationMessage
                 {
-                    Severity = NotificationSeverity.Success,
+                    Severity = NotificationSeverity.Error,
                     Summary = "Éxito",
                     Detail = "Se ha eliminado correctamente",
                     Duration = 4_000

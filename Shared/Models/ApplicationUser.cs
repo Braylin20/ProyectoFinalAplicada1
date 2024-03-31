@@ -14,8 +14,9 @@ namespace ProyectFinal.Data
         public int? AbogadoId { get; set; }
         public long? Cedula { get; set; }
         
-        [Required(ErrorMessage = "Este campo es requerido")]
+
         public DateTime FechaCreacion { get; set; }
+        public Expedientes? Expedientes { get; set; }
 
         [ForeignKey("AbogadoId")]
         public UsuarioDetalle? Abogado { get; set; }

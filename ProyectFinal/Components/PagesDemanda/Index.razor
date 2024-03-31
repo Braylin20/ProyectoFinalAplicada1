@@ -27,16 +27,15 @@
                
             </div>
 
-            <table class="table table-bordered">
+            <table class="table table-bordered text-center">
                 <thead>
                     <tr>
                         <th class="table-head text-white" style="background-color: #012E40">Id</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Descripci&oacute;n</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Archivo</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Foto de c&eacute;dula</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Tipo de demanda</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Fecha de Audiencia</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Tipo de Demanda</th>
                         <th class="table-head text-white" style="background-color: #012E40">Estado</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Fecha de Audiencia</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Archivo</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Foto de C&eacute;dula</th>
                         <th class="table-head text-white" style="background-color: #012E40">Opciones</th>
                     </tr>
                 </thead>
@@ -49,7 +48,6 @@
 
                         <tr>
                             <td>@item.DemandaId</td>
-                            <td>@item.Descripcion</td>
                             <td>
                                 @if(TipoDemanda != null)
                                     @TipoDemanda.TipoDemanda
@@ -66,14 +64,14 @@
                                 @if (item.Documento != null && item.Documento.Length > 0)
                                 {
                                     @* <a href="@($"DownloadArchivo/{item.DemandaId}")" class="btn btn-primary bi bi-download">Descargar</a> *@
-                                    <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.Documento)" download="Archivo.pdf" class="btn btn-primary bi bi-download"><img src="/Download.svg" style="width: 30px;" /></a>
+                                    <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.Documento)" download="Archivo.pdf" ><img src="/Download.svg" style="width: 35px;" /></a>
                                 }
                             </td>
                             <td>
                                 @if (item.FotoCedula != null && item.FotoCedula.Length > 0)
                                 {
                                     @* <a href="@($"DownloadArchivo/{item.DemandaId}")" class="btn btn-primary bi bi-download">Descargar</a> *@
-                                    <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.FotoCedula)" download="Foto.png" class="btn btn-primary bi bi-download"><img src="/Download.svg" style="width: 30px;" /></a>
+                                    <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.FotoCedula)" download="Foto.png" ><img src="/Download.svg" style="width: 35px;" /></a>
                                 }                        
                             </td>
                             <td>
