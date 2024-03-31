@@ -74,10 +74,15 @@
                     <ValidationMessage For="@(() => expediente.Comentario)" />
                 </div>
             </div>
-            <div class="card-footer d-flex justify-content-between">
-                <div class="input-group">
-                    <a href="" class="bi bi-arrow-return-left btn btn-primary">Volver</a>
-                    <button type="submit" class="bi bi-floppy btn btn-success">Guardar</button>
+            <div class="card-footer">
+                <div class="btn-group">
+                    <a href="IndexExpediente" class="btn text-white" style=" background-color: #012E40">
+                        <img src="Back.svg" style="width:25px; " />Atr&aacute;s
+                    </a>
+
+                    <button type="submit" class="btn btn-success">
+                        <img src="Save.svg" style="width:25px" /> Guardar
+                    </button>
                 </div>
             </div>
         </div>

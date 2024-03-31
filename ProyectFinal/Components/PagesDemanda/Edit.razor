@@ -174,7 +174,7 @@
                                                     <td>@item.Genero</td>
                                                     <td>@item.FechaNacimientoNino</td>
                                                     <td>
-                                                        @* <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalle(item))" /> *@
+                                                       @*  <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalle(item))" /> *@
                                                     </td>
                                                 </tr>
                                             }
@@ -189,8 +189,13 @@
             </div>
             <div class="card-footer">
                 <div class="btn-group">
-                    <a href="IndexDemanda" class="btn btn-secondary">Atr&aacute;s</a>
-                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <a href="IndexDemanda" class="btn text-white" style=" background-color: #012E40">
+                        <img src="Back.svg" style="width:25px; " />Atr&aacute;s
+                    </a>
+
+                    <button type="submit" class="btn btn-success">
+                        <img src="Save.svg" style="width:25px" /> Guardar
+                    </button>
                 </div>
             </div>
         </div>
