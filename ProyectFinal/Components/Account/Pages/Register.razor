@@ -18,6 +18,7 @@
                     <img src="PoderJudicial.png" class="img-fluid" style="width:150px;" />
                 </div>
                 <div class="card-body">
+                    <StatusMessage Message="@Message" />
                     <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
                         <ValidationSummary class="alert alert-danger" />
                         <div class="mb-3">
@@ -122,6 +123,12 @@
             return;
         }
 
+        var ListaUser = UserManager.Users.ToList();
+        if(ListaUser.FirstOrDefault(u=> u.Cedula ==Input.Cedula) != null)
+    {
+            identityErrors = new List<IdentityError> { new IdentityError { Code = "1", Description = "Ya existe un usuario con la cedula ingresada" } };
+            return;
+        }
         await UserManager.AddToRoleAsync(user, "User");
 
         Logger.LogInformation("User created a new account with password.");
