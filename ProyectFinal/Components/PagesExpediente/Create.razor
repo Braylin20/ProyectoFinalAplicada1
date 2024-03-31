@@ -3,11 +3,10 @@
 @inject SentenciaServices sentenciaService
 @inject DemandaServices demandaService
 @inject TiposResolucionServices resolucionService
-@inject TipoDemandaServices tiposDemandaServices
+@inject TipoDemandaServices demandasServices
 @inject UserManager<ApplicationUser> UserManager
 @inject NotificationService notificationService
 @rendermode InteractiveServer
-@attribute [Authorize(Roles = "Admin,Empleado")]
 <PageTitle>Ticket</PageTitle>
 
 <RadzenNotification/>
@@ -60,10 +59,10 @@
                         <label class="form-label" for="Nombre">Tipo Demanda:</label>
                         <InputSelect @bind-Value="expediente.DemandaId" class="form-control">
                             <option value="">Seleccione una opcion</option>
-                            @foreach (var item in tipoDemandas)
+                            @foreach (var item in demandas)
                             {
-                              
-                                <option value="@item.TiposDemandasId">@item.TipoDemanda </option>
+                                var tipoDemanda = demandasServices.GetTipoDemanda(item.TiposDemandasId);
+                                <option value="@item.DemandaId">@tipoDemanda</option>
                             }
                         </InputSelect>
                         <ValidationMessage For="@(() => expediente.DemandaId)" />
@@ -94,18 +93,16 @@
 @code {
     public Expedientes expediente = new Expedientes();
     public List<Sentencias> sentencias { get; set; } = new List<Sentencias>();
-    public List<TiposDemandas> tipoDemandas { get; set; } = new List<TiposDemandas>();
-    public List<Demandas> ListaDemandas { get; set; } = new List<Demandas>();
+    public List<Demandas> demandas { get; set; } = new List<Demandas>();
     public ApplicationUser Usuario { get; set; } = new ApplicationUser();
     public List<ApplicationUser> Usuarios { get; set; } = new List<ApplicationUser>();
 
     protected override async Task OnInitializedAsync()
     { 
         sentencias = await sentenciaService.Listar(p => true);
-        tipoDemandas = await tiposDemandaServices.Listar(p => true);
-      
-
+        demandas = await demandaService.Listar(p => true);
     }
+
     public async Task BuscarUsuario()
     {
         var users = UserManager.Users.ToList();

@@ -1,6 +1,6 @@
 ﻿@page "/EditEmpleado/{Id:guid}"
 @rendermode InteractiveServer
-@attribute [Authorize(Roles = "Admin")]
+
 @attribute [AllowAnonymous]
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager

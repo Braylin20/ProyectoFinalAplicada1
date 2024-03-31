@@ -1,5 +1,5 @@
 ﻿@page "/IndexDemanda"
-@attribute [Authorize(Roles = "Admin,Empleado")]
+
 @rendermode InteractiveServer
 @inject DemandaServices demandaServices
 @inject TipoDemandaServices tipoDemandaServices
@@ -63,14 +63,14 @@
                             <td>
                                 @if (item.Documento != null && item.Documento.Length > 0)
                                 {
-                                   
+                                    @* <a href="@($"DownloadArchivo/{item.DemandaId}")" class="btn btn-primary bi bi-download">Descargar</a> *@
                                     <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.Documento)" download="Archivo.pdf" ><img src="/Download.svg" style="width: 35px;" /></a>
                                 }
                             </td>
                             <td>
                                 @if (item.FotoCedula != null && item.FotoCedula.Length > 0)
                                 {
-                                   
+                                    @* <a href="@($"DownloadArchivo/{item.DemandaId}")" class="btn btn-primary bi bi-download">Descargar</a> *@
                                     <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.FotoCedula)" download="Foto.png" ><img src="/Download.svg" style="width: 35px;" /></a>
                                 }                        
                             </td>
@@ -81,7 +81,9 @@
                                 <a href="/DeleteDemanda/@item.DemandaId">
                                     <img src="Delete.svg" style="width: 35px;" />
                                 </a>
-                             
+                              @*   <a href="/ViewDemanda/@item.DemandaId">
+                                    <img src="Info.svg" style="width: 35px;" />
+                                </a> *@
                                
                             </td>
                         </tr>

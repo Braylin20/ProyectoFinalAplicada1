@@ -1,4 +1,4 @@
-﻿@page "/EditExpediente/{ExpedienteId:int}"
+﻿@page "/DeleteExpediente/{ExpedienteId:int}"
 @inject ExpedienteServices expedienteService
 @inject SentenciaServices sentenciaService
 @inject DemandaServices demandaService
@@ -6,29 +6,29 @@
 @inject TipoDemandaServices demandasServices
 @rendermode InteractiveServer
 <PageTitle>Ticket</PageTitle>
-<EditForm Model="expediente" OnValidSubmit="Guardar">
+<EditForm Model="expediente">
     <DataAnnotationsValidator />
 
     <div class="container">
         <div class="card shadow-lg">
             <div class="card-header">
-                <h3>Editar Expediente.</h3>
+                <h3 style="color:red">Eliminar Expediente.</h3>
             </div>
             <div class=card-body>
 
 
-             
+
                 <div class="mb-3">
                     <label class="form-label" for="Nombre">Fecha:</label>
-                    <InputDate @bind-Value="expediente.FechaCreacion" class="form-control" min="2024-01-01" />
+                    <InputDate @bind-Value="expediente.FechaCreacion" class="form-control" min="2024-01-01" Readonly />
                     <ValidationMessage For="@(() => expediente.FechaCreacion)" />
                 </div>
 
 
-              
+
                 <div class="mb-3">
                     <label class="form-label" for="SolicitadoPor">Resolucion Sentencia</label>
-                    <InputSelect @bind-Value="expediente.SentenciaId" class="form-control">
+                    <InputSelect @bind-Value="expediente.SentenciaId" class="form-control" Readonly>
                         <option value="">Seleccione una opcion</option>
                         @foreach (var item in sentencias)
                         {
@@ -39,12 +39,12 @@
                     <ValidationMessage For="@(() => expediente.SentenciaId)" />
                 </div>
 
-               
+
 
 
                 <div class="mb-3">
                     <label class="form-label" for="Nombre">Tipo Demanda:</label>
-                    <InputSelect @bind-Value="expediente.DemandaId" class="form-control">
+                    <InputSelect @bind-Value="expediente.DemandaId" class="form-control" Readonly>
                         <option value="">Seleccione una opcion</option>
                         @foreach (var item in demandas)
                         {
@@ -55,10 +55,10 @@
                     <ValidationMessage For="@(() => expediente.DemandaId)" />
                 </div>
 
-                
+
                 <div class="mb-3">
                     <label class="form-label" for="SolicitadoPor">Comentario</label>
-                    <InputTextArea @bind-Value="expediente.Comentario" class="form-control" />
+                    <InputTextArea @bind-Value="expediente.Comentario" class="form-control" Readonly/>
                     <ValidationMessage For="@(() => expediente.Comentario)" />
                 </div>
 
@@ -69,10 +69,11 @@
                     <a href="IndexExpediente" class="btn text-white" style=" background-color: #012E40">
                         <img src="Back.svg" style="width:25px; " />Atr&aacute;s
                     </a>
+                    <button class="btn btn-danger" @onclick="Eliminar">
 
-                    <button type="submit" class="btn btn-success">
-                        <img src="Save.svg" style="width:25px" /> Guardar
+                        <img src="DeleteBlack.svg" type="button" style="width: 25px;" />Delete
                     </button>
+
                 </div>
             </div>
 
@@ -85,9 +86,7 @@
     [Parameter]
     public int ExpedienteId { get; set; }
     public Expedientes expediente = new Expedientes();
-    public List<Sentencias> sentencias { get; set; } = new List<Sentencias>();
-    public List<Demandas> demandas { get; set; } = new List<Demandas>();
-    
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -96,26 +95,28 @@
         demandas = await demandaService.Listar(p => true);
     }
 
-    public async Task Guardar()
+    public async Task Eliminar()
     {
-        var guardo = await expedienteService.Edit(expediente);
+        var guardo = await expedienteService.DeleteExpediente(ExpedienteId);
         if (guardo)
         {
             Nuevo();
-           
+
         }
-        
-         
+
+
     }
 
     public void Nuevo()
     {
         expediente = new Expedientes();
-       
+
     }
 
 
+    public List<Sentencias> sentencias { get; set; } = new List<Sentencias>();
+    public List<Demandas> demandas { get; set; } = new List<Demandas>();
 
-    
+
 
 }
