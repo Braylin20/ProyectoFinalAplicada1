@@ -15,12 +15,13 @@
             <div class="card shadow-lg border-0 rounded-3">
                 <div class="card-header bg-primary text-white text-center">
                     <h2 class="fw-bold">Register</h2>
-                    <img src="PoderJudicial.png" class="img-fluid" style="width:150px;" />
+                    <a href="/Account/Login"><img src="PoderJudicial.png" class="img-fluid" style="width:150px;" /></a>
                 </div>
                 <div class="card-body">
-                    <StatusMessage Message="@Message" />
+                    <StatusMessage Message="@message1" />
                     <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
-                        <ValidationSummary class="alert alert-danger" />
+                        
+                        <DataAnnotationsValidator/>
                         <div class="mb-3">
                             <label for="inputNombre" class="form-label">Nombre</label>
                             <InputText @bind-Value="Input.Nombre" class="form-control" id="inputNombre" placeholder="Nombre" />
@@ -58,46 +59,7 @@
         </div>
     </div>
 </div>
-@* <div class="row">
-    <div class="col-md-4">
-        <StatusMessage Message="@Message" />
-        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
-            <DataAnnotationsValidator />
-            <h2>Create a new account.</h2>
-            <hr />
-            <ValidationSummary class="text-danger" role="alert" />
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label for="email">Email</label>
-                <ValidationMessage For="() => Input.Email" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputNumber type="password" @bind-Value="Input.Cedula" class="form-control" autocomplete="new-password" aria-required="true" placeholder="C&eacute;dula" />
-                <label for="confirm-password">Cedula</label>
-                <ValidationMessage For="() => Input.Cedula" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="password">Password</label>
-                <ValidationMessage For="() => Input.Password" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="confirm-password">Confirm Password</label>
-                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
-            </div>
 
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-        </EditForm>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            <ExternalLoginPicker />
-        </section>
-    </div>
-</div> *@
 @code {
     private IEnumerable<IdentityError>? identityErrors;
     [SupplyParameterFromForm]
@@ -105,6 +67,9 @@
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
+    public string? message1;
+
+
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
@@ -112,9 +77,23 @@
         user.Nombre = Input.Nombre;
         user.Apellido = Input.Apellido;
 
+        var ListaUser = UserManager.Users.ToList();
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         var emailStore = GetEmailStore();
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+        if (ListaUser.FirstOrDefault(u => u.Cedula == Input.Cedula) != null)
+        {
+            identityErrors = new List<IdentityError> { new IdentityError { Code = "1", Description = "Ya existe un usuario con la cedula ingresada" } };
+            message1 = identityErrors.First().Description;
+            return;
+        }
+
+        if (ListaUser.FirstOrDefault(u => u.UserName == Input.Email) != null)
+        {
+            identityErrors = new List<IdentityError> { new IdentityError { Code = "2", Description = "Ya existe un Correo" } };
+            message1 = identityErrors.First().Description;
+            return;
+        }
         var result = await UserManager.CreateAsync(user, Input.Password);
 
         if (!result.Succeeded)
@@ -123,12 +102,9 @@
             return;
         }
 
-        var ListaUser = UserManager.Users.ToList();
-        if(ListaUser.FirstOrDefault(u=> u.Cedula ==Input.Cedula) != null)
-    {
-            identityErrors = new List<IdentityError> { new IdentityError { Code = "1", Description = "Ya existe un usuario con la cedula ingresada" } };
-            return;
-        }
+
+       
+   
         await UserManager.AddToRoleAsync(user, "User");
 
         Logger.LogInformation("User created a new account with password.");
@@ -171,23 +147,25 @@
     }
     private sealed class InputModel
     {
-        [Required]
+        [Required(ErrorMessage = "El Email es requerido")]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; } = "";
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [Required(ErrorMessage = "La Contraseña es requerida")]
+        [StringLength(100, ErrorMessage = "El {0} debe tener al menos {2} y como máximo {1} caracteres de longitud.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Contraseña")]
         public string Password { get; set; } = "";
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "Confirmar Contraseña")]
+        [Compare("Password", ErrorMessage = "La contraseña y la confirmación de contraseña no coinciden.")]
         public string ConfirmPassword { get; set; } = "";
-        [Required]
+        [RegularExpression(@"^\d{11}$", ErrorMessage = "La cédula debe tener 11 digitos")]
         public long Cedula { get; set; }
+        [Required(ErrorMessage ="El Apellido es requerido")]
         public string Apellido { get; set; }
+        [Required(ErrorMessage = "El Nombre es requerido")]
         public string Nombre { get; set; }
     }
 }
