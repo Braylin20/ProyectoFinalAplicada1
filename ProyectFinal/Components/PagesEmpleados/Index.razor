@@ -23,7 +23,9 @@
                         <label class="fw-bold">Fecha Final</label>
                         <div class="input-group">
                             <InputDate @bind-Value="FechaFinal" class="form-control" />
-                            <button type="button" class="btn btn-primary bi bi-search" @onclick="FiltrarPorfecha"><img src="/Buscar2.svg" style="width: 20px;" />Buscar</button>
+                            <button type="button" class="btn btn-primary bi bi-search" @onclick="FiltrarPorfecha">
+                                <img src="Search.svg" style="width: 20px;" />
+                            </button>
                         </div>
                         
                     </div>
@@ -43,7 +45,9 @@
                     </InputSelect>
                     @if (Opcion == 3)
                     {
-                        <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" />Buscar</button>
+                        <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar">
+                            <img src="Search.svg" style="width: 20px;" />
+                        </button>
                     }
                 </div>
             </div>
@@ -54,7 +58,9 @@
                         <label class="fw-bold">C&eacute;dula</label>
                         <div class="input-group">
                             <InputNumber @bind-Value="User.Cedula" class="form-control"></InputNumber>
-                            <button type="button" class="btn btn-primary bi bi-search" @onclick="Filtrar"></button>
+                            <button type="button" class="btn btn-primary bi bi-search" @onclick="Filtrar">
+                                <img src="Search.svg" style="width: 20px;" />
+                            </button>
                         </div>
                     </div>
                     
@@ -64,7 +70,9 @@
                         <label class="fw-bold">Nombre</label>
                         <div class="input-group">
                             <InputText @bind-Value="User.Nombre" class="form-control"></InputText>
-                            <button type="button" class="btn btn-primary bi bi-search" @onclick="Filtrar"></button>
+                            <button type="button" class="btn btn-primary bi bi-search" @onclick="Filtrar">
+                                <img src="Search.svg" style="width: 20px;" />
+                            </button>
                         </div>
                     </div>
                     break;
@@ -82,7 +90,6 @@
                     <th class="table-head text-white" style="background-color: #012E40">Nombre</th>
                     <th class="table-head text-white" style="background-color: #012E40">Apellido</th>
                     <th class="table-head text-white" style="background-color: #012E40">Fecha Creaci&oacute;n</th>
-                    <th class="table-head text-white" style="background-color: #012E40">Tel&eacute;fono</th>
                     <th class="table-head text-white" style="background-color: #012E40">Email</th>
                     <th class="table-head text-white" style="background-color: #012E40">Opciones</th>
                 </tr>
