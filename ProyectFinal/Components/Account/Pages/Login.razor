@@ -12,20 +12,9 @@
 
 <RadzenNotification />
 <EditForm Model="Input" OnValidSubmit="LoginUser" FormName="Login">
-    
-    @* <DataAnnotationsValidator /> *@
-
-    <!-------------------Main Container----------------------->
-
+    <DataAnnotationsValidator />
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
-
-
-
-        <!-------------------Login Container----------------------->
         <div class="row border rounded-3 p-3 bg-white shadow box-area ">
-
-            
-            <!-------------------Left Box----------------------->
             <div class="col-md-6 rounded-3 d-flex justify-content-center align-items-center flex-column left-box" style="background: #103cbe">
                 <div class="featured-image mb-3 mt-3">
                     <img src="PoderJudicial.png" class="img-fluid" style="width:250px;" />
@@ -33,11 +22,8 @@
                 <p class="text-white fs-2" style="font-family: Courier New, Courier, monospace; font-weight:600;">UN MEJOR FUTURO</p>
                 <small class="text-white text-wrap text-center" style="width: 17rem; font-family:Courier New, Courier, monospace">El Tribunal de Niños y Niñas protege el bienestar de los menores.</small>
             </div>
-
-
-            <!-------------------Right Box----------------------->
             <div class="col-md-6 right-box">
-                @* <StatusMessage Message="@errorMessage" /> *@
+
                 <div class="row align-items-center">
                     <div class="header-text mb-4">
                        
@@ -45,9 +31,11 @@
                     <div class="input-group mb-3">
                         <InputText @bind-Value="Input.Email" class="form-control form-control-lg bg-light " placeholder="Email" />
                     </div>
+                        <ValidationMessage For="@(()=>Input.Email)" />
                     <div class="input-group mb-1">
                         <InputText @bind-Value="Input.Password" class="form-control form-control-lg bg-light " placeholder="Password" type="password" password />
                     </div>
+                        <ValidationMessage For="@(()=>Input.Password)"/>
                     <div class="input-group mb-5 d-flex justify-content-between">
                         <div class="form-check">
                             <InputCheckbox @bind-Value="Input.RememberMe" class="form-check-input" id="formCheck" />
@@ -62,7 +50,7 @@
                     </div>
                     <div class="row">
                         <p>
-                            ¿No tienes una cuenta?<a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))"> Regirtrarse</a>
+                            ¿No tienes una cuenta?<a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))"> Registrarse</a>
                         </p>
                     </div>
                 </div>
@@ -130,11 +118,11 @@
 
     private sealed class InputModel
     {
-        [Required]
+        [Required(ErrorMessage ="Este campo es requerido")]
         [EmailAddress]
         public string Email { get; set; } = "";
 
-        [Required]
+        [Required(ErrorMessage = "Este campo es requerido")]
         [DataType(DataType.Password)]
         public string Password { get; set; } = "";
   

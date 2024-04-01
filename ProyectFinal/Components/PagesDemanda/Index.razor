@@ -6,22 +6,61 @@
 @inject AlguacilServices alguacilServices
 @inject AudienciasServices audienciasServices
 @inject EstadoServices estadosDemandasServices
+@inject NotificationService notificationService
 @inject IJSRuntime JSRuntime
+<RadzenNotification/>
 <div class="card shadow-lg">
     <div class="card-header" style="background-color: #012E40">
         <h3 class="text-white text-center">Index Demanda</h3>
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col-4">
-                <label>Filtrar Por</label>
-                <InputSelect @bind-Value="Opcion" class="form-select">
-                    <option value="1">DemandaId</option>
-                    <option value="2">Fecha</option>
-                    <option value="4">Todo</option>
-                </InputSelect>
-            </div>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-6">
+                        <label class="fw-bold">Fecha Inicio</label>
+                        <InputDate @bind-Value="FechaInicio" class="form-control mb-4" />
+                    </div>
+                    <div class="col-6">
+                        <label class="fw-bold">Fecha Final</label>
+                        <div class="input-group">
+                            <InputDate @bind-Value="FechaFinal" class="form-control" />
+                            <button type="button" class="btn btn-primary bi bi-search" @onclick="FiltrarPorfecha"><img src="/Buscar2.svg" style="width: 20px;" /></button>
+                        </div>
 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <label class="fw-bold">Filtrar Por</label>
+                <div class="input-group">
+                    <InputSelect @bind-Value="Opcion" class="form-select col-4">
+                        <option value="1">DemandaId</option>
+                        <option value="2">Todo</option>
+                    </InputSelect>
+                    @if (Opcion == 2)
+                    {
+                        <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" /></button>
+                    }
+                </div>
+                
+            </div>
+        
+
+            @if (Opcion == 1)
+            {
+                <div class="col-3">
+                    <label>Demanda Id</label>
+                    <div class="input-group">
+                        <InputNumber @bind-Value="demandas.DemandaId" class="form-control"></InputNumber>
+                        <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" /></button>
+                    </div>
+                </div>
+            }
+        </div>
+        
             <div class="justify-content-end d-flex mb-4">
                 <a href="CreateDemanda" class="btn btn-primary bi-floppy-fill"><img src="/Create.svg" style="width: 30px;" />Create</a>
                
@@ -94,14 +133,16 @@
                                 <a href="/DeleteDemanda/@item.DemandaId">
                                     <img src="Delete.svg" style="width: 35px;" />
                                 </a>
-                             
-                               
+
+                                <a href="/ViewDemanda/@item.DemandaId">
+                                    <img src="Info.svg" style="width: 35px;" />
+                                </a>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
-        </div>
+        
     </div>
 </div>
 
@@ -115,7 +156,8 @@
     public List<Audiencias>? Audiencias = new List<Audiencias>();
     public List<EstadosDemandas>? Estados = new List<EstadosDemandas>();
     public int Opcion { get; set; }
-
+    public DateTime FechaInicio { get; set; }
+    public DateTime FechaFinal { get; set; }
     protected override async Task OnInitializedAsync()
     {
 
@@ -123,7 +165,38 @@
         TiposDemadas = await tipoDemandaServices.Listar(t => true);
         Audiencias = await audienciasServices.Listar(t => true);
         Estados = await estadosDemandasServices.Listar(t => true);
+        FechaFinal = DateTime.Now;
+        FechaInicio = DateTime.Now;
     }
-    
+    public async Task FiltrarPorfecha()
+    {
+        ListaDemandas = await demandaServices.GetDemandas();
+        if(FechaInicio > FechaFinal)
+        {
+            var mensaje= new NotificationMessage
+            {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "La fecha de inicio no puede ser mayor a la fecha final",
+                    Duration = 4_000
+            };
+            notificationService.Notify(mensaje);
+            return;
+        }
+        var demandas = ListaDemandas.Where(x => x.Fecha.Date >= FechaInicio.Date && x.Fecha.Date <= FechaFinal.Date).ToList();
+        ListaDemandas = demandas;
+    }
+    public async Task Filtrar()
+    {
+        if (Opcion == 1)
+        {
+            ListaDemandas = await demandaServices.GetDemandas();
+            var listDemandas = ListaDemandas.Where(a => a.DemandaId == demandas.DemandaId).ToList();
+            ListaDemandas = listDemandas;
+        }
+        else if (Opcion == 2)
+            ListaDemandas = await demandaServices.GetDemandas();
+    }
+
 
 }

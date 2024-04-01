@@ -2,10 +2,21 @@
 
 @inject NavigationManager NavigationManager
 
-<a href="/EditUser/@User.Id" class="btn btn-primary">presiona</a>
-
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ApplicationDbContext context
+
+<div class="card shadow-lg w-50 mx-auto">
+    <div class="card-header text-center text-white" style=" background-color: #012E40">
+        <h3>Tel&eacute;fono</h3>
+    </div>
+    <div class="card-body text-center">
+        <a href="/EditUser/@User.Id" class="btn btn-primary">
+            <img src="Telefono.svg" style="width:25px" />Agregar Tel&eacute;fono
+        </a>
+    </div>
+</div>
+
+
 @code {
     private AuthenticationState authenticationState;
     public ApplicationUser User { get; set; } = new ApplicationUser();
@@ -17,12 +28,6 @@
         var applicationUser = user.Identity.Name;
         var usuarioAutenticado = context.Users.FirstOrDefault(u => u.UserName == applicationUser);
         User.Id = usuarioAutenticado.Id;
-    }
-
-    public void SetUser()
-    {
-        
-
     }
 }
 

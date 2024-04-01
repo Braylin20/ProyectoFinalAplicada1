@@ -200,8 +200,8 @@
     }
     public async Task FiltrarPorfecha()
     {
-        ListaDemandas = await demandaServices.GetDemandas();
-        ListaDemandas = ListaDemandas.Where(x => x.Fecha.Date >= FechaInicio.Date && x.Fecha.Date <= FechaFinal.Date).ToList();
+        ListaDemandasUser = await demandaServices.GetDemandas();
+        ListaDemandasUser = ListaDemandas.Where(x => x.Fecha.Date >= FechaInicio.Date && x.Fecha.Date <= FechaFinal.Date).ToList();
     }
 
     public async Task Filtrar()

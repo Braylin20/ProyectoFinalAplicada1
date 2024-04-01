@@ -9,8 +9,8 @@
 @attribute [Authorize(Roles = "Admin,Empleado")]
 <RadzenNotification />
 <div class="card shadow-lg">
-    <div class="card-header">
-        <h3 class="text-white text-center">Index Expediente</h3>
+    <div class="card-header" style=" background-color: #012E40">
+        <h3 class="text-white text-center">Index Expediente </h3>
     </div>
     <div class="card-body">
         <div class="row">
@@ -36,7 +36,7 @@
                 <label>Filtrar Por</label>
                 <InputSelect @bind-Value="Opcion" class="form-select">
                     <option value="1">DemandaId</option>
-                    <option value="2">Tipo de Demanda</option>
+                    <option value="2">Tipo de Resoluci&oacute;n</option>
                     <option value="3">Todo</option>
                 </InputSelect>
                 @if (Opcion == 3)
@@ -83,7 +83,7 @@
                     <th class="table-head text-white" style="background-color: #012E40">Fecha</th>
                     <th class="table-head text-white" style="background-color: #012E40">Comentario</th>
                     <th class="table-head text-white" style="background-color: #012E40">Tipo Resoluci&oacute;n</th>
-                    <th class="table-head text-white" style="background-color: #012E40">Tipo Demanda</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Opciones</th>
                 </tr>
             </thead>
             <tbody>

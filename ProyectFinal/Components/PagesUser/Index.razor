@@ -1,5 +1,6 @@
 ﻿@page "/IndexUser"
 @inject EmpleadoServices empleadoServices
+@attribute [Authorize(Roles = "Admin,Empleado")]
 @inject UserManager<ApplicationUser> userManager
 @rendermode InteractiveServer
 @inject NotificationService notificationService
@@ -70,12 +71,6 @@
                     break;
             }
         </div>
-        <AuthorizeView Roles="Admin">
-            <div class="justify-content-end d-flex mb-4">
-                <a href="CreateEmpleado" class="btn btn-primary bi-floppy-fill"> <img src="/Create.svg" style="width: 30px;" />Create</a>
-
-            </div>
-        </AuthorizeView>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -138,6 +133,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        ListaUser = userManager.Users.ToList();
         ListaUser = await userManager.GetUsersInRoleAsync("User");
         FechaFinal = DateTime.Now;
         FechaInicio = DateTime.Now;

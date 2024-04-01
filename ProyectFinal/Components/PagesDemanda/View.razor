@@ -1,0 +1,103 @@
+﻿@page "/ViewDemanda/{DemandaId:int}"
+@inject ExpedienteServices expedienteService
+@inject SentenciaServices sentenciaService
+@inject DemandaServices demandaService
+@inject AudienciasServices AudienciasServices
+@inject TipoDemandaServices demandasServices
+@attribute [Authorize(Roles = "Admin,Empleado")]
+@rendermode InteractiveServer
+
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-header" style=" background-color: #012E40">
+            <h3 class="text-white text-center">Informaci&oacute;n de demanda</h3>
+        </div>
+        <div class=card-body>
+            <p class="fw-bold">DemandaId: @Demanda.DemandaId</p>
+            <p class="fw-bold">Fecha: @Demanda.Fecha</p>
+            <p class="fw-bold">Descripci&oacute;n: @Demanda.Descripcion</p>
+            @if (TiposDemandas.TipoDemanda is null)
+            {
+                <p class="fw-bold">Tipo de Demanda: No asignado </p>
+            }
+            else
+            {
+                <p class="fw-bold">Tipo de Demanda: @TiposDemandas.TipoDemanda </p>
+            }
+            @if (Audiencia.AudienciaId == 0)
+            {
+                <p class="fw-bold">Tipo de Demanda: No asignado </p>
+            }
+            else
+            {
+                <p class="fw-bold">Fecha de Audiencia @Audiencia.FechaAudiencia </p>
+            }
+        </div>
+        <div>
+            <table class="table table-bordered text-center">
+                <thead class="text-white" style="background-color: #012E40">
+                    <tr>
+                        <th>Numero de cedula</th>
+                        <th>Nombre de Demandado</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Demanda.DemandaDetalles)
+                    {
+                        <tr>
+                            <td>@item.NumCedulaDemandado</td>
+                            <td>@item.NombreDemandado</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-footer">
+            <div class="btn-group">
+                <a href="IndexDemanda" class="btn text-white" style=" background-color: #012E40">
+                    <img src="Back.svg" style="width:25px; " />Atr&aacute;s
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public int DemandaId { get; set; }
+    public Demandas Demanda = new Demandas();
+    public Audiencias Audiencia = new Audiencias();
+    public TiposDemandas TiposDemandas = new TiposDemandas();
+    public List<TiposDemandas> TiposDemadas { get; set; } = new List<TiposDemandas>();
+    public List<Sentencias> sentencias { get; set; } = new List<Sentencias>();
+    public List<Demandas> demandas { get; set; } = new List<Demandas>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Demanda = await demandaService.GetDemanda(DemandaId);
+        if (Demanda.AudienciaId != null)
+        {
+            Audiencia = await AudienciasServices.GetAudiencia(Demanda.AudienciaId.Value);
+        }
+
+        TiposDemadas = await demandasServices.Listar(t => true);
+
+        var tipo = TiposDemadas.FirstOrDefault(t => t.TiposDemandasId == Demanda.TiposDemandasId);
+        if (tipo != null)
+        {
+            TiposDemandas = tipo;
+        }
+
+
+    }
+
+
+
+
+
+
+}

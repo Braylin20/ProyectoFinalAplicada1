@@ -62,6 +62,7 @@
                                         <label>Nombre</label>
                                         <div class="input-group">
                                             <InputText @bind-Value="demandasDetalle.NombreDemandado" class="form-control " />
+                                            <ValidationMessage For="@(()=> demandasDetalle.NombreDemandado)" />
                                             <button type="button" class="btn btn-success bi-floppy-fill" @onclick="AgregarDetalleDemandado">Agregar</button>
                                         </div>
                                     </div>
@@ -80,6 +81,7 @@
                                             <tr>
                                                 <th>Numero de cedula</th>
                                                 <th>Nombre de Demandado</th>
+                                                <th>Eliminar</th>
 
                                             </tr>
                                         </thead>
@@ -90,7 +92,9 @@
                                                     <td>@item.NumCedulaDemandado</td>
                                                     <td>@item.NombreDemandado</td>
                                                     <td>
-                                                        <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalleDemandado(item))" />
+                                                        <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalleDemandado(item))" >
+                                                            <img src="DeleteBlack.svg" style="width: 25px " />
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             }
@@ -135,6 +139,7 @@
                                                 <th>Nombre</th>
                                                 <th>G&eacute;nero</th>
                                                 <th>Fecha de Nacimiento</th>
+                                                <th>Eliminar</th>
 
                                             </tr>
                                         </thead>
@@ -146,7 +151,9 @@
                                                     <td>@item.Genero</td>
                                                     <td>@item.FechaNacimientoNino</td>
                                                     <td>
-                                                        <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalleNino(item))" />
+                                                        <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalleNino(item))" >
+                                                        <img src="DeleteBlack.svg" style="width: 25px "/>
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             }
@@ -220,6 +227,8 @@
         Audiencias = await audienciaServices.Listar(e =>true);
         TiposDemandas = await tipoDemandaServices.Listar(e => true);
         authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        Demanda.Fecha = DateTime.Now;
+        NinoDetalle.FechaNacimientoNino = DateTime.Now;
     }
 
     public async Task agregarArchivo(InputFileChangeEventArgs e)
@@ -248,27 +257,15 @@
             }
         }
     }
-
-    // private async Task HandleImagenSeleccionada(InputFileChangeEventArgs e)
-    // {
-    //     var archivo = e.File;
-    //     if (archivo != null)
-    //     {
-    //         // Obtener los datos del archivo seleccionado
-    //         using var memoryStream = new MemoryStream();
-    //         await archivo.OpenReadStream().CopyToAsync(memoryStream);
-    //         Demanda.Archivo = memoryStream.ToArray(); // Guardar los datos del archivo en tu propiedad Imagen
-    //     }
-    // }
     public async Task AgregarDetalleDemandado()
     {
-        if (demandasDetalle.NombreDemandado == null || demandasDetalle.NumCedulaDemandado == null)
+        if (demandasDetalle.NombreDemandado == null || demandasDetalle.NumCedulaDemandado == null ||demandasDetalle.NumCedulaDemandado.Length != 11)
         {
             var mensajeError = new NotificationMessage
                 {
                     Severity = NotificationSeverity.Error,
                     Summary = "Error",
-                    Detail = "Debe ingresar algún valor en el demandado",
+                    Detail = "Debe ingresar algún valor en el demandado o la cédula es invalida",
                     Duration = 4_000
                 };
             notificationService.Notify(mensajeError);

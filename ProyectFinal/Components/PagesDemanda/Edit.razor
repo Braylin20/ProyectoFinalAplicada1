@@ -104,11 +104,12 @@
                                 </div>
                                 <hr clas="border-bottom" />
                                 <div>
-                                    <table class="table table-bordered">
-                                        <thead>
+                                    <table class="table table-bordered text-center">
+                                        <thead class="text-white" style="background-color: #012E40">
                                             <tr>
-                                                <th>AccesorioId</th>
-                                                <th>Valor</th>
+                                                <th>Nombre de Demandado</th>
+                                                <th>Numero de C&eacute;dula</th>
+                                                <th>Eliminar</th>
 
                                             </tr>
                                         </thead>
@@ -119,7 +120,7 @@
                                                     <td>@item.NombreDemandado</td>
                                                     <td>@item.NumCedulaDemandado</td>
                                                     <td>
-                                                        <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalle(item))" />
+                                                        <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalleDemandado(item))" />
                                                     </td>
                                                 </tr>
                                             }
@@ -158,12 +159,13 @@
                                 </div>
                                 <hr clas="border-bottom" />
                                 <div>
-                                    <table class="table table-bordered">
-                                        <thead>
+                                    <table class="table table-bordered text-center">
+                                        <thead class="text-white " style="background-color: #012E40">
                                             <tr>
-                                                <th>AccesorioId</th>
-                                                <th>Valor</th>
-
+                                                <th>Nombre del niño</th>
+                                                <th>G&eacute;nero</th>
+                                                <th>Fecha de Nacimiento</th>
+                                                <th>Eliminar</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -174,7 +176,7 @@
                                                     <td>@item.Genero</td>
                                                     <td>@item.FechaNacimientoNino</td>
                                                     <td>
-                                                       @*  <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalle(item))" /> *@
+                                                        <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalleNino(item))" />
                                                     </td>
                                                 </tr>
                                             }
@@ -197,7 +199,7 @@
                             </a>
 
                             <button type="submit" class="btn btn-success">
-                                <img src="Save.svg" style="width:25px" /> Guardar
+                                <img src="Save.svg" style="width:25px" /> Editar
                             </button>
                         </div>
                     </div>
@@ -252,15 +254,18 @@
     }
     public async Task AgregarDetalleDemandado()
     {
-        if (Validar())
+        if (demandasDetalle.NombreDemandado == null || demandasDetalle.NumCedulaDemandado == null || demandasDetalle.NumCedulaDemandado.Length != 11)
         {
+            var mensajeError = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "Debe ingresar algún valor en el demandado o la cédula es invalida",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensajeError);
             return;
         }
-        // if (VehiculoDetalle.AccesorioId == 0)
-        // {
-        //     Mensaje = "Debe llenar los campos del detalle o está agregando valores negativos";
-        //     return;
-        // }
         else
         {
             Demanda.DemandaDetalles.Add(demandasDetalle);
@@ -269,15 +274,18 @@
     }
     public async Task AgregarDetalleNino()
     {
-        if (Validar())
+        if (NinoDetalle.NombreNino is null || NinoDetalle.Genero is null || NinoDetalle.FechaNacimientoNino is null)
         {
+            var mensajeError = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "Debe ingresar algún valor en el niño",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensajeError);
             return;
         }
-        // if (VehiculoDetalle.AccesorioId == 0)
-        // {
-        //     Mensaje = "Debe llenar los campos del detalle o está agregando valores negativos";
-        //     return;
-        // }
         else
         {
             Demanda.UsuarioNinoDetalles.Add(NinoDetalle);
@@ -298,7 +306,7 @@
                 {
                     Severity = NotificationSeverity.Error,
                     Summary = "Error",
-                    Detail = "No se ha guardado correctamente",
+                    Detail = "No se ha editado correctamente",
                     Duration = 4_000
                 };
             notificationService.Notify(mensaje);
@@ -309,7 +317,7 @@
                 {
                     Severity = NotificationSeverity.Success,
                     Summary = "Éxito",
-                    Detail = "Se ha guardado correctamente",
+                    Detail = "Se ha editado correctamente",
                     Duration = 4_000
                 };
             notificationService.Notify(mensaje);
@@ -317,12 +325,20 @@
             NinoDetalle = new NinoDetalle();
         }
     }
-    public async Task RemoverDetalle(DemandasDetalle detalle)
+    public async Task RemoverDetalleDemandado(DemandasDetalle detalle)
     {
         var detalleEncontrado = Demanda.DemandaDetalles.FirstOrDefault(v => v.DetalleId == detalle.DetalleId);
         if (detalleEncontrado != null)
         {
             Demanda.DemandaDetalles.Remove(detalle);
+        }
+    }
+    public async Task RemoverDetalleNino(NinoDetalle detalle)
+    {
+        var detalleEncontrado = Demanda.UsuarioNinoDetalles.FirstOrDefault(v => v.DetalleId == detalle.DetalleId);
+        if (detalleEncontrado != null)
+        {
+            Demanda.UsuarioNinoDetalles.Remove(detalle);
         }
     }
     public bool Validar()

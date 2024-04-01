@@ -2,6 +2,8 @@
 
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> userManager
+@inject ApplicationDbContext context
 <AuthorizeView>
     <Authorized>
         <nav class="navbar navbar-expand-lg">
@@ -25,12 +27,20 @@
                                 </a>
 
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="/IndexDemandaUser">
-                                    <img src="Demanda.svg" class="Icon" type="button" href="/IndexDemandaUser" />Demandas
-                                </a>
-                            </li>
-
+                            <AuthorizeView Roles="User">
+                                <ChildContent Context="formContext">
+                                    <li class="nav-item">
+                                        <a class="nav-link text-white" href="/IndexDemandaUser">
+                                            <img src="Demanda.svg" class="Icon" type="button" href="/IndexDemandaUser" />Demandas
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-white" href="/IndexExpedienteUser">
+                                            <img src="Expedientes.svg" class="Icon" type="button" href="/IndexExpedienteUser" />Expediente
+                                        </a>
+                                    </li>
+                                </ChildContent>
+                            </AuthorizeView>
                             <AuthorizeView Roles="Admin,Empleado">
                                   <ChildContent Context="formContext">
                                     <li class="nav-item">
@@ -39,11 +49,28 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link mx-lg-2 text-white" href="IndexAudiencia">Audiencia</a>
+                                        <a class="nav-link mx-lg-2 text-white" href="IndexAudiencia">
+                                            <img src="Calendar.svg" class="Icon"/>Audiencia
+                                        </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link text-white" href="IndexEmpleado">
                                             <img src="Empleado.svg" class="Icon" type="button" href="/IndexEmpleado" />Empleado
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-white" href="IndexExpediente">
+                                            <img src="Expedientes.svg" class="Icon" type="button" href="IndexExpediente" />Expedientes
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-white" href="IndexSentencia">
+                                            <img src="Sentencia.svg" class="Icon" type="button" href="IndexSentencia" />Sentencias
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-white" href="IndexUser">
+                                            <img src="Empleado.svg" class="Icon" type="button" href="IndexUser" />Usuarios
                                         </a>
                                     </li>
                                 </ChildContent>
@@ -51,20 +78,19 @@
                         </ul>
                     </div>
                 </div>
-                <AntiforgeryToken />
                 <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                <AntiforgeryToken />
                 <a href="Configuration">
 
-                    <img type="button" src="Configuration.svg" class="ConfigImagen" />
+                    <img type="button" src="Telefono.svg" class="ConfigImagen" />
                 </a>
                 <img type="button" src="User.svg" class="UserImagen" data-bs-toggle="modal" data-bs-target="#exampleModal" />
-               
+                
             </div>
         </nav>
     </Authorized>
 </AuthorizeView>
 
-<h3>@User</h3>
 
 
 <!-- Modal -->
@@ -76,13 +102,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                
+                <a href="/EditUser/@User.Id" class="btn btn-primary">presiona</a>
             </div>
             <div class="modal-footer">
                 <form action="Account/Logout" method="post">
                     <AntiforgeryToken />
                     <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                    <button type="submit"  class="nav-link btn">
+                    <button type="submit" class="nav-link btn">
                         <img src="Logout.svg" type="submit" class="LogoutImagen" />
                     </button>
                 </form>
@@ -93,17 +119,21 @@
 
 @code {
     private string? currentUrl;
-    public string? User { get; set; }
     private AuthenticationState authenticationState;
+    public string UserName { get; set; }
+    public ApplicationUser User { get; set; } = new ApplicationUser();
     protected async Task OnInitializedAsync()
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
         authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        SetUser();
+        
+        var user = authenticationState.User;
+        var applicationUser = user.Identity.Name;
+        var usuarioAutenticado = context.Users.FirstOrDefault(u => u.UserName == applicationUser);
+        User.Id = usuarioAutenticado.Id;
+        
     }
-    public void SetUser() => User = authenticationState!.User.Identity!.Name;
-    
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
     {

@@ -2,76 +2,75 @@
 @inject ExpedienteServices expedienteService
 @inject SentenciaServices sentenciaService
 @inject DemandaServices demandaService
-@inject TiposResolucionServices resolucionService
+@inject AudienciasServices AudienciasServices
 @inject TipoDemandaServices demandasServices
+@attribute [Authorize(Roles = "Admin,Empleado")]
 @rendermode InteractiveServer
-<PageTitle>Ticket</PageTitle>
-<EditForm Model="demanda">
-    <DataAnnotationsValidator />
 
     <div class="container">
         <div class="card shadow-lg">
-            <div class="card-header">
-                <h3 style="color:red">Eliminar Expediente.</h3>
+            <div class="card-header" style=" background-color: #012E40">
+            <h3 class="text-white">Eliminar Demanda</h3>
             </div>
             <div class=card-body>
+                <p class="fw-bold">DemandaId: @Demanda.DemandaId</p>
+                <p class ="fw-bold">Fecha: @Demanda.Fecha</p>
+                <p class="fw-bold">Descripci&oacute;n: @Demanda.Descripcion</p>
+                @if(TiposDemandas.TipoDemanda is null)
+                {
+                <p class="fw-bold">Tipo de Demanda: No asignado </p>
+                }
+                else
+                {
+                    <p class="fw-bold">Tipo de Demanda: @TiposDemandas.TipoDemanda </p>
+                }
+                @if (Audiencia.AudienciaId ==0)
+                {
+                    <p class="fw-bold">Tipo de Demanda: No asignado </p>
+                }
+                else
+                {
+                    <p class="fw-bold">Fecha de Audiencia @Audiencia.FechaAudiencia </p>
+                }
 
-
-
-                <div class="mb-3">
-                    <label class="form-label" for="Nombre">Fecha:</label>
-                    <InputDate @bind-Value="demanda.Fecha" class="form-control" min="2024-01-01" Readonly />
-                    <ValidationMessage For="@(() => demanda.Fecha)" />
-                </div>
-
-
-
-                <div class="mb-3">
-                    <label class="form-label" for="SolicitadoPor">Resolucion Sentencia</label>
-                    <InputText @bind-Value="demanda.Descripcion" class="form-control" Readonly> 
-                    </InputText>
-                    <ValidationMessage For="@(() => demanda.Descripcion)" />
-                </div>
-
-
-
-
-                <div class="mb-3">
-                    <label class="form-label" for="Nombre">Tipo Demanda:</label>
-                    <InputSelect @bind-Value="demanda.DemandaId" class="form-control" Readonly>
-                        <option value="">Seleccione una opcion</option>
-                        @foreach (var item in demandas)
-                        {
-                            var tipoDemanda = demandasServices.GetTipoDemanda(item.TiposDemandasId);
-                            <option value="@item.DemandaId">@tipoDemanda</option>
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="@(() => demanda.DemandaId)" />
-                </div>
-
-
-             
-
+                
+                
 
             </div>
+        <div>
+            <table class="table table-bordered text-center">
+                <thead class="text-white" style="background-color: #012E40">
+                    <tr>
+                        <th>Numero de cedula</th>
+                        <th>Nombre de Demandado</th>
 
-            <AuthorizeView Roles="Admin,Empleado">
-                <ChildContent Context="formContext">
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Demanda.DemandaDetalles)
+                    {
+                        <tr>
+                            <td>@item.NumCedulaDemandado</td>
+                            <td>@item.NombreDemandado</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
-                    <div class="card-footer">
-                        <div class="btn-group">
-                            <a href="IndexDemanda" class="btn text-white" style=" background-color: #012E40">
-                                <img src="Back.svg" style="width:25px; " />Atr&aacute;s
-                            </a>
-                            <button class="btn btn-danger" @onclick="Eliminar">
+            <div class="card-footer">
+                <div class="btn-group">
+                    <a href="IndexDemanda" class="btn text-white" style=" background-color: #012E40">
+                        <img src="Back.svg" style="width:25px; " />Atr&aacute;s
+                    </a>
+                    <button class="btn btn-danger" @onclick="Eliminar">
 
-                                <img src="DeleteBlack.svg" type="button" style="width: 25px;" />Delete
-                            </button>
+                        <img src="DeleteBlack.svg" type="button" style="width: 25px;" />Delete
+                    </button>
 
-                        </div>
-                    </div>
-                </ChildContent>
-            </AuthorizeView>
+                </div>
+            </div>
+
 
 
             <AuthorizeView Roles="User">
@@ -93,19 +92,34 @@
             </AuthorizeView>
         </div>
     </div>
-</EditForm>
 
 
 @code {
     [Parameter]
     public int DemandaId { get; set; }
-    public Demandas demanda = new Demandas();
+    public Demandas Demanda = new Demandas();
+    public Audiencias Audiencia = new Audiencias();
+    public TiposDemandas TiposDemandas = new TiposDemandas();
+    public List<TiposDemandas> TiposDemadas { get; set; } = new List<TiposDemandas>();
 
 
     protected override async Task OnInitializedAsync()
     {
-        demanda = await demandaService.GetDemanda(DemandaId);
-       
+        Demanda = await demandaService.GetDemanda(DemandaId);
+        if (Demanda.AudienciaId != null)
+        {
+            Audiencia = await AudienciasServices.GetAudiencia(Demanda.AudienciaId.Value);
+        }
+
+        TiposDemadas = await demandasServices.Listar(t => true);
+
+        var tipo = TiposDemadas.FirstOrDefault(t => t.TiposDemandasId == Demanda.TiposDemandasId);
+        if (tipo != null)
+        {
+            TiposDemandas = tipo;
+        }
+        
+
     }
 
     public async Task Eliminar()
@@ -122,7 +136,7 @@
 
     public void Nuevo()
     {
-        demanda = new Demandas();
+        Demanda = new Demandas();
 
     }
 
