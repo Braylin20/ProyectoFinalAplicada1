@@ -12,7 +12,7 @@ using ProyectFinal.Data;
 namespace ProyectFinal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240330001420_Initial")]
+    [Migration("20240401020114_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -187,6 +187,9 @@ namespace ProyectFinal.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("ExpedientesExpedienteId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
@@ -220,9 +223,6 @@ namespace ProyectFinal.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Telefono")
-                        .HasColumnType("bigint");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -233,6 +233,8 @@ namespace ProyectFinal.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AbogadoId");
+
+                    b.HasIndex("ExpedientesExpedienteId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -256,6 +258,9 @@ namespace ProyectFinal.Migrations
                     b.Property<string>("Apellido")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -414,18 +419,12 @@ namespace ProyectFinal.Migrations
 
                     b.Property<string>("Id")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SentenciaId")
                         .HasColumnType("int");
 
                     b.HasKey("ExpedienteId");
-
-                    b.HasIndex("DemandaId");
-
-                    b.HasIndex("Id");
-
-                    b.HasIndex("SentenciaId");
 
                     b.ToTable("Expedientes");
                 });
@@ -482,6 +481,34 @@ namespace ProyectFinal.Migrations
                     b.ToTable("Sentencias");
                 });
 
+            modelBuilder.Entity("Share.Models.TelefonoDetalles", b =>
+                {
+                    b.Property<int>("DetalleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DetalleId"));
+
+                    b.Property<string>("Id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Telefono")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TipoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DetalleId");
+
+                    b.HasIndex("Id");
+
+                    b.HasIndex("TipoId");
+
+                    b.ToTable("TelefonoDetalles");
+                });
+
             modelBuilder.Entity("Share.Models.TipoResoluciones", b =>
                 {
                     b.Property<int>("ResolucionId")
@@ -496,6 +523,22 @@ namespace ProyectFinal.Migrations
                     b.HasKey("ResolucionId");
 
                     b.ToTable("TipoResoluciones");
+                });
+
+            modelBuilder.Entity("Share.Models.TipoTelefonos", b =>
+                {
+                    b.Property<int>("TipoTelefonoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TipoTelefonoId"));
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TipoTelefonoId");
+
+                    b.ToTable("TipoTelefonos");
                 });
 
             modelBuilder.Entity("Share.Models.TiposDemandas", b =>
@@ -619,7 +662,13 @@ namespace ProyectFinal.Migrations
                         .WithMany()
                         .HasForeignKey("AbogadoId");
 
+                    b.HasOne("Share.Models.Expedientes", "Expedientes")
+                        .WithMany()
+                        .HasForeignKey("ExpedientesExpedienteId");
+
                     b.Navigation("Abogado");
+
+                    b.Navigation("Expedientes");
                 });
 
             modelBuilder.Entity("Share.Models.Demandas", b =>
@@ -669,33 +718,6 @@ namespace ProyectFinal.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Share.Models.Expedientes", b =>
-                {
-                    b.HasOne("Share.Models.Demandas", "Demandas")
-                        .WithMany()
-                        .HasForeignKey("DemandaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProyectFinal.Data.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Share.Models.Sentencias", "Sentencia")
-                        .WithMany()
-                        .HasForeignKey("SentenciaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Demandas");
-
-                    b.Navigation("Sentencia");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Share.Models.NinoDetalle", b =>
                 {
                     b.HasOne("Share.Models.Demandas", null)
@@ -714,6 +736,23 @@ namespace ProyectFinal.Migrations
                         .IsRequired();
 
                     b.Navigation("TipoResoluciones");
+                });
+
+            modelBuilder.Entity("Share.Models.TelefonoDetalles", b =>
+                {
+                    b.HasOne("ProyectFinal.Data.ApplicationUser", null)
+                        .WithMany("TelefonoDetalles")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Share.Models.TipoTelefonos", "TipoTelefono")
+                        .WithMany()
+                        .HasForeignKey("TipoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TipoTelefono");
                 });
 
             modelBuilder.Entity("Share.Models.UsuarioDetalle", b =>
@@ -746,6 +785,8 @@ namespace ProyectFinal.Migrations
 
             modelBuilder.Entity("ProyectFinal.Data.ApplicationUser", b =>
                 {
+                    b.Navigation("TelefonoDetalles");
+
                     b.Navigation("UsuarioDetalle");
                 });
 

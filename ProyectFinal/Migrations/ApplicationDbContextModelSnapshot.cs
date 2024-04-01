@@ -184,6 +184,9 @@ namespace ProyectFinal.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("ExpedientesExpedienteId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
@@ -227,6 +230,8 @@ namespace ProyectFinal.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AbogadoId");
+
+                    b.HasIndex("ExpedientesExpedienteId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -411,19 +416,12 @@ namespace ProyectFinal.Migrations
 
                     b.Property<string>("Id")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SentenciaId")
                         .HasColumnType("int");
 
                     b.HasKey("ExpedienteId");
-
-                    b.HasIndex("DemandaId");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("SentenciaId");
 
                     b.ToTable("Expedientes");
                 });
@@ -489,6 +487,7 @@ namespace ProyectFinal.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DetalleId"));
 
                     b.Property<string>("Id")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Telefono")
@@ -660,7 +659,13 @@ namespace ProyectFinal.Migrations
                         .WithMany()
                         .HasForeignKey("AbogadoId");
 
+                    b.HasOne("Share.Models.Expedientes", "Expedientes")
+                        .WithMany()
+                        .HasForeignKey("ExpedientesExpedienteId");
+
                     b.Navigation("Abogado");
+
+                    b.Navigation("Expedientes");
                 });
 
             modelBuilder.Entity("Share.Models.Demandas", b =>
@@ -710,33 +715,6 @@ namespace ProyectFinal.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Share.Models.Expedientes", b =>
-                {
-                    b.HasOne("Share.Models.Demandas", "Demandas")
-                        .WithMany()
-                        .HasForeignKey("DemandaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProyectFinal.Data.ApplicationUser", "User")
-                        .WithOne("Expedientes")
-                        .HasForeignKey("Share.Models.Expedientes", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Share.Models.Sentencias", "Sentencia")
-                        .WithMany()
-                        .HasForeignKey("SentenciaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Demandas");
-
-                    b.Navigation("Sentencia");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Share.Models.NinoDetalle", b =>
                 {
                     b.HasOne("Share.Models.Demandas", null)
@@ -761,7 +739,9 @@ namespace ProyectFinal.Migrations
                 {
                     b.HasOne("ProyectFinal.Data.ApplicationUser", null)
                         .WithMany("TelefonoDetalles")
-                        .HasForeignKey("Id");
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Share.Models.TipoTelefonos", "TipoTelefono")
                         .WithMany()
@@ -802,8 +782,6 @@ namespace ProyectFinal.Migrations
 
             modelBuilder.Entity("ProyectFinal.Data.ApplicationUser", b =>
                 {
-                    b.Navigation("Expedientes");
-
                     b.Navigation("TelefonoDetalles");
 
                     b.Navigation("UsuarioDetalle");

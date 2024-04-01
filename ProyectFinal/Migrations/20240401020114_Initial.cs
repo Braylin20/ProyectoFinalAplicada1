@@ -18,7 +18,8 @@ namespace ProyectFinal.Migrations
                     AlguacilId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -67,6 +68,23 @@ namespace ProyectFinal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Expedientes",
+                columns: table => new
+                {
+                    ExpedienteId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SentenciaId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DemandaId = table.Column<int>(type: "int", nullable: false),
+                    Comentario = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Expedientes", x => x.ExpedienteId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TipoResoluciones",
                 columns: table => new
                 {
@@ -90,6 +108,19 @@ namespace ProyectFinal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TiposDemandas", x => x.TiposDemandasId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TipoTelefonos",
+                columns: table => new
+                {
+                    TipoTelefonoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TipoTelefonos", x => x.TipoTelefonoId);
                 });
 
             migrationBuilder.CreateTable(
@@ -275,7 +306,7 @@ namespace ProyectFinal.Migrations
                     AbogadoId = table.Column<int>(type: "int", nullable: true),
                     Cedula = table.Column<long>(type: "bigint", nullable: true),
                     FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Telefono = table.Column<long>(type: "bigint", nullable: false),
+                    ExpedientesExpedienteId = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -294,6 +325,11 @@ namespace ProyectFinal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Expedientes_ExpedientesExpedienteId",
+                        column: x => x.ExpedientesExpedienteId,
+                        principalTable: "Expedientes",
+                        principalColumn: "ExpedienteId");
                 });
 
             migrationBuilder.CreateTable(
@@ -336,37 +372,29 @@ namespace ProyectFinal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Expedientes",
+                name: "TelefonoDetalles",
                 columns: table => new
                 {
-                    ExpedienteId = table.Column<int>(type: "int", nullable: false)
+                    DetalleId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SentenciaId = table.Column<int>(type: "int", nullable: false),
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    DemandaId = table.Column<int>(type: "int", nullable: false),
-                    Comentario = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    TipoId = table.Column<int>(type: "int", nullable: false),
+                    Telefono = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Expedientes", x => x.ExpedienteId);
+                    table.PrimaryKey("PK_TelefonoDetalles", x => x.DetalleId);
                     table.ForeignKey(
-                        name: "FK_Expedientes_AspNetUsers_Id",
+                        name: "FK_TelefonoDetalles_AspNetUsers_Id",
                         column: x => x.Id,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Expedientes_Demandas_DemandaId",
-                        column: x => x.DemandaId,
-                        principalTable: "Demandas",
-                        principalColumn: "DemandaId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Expedientes_Sentencias_SentenciaId",
-                        column: x => x.SentenciaId,
-                        principalTable: "Sentencias",
-                        principalColumn: "SentenciaId",
+                        name: "FK_TelefonoDetalles_TipoTelefonos_TipoId",
+                        column: x => x.TipoId,
+                        principalTable: "TipoTelefonos",
+                        principalColumn: "TipoTelefonoId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -455,6 +483,11 @@ namespace ProyectFinal.Migrations
                 column: "AbogadoId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_ExpedientesExpedienteId",
+                table: "AspNetUsers",
+                column: "ExpedientesExpedienteId");
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -502,21 +535,6 @@ namespace ProyectFinal.Migrations
                 column: "SentenciaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Expedientes_DemandaId",
-                table: "Expedientes",
-                column: "DemandaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Expedientes_Id",
-                table: "Expedientes",
-                column: "Id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Expedientes_SentenciaId",
-                table: "Expedientes",
-                column: "SentenciaId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_NinoDetalles_DemandaId",
                 table: "NinoDetalles",
                 column: "DemandaId");
@@ -525,6 +543,16 @@ namespace ProyectFinal.Migrations
                 name: "IX_Sentencias_ResolucionId",
                 table: "Sentencias",
                 column: "ResolucionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TelefonoDetalles_Id",
+                table: "TelefonoDetalles",
+                column: "Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TelefonoDetalles_TipoId",
+                table: "TelefonoDetalles",
+                column: "TipoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UsuarioDetalles_Id",
@@ -592,10 +620,10 @@ namespace ProyectFinal.Migrations
                 name: "EmpleadoSentencia");
 
             migrationBuilder.DropTable(
-                name: "Expedientes");
+                name: "NinoDetalles");
 
             migrationBuilder.DropTable(
-                name: "NinoDetalles");
+                name: "TelefonoDetalles");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -608,6 +636,9 @@ namespace ProyectFinal.Migrations
 
             migrationBuilder.DropTable(
                 name: "Demandas");
+
+            migrationBuilder.DropTable(
+                name: "TipoTelefonos");
 
             migrationBuilder.DropTable(
                 name: "TipoResoluciones");
@@ -626,6 +657,9 @@ namespace ProyectFinal.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Expedientes");
 
             migrationBuilder.DropTable(
                 name: "UsuarioDetalles");

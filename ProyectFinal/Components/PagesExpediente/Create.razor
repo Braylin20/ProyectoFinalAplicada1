@@ -103,7 +103,7 @@
     { 
         sentencias = await sentenciaService.Listar(p => true);
         tipoDemandas = await tiposDemandaServices.Listar(p => true);
-      
+
 
     }
     public async Task BuscarUsuario()
@@ -128,13 +128,7 @@
         else
         {
             expediente.Id = user.Id;
-            Usuario = new ApplicationUser
-                {
-                    Cedula = user.Cedula,
-                    Nombre = user.Nombre,
-                    Apellido = user.Apellido,
-                    UserName = user.UserName
-                };
+
             var mensaje2 = new NotificationMessage
                 {
                     Severity = NotificationSeverity.Success,
@@ -148,6 +142,20 @@
 
     public async Task Guardar()
     {
+        expediente.FechaCreacion = DateTime.Now;
+        // var demanda = new Demandas
+        //     {
+        //         DemandaId = expediente.DemandaId,
+
+        //     };
+        // expediente.Demandas = demanda;
+        // var sentencia = new Sentencias
+        //     {
+        //         SentenciaId = expediente.SentenciaId,
+        //     };
+        // expediente.Sentencia = sentencia;
+        expediente.SentenciaId = 2;
+        expediente.DemandaId = 2;
         var guardo = await expedienteService.Save(expediente);
         if (!guardo)
         {

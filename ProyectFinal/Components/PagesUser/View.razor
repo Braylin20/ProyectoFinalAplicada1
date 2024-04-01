@@ -1,0 +1,133 @@
+﻿@page "/ViewUser/{Id:guid}"
+@inject EmpleadoServices empleadosServices
+@inject TiposTelefonosServices TiposTelefonosServices
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ApplicationDbContext context
+@inject NotificationService notificationService
+@inject UserManager<ApplicationUser> userManager
+@inject ApplicationUserServices ApplicationUserServices
+@inject DemandaServices DemandaServices
+@rendermode InteractiveServer
+<RadzenNotification />
+
+<EditForm Model="User">
+    <DataAnnotationsValidator />
+
+    <div class="container-fluid ">
+        <div class="card shadow-lg ">
+            <div class="card-header" style="background-color: #012E40">
+                <h3 class="text-center text-white">Eliminar User</h3>
+            </div>
+            <div class="row">
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6 ">
+                            <p class="fw-bold">Nombre: @User.Nombre</p>
+                            <p class="fw-bold">Apellido @User.Apellido</p>
+                            <p class="fw-bold">C&eacute;dula @User.Cedula</p>
+                            <p class="fw-bold">Gmail: @User.UserName</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="card-body border border-primary">
+                                <div>
+                                    <h3>Tel&eacute;fonos</h3>
+                                </div>
+
+                                <hr clas="border-bottom" />
+                                <div>
+                                    <table class="table table-bordered table-hover text-center">
+                                        <thead class="text-white" style="background-color: #012E40">
+                                            <tr>
+                                                <th>N&uacute;mero</th>
+                                                <th>Tipo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in User.TelefonoDetalles)
+                                            {
+                                                var tipo = User.TelefonoDetalles.FirstOrDefault(t => t.TipoId == item.TipoId);
+                                                tipo.TipoTelefono = TiposTelefonos.FirstOrDefault(t => t.TipoTelefonoId == tipo.TipoId);
+                                                var tipoTelefono = tipo.TipoTelefono;
+                                                <tr>
+                                                    <td>@item.Telefono</td>
+
+                                                    @if (tipoTelefono != null)
+                                                    {
+                                                        <td>@tipoTelefono.Descripcion</td>
+                                                    }
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card-body border border-primary">
+                                <div>
+                                    <h3>Niños</h3>
+                                </div>
+                                <hr clas="border-bottom" />
+                                <div>
+                                    <table class="table table-bordered text-center">
+                                        <thead class="text-white" style="background-color: #012E40">
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>G&eacute;nero</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in ListaDemandas)
+                                            {
+                                                var tipo = item.UsuarioNinoDetalles.Where(d => d.DemandaId == item.DemandaId).ToList();
+                                                foreach (var nombre in tipo)
+                                                {
+                                                    <tr>
+                                                        <td>@nombre.NombreNino</td>
+                                                        <td>@nombre.Genero</td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="btn-group">
+                    <a href="IndexUser" class="btn btn-secondary">Atr&aacute;s</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+    public List<Demandas> ListaDemandas { get; set; } = new List<Demandas>();
+    public ICollection<DemandasDetalle> DemandasDetalles { get; set; } = new List<DemandasDetalle>();
+    public TelefonoDetalles TelefonoDetalle { get; set; } = new();
+    public List<TipoTelefonos> TiposTelefonos { get; set; } = new List<TipoTelefonos>();
+    public ApplicationUser User { get; set; } = new ApplicationUser();
+    private AuthenticationState authenticationState;
+    public Demandas Demanda { get; set; } = new Demandas();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaDemandas = await DemandaServices.GetDemandas();
+        User = await ApplicationUserServices.GetUser(Id.ToString());
+
+        var demandas = ListaDemandas.Where(d => d.Cedula == User.Cedula).ToList();
+        ListaDemandas = demandas;
+        TiposTelefonos = await TiposTelefonosServices.Listar(t => true);
+        authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+    }
+}

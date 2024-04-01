@@ -15,8 +15,11 @@ namespace Share.Models
     {
         [Key]
         public int ExpedienteId { get; set; }
+        [ForeignKey("Sentencias")]
         public int SentenciaId { get; set; }
+        [ForeignKey("Users")]
         public string Id { get; set; }
+        [ForeignKey("Demandas")]
         public int DemandaId { get; set; }
         [Required(ErrorMessage = "Este campo es requerido")]
         public string? Comentario { get; set; }
@@ -24,15 +27,7 @@ namespace Share.Models
         [Required(ErrorMessage = "Este campo es requerido")]
         public DateTime FechaCreacion { get; set; }
 
-        [ForeignKey("DemandaId")]
-        public Demandas? Demandas { get; set; }
-        [ForeignKey("SentenciaId")]
-
-        public Sentencias? Sentencia { get; set; }
-        [ForeignKey("Id")]
-
-        public ApplicationUser? User { get; set; }
-
+   
 
     }
 }
