@@ -19,19 +19,13 @@ Al igual que visualizar todos y cada unos de sus expedientes con sus sentencias 
 **Programación de Audiencias:** Permite programar y gestionar audiencias judiciales.
 
 **Tecnologías Utilizadas**
-El sistema se ha desarrollado utilizando las siguientes tecnologías y herramientas:
+Utilizamos blazor en conjunto de Boostrap para el lado del diseño, junto con c# y Asp.net8.
 
-**ASP.NET Core:** Utilizado para el desarrollo del backend del sistema, proporcionando una arquitectura robusta y escalable.
+![![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/b0cfbf10-caf1-4ca6-a934-9e56f01ba290)
+]
 
-**C#: **Lenguaje de programación principal utilizado en el desarrollo del sistema, aprovechando su sintaxis intuitiva y su amplia gama de características.
-
-**Entity Framework Core:** Utilizado para el mapeo objeto-relacional y el acceso a la base de datos, simplificando las operaciones de persistencia de datos.
-
-**Razor Pages:** Utilizado para desarrollar las páginas web del frontend del sistema, proporcionando una interfaz de usuario dinámica y receptiva.
-
-**HTML/CSS/:** Utilizados para la maquetación, el diseño y la interactividad de las páginas web del sistema, asegurando una experiencia de usuario atractiva y funcional.
-
-
-Realmente este es un proyecto que nos tomo muchas horas, espero les guste, nos falta alguna que otra cosita, pero nos costo mucho trabajo hacerlo.
-
+![![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/6a6cdf80-7078-4f62-8c77-006434c70247)
+]
+![![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/720d7b59-3003-4cf9-8750-f355c56b615b)
+]
 
