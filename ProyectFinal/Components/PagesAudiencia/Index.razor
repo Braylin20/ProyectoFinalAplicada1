@@ -61,7 +61,7 @@
                     <div class="col-3">
                         <label class="fw-bold">Nombre</label>
                         <div class="input-group">
-                            <InputText @bind-Value="Audiencias.Comentario" class="form-control"></InputText>
+                            <InputText @bind-Value="Audiencias.Comentario" class="form-control" @oninput="FiltrarPorComentario"></InputText>
                             <button type="button" class="btn btn-primary bi bi-search" @onclick="Filtrar"></button>
                         </div>
                     </div>
@@ -144,6 +144,13 @@
         ListaAudiencias = await audienciaServices.GetAudiencias();
         ListaAudiencias = ListaAudiencias.Where(x => x.FechaAudiencia.Date >= FechaInicio.Date && x.FechaAudiencia.Date <= FechaFinal.Date).ToList();
     }
+
+    public async Task FiltrarPorComentario(ChangeEventArgs e)
+    {
+        Audiencias.Comentario = e.Value?.ToString();
+        await Filtrar();
+    }
+
     public async Task Filtrar()
     {
         if (Opcion == 1)

@@ -2,6 +2,7 @@
 @inject AlguacilServices alguacilService
 @rendermode InteractiveServer
 @inject NotificationService notificationService
+@inject NotificationService notificationService
 @attribute [Authorize(Roles = "Admin,Empleado")]
 
 <RadzenNotification />
@@ -11,13 +12,59 @@
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col-4">
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-6">
+                        <label class="fw-bold">Fecha Inicio</label>
+                        <InputDate @bind-Value="FechaInicio" class="form-control mb-4" />
+                    </div>
+                    <div class="col-6">
+                        <label class="fw-bold">Fecha Final</label>
+                        <div class="input-group">
+                            <InputDate @bind-Value="FechaFinal" class="form-control" />
+                            <button type="button" class="btn btn-primary bi bi-search" @onclick="FiltrarPorfecha"><img src="/Buscar2.svg" style="width: 20px;" /></button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
                 <label>Filtrar Por</label>
-                <InputSelect @bind-Value="Opcion" class="form-select mb-3">
+                <InputSelect @bind-Value="Opcion" class="form-select">
                     <option value="1">AlguacilId</option>
                     <option value="2">Nombre</option>
+                    <option value="3">Todo</option>
                 </InputSelect>
+                @if (Opcion == 3)
+                {
+                    <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" /></button>
+                }
             </div>
+            @if (Opcion == 2)
+            {
+                <div class="col-3">
+                    <label>Nombre</label>
+                    <div class="input-group">
+                        <InputText @bind-Value="alguacil.Nombre" class="form-select" @oninput="FiltrarPorNombre">
+                        </InputText>
+                        <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" /></button>
+                    </div>
+                </div>
+            }
+            else if (Opcion == 1)
+            {
+                <div class="col-3">
+                    <label>Demanda Id</label>
+                    <div class="input-group">
+                        <InputNumber @bind-Value="alguacil.AlguacilId" class="form-control"></InputNumber>
+                        <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" /></button>
+                    </div>
+                </div>
+            }
+           
+        </div>
             <AuthorizeView Roles="Admin">
                 <div class="justify-content-end d-flex mb-4">
                     <a href="CreateAlguacil" class="btn btn-primary bi-floppy-fill"> <img src="/Create.svg" style="width: 30px;" />Create</a>
@@ -57,7 +104,7 @@
                     }
                 </tbody>
             </table>
-        </div>
+       
     </div>
 </div>
 
@@ -66,9 +113,58 @@
 @code {
     public List<Alguaciles> ListaAlguacil { get; set; } = new List<Alguaciles>();
     public int Opcion { get; set; }
+    public DateTime FechaInicio { get; set; }
+    public DateTime FechaFinal { get; set; }
+    public Alguaciles alguacil { get; set; } = new Alguaciles();
 
     protected override async Task OnInitializedAsync()
     {
         ListaAlguacil = await alguacilService.GetAlguaciles();
+
+        FechaFinal = DateTime.Now;
+        FechaInicio = DateTime.Now;
+    }
+    public async Task FiltrarPorNombre(ChangeEventArgs e)
+    {
+        alguacil.Nombre = e.Value?.ToString();
+        await Filtrar();
+    }
+
+    public async Task FiltrarPorfecha()
+    {
+        ListaAlguacil = await alguacilService.GetAlguaciles();
+        if (FechaInicio > FechaFinal)
+        {
+            var mensajeError = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "La fecha inicio debe ser menor que la fecha final",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensajeError);
+            return;
+        }
+        else
+        {
+            ListaAlguacil = ListaAlguacil.Where(x => x.FechaCreacion.Date >= FechaInicio.Date && x.FechaCreacion.Date <= FechaFinal.Date).ToList();
+            
+        }
+    }
+    public async Task Filtrar()
+    {
+        if (Opcion == 1)
+        {
+            ListaAlguacil = await alguacilService.GetAlguaciles();
+            ListaAlguacil = ListaAlguacil.Where(a => a.AlguacilId == alguacil.AlguacilId).ToList();
+        }
+        else if (Opcion == 2)
+        {
+            ListaAlguacil = await alguacilService.GetAlguaciles();
+            ListaAlguacil = ListaAlguacil.Where(a => a.Nombre!.ToLower().Contains(alguacil.Nombre!.ToLower())).ToList();
+        }
+
+        else if (Opcion == 3)
+            ListaAlguacil = await alguacilService.GetAlguaciles();
     }
 }
