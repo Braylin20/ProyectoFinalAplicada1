@@ -17,9 +17,13 @@ namespace Share.Models
         public int? TiposDemandasId { get; set; }
         public int? EstadoId { get; set; }
         public int? AlguacilId { get; set; }
+        [Required(ErrorMessage = "Este campo es requerido")]
+        [RegularExpression(@"^\d{11}$", ErrorMessage = "La cédula debe tener 11 digitos")]
         public long? Cedula { get; set; }
         public int? AudienciaId { get; set; }
+        [Required(ErrorMessage ="Este campo es requerido")]
         public byte[]? Documento { get; set; }
+        [Required(ErrorMessage = "Este campo es requerido")]
         public byte[]? FotoCedula { get; set; }
         public DateTime Fecha { get; set; }
         [Required(ErrorMessage = "Este campo es requerido")]

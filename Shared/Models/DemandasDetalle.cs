@@ -12,6 +12,7 @@ namespace Share.Models
         [Key]
         public int DetalleId { get; set; }
         public int DemandaId { get; set; }
+        [RegularExpression(@"^\d{11}$", ErrorMessage = "La cédula debe tener 11 digitos")]
         public string? NumCedulaDemandado { get; set; }
         public string? NombreDemandado { get; set; }
         //public string? NombreNino { get; set; }

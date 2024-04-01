@@ -10,7 +10,7 @@ namespace ProyectFinal.Services
         
         public async Task<List<Demandas>> GetDemandas()
         {
-            return await _context!.Demandas.
+            return await _context!.Demandas.Include(d=>d.TipoDemanda).
                 Include(d => d.DemandaDetalles).
                 Include(d => d.UsuarioNinoDetalles).
                 ToListAsync();

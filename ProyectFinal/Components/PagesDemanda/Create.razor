@@ -25,22 +25,25 @@
                             <div class="form-group">
                                 <label class="fw-bold mb-2">Cedula:</label>
                                 <InputNumber  @bind-Value="Demanda.Cedula" class="form-control"  />
+                                <ValidationMessage For="@(()=>Demanda.Cedula)" />
+                                
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
                                 <label class="fw-bold mb-2">Instancia:</label>
                                 <InputFile accept=".pdf" class="form-control" OnChange="agregarArchivo" />
+                                <ValidationMessage For="@(()=>Demanda.Documento)" />
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
                                 <label class="fw-bold mb-2">Foto copia de c&eacute;dula:</label>
                                 <InputFile accept=".png" class="form-control" OnChange="agregarFotoCedula" />
+                                <ValidationMessage For="@(()=>Demanda.FotoCedula)" />
                             </div>
                         </div>
                     </div>
-                    
                     <div class="col-12">
                         <label class="fw-bold mb-2">Descripci&oacute;n</label>
                         <InputTextArea @bind-Value="Demanda.Descripcion" class="form-control mb-3" />
@@ -67,15 +70,16 @@
                                     <div class="col-8">
                                         <label class="mt-3">Numero de cedula</label>
                                         <InputText @bind-Value="demandasDetalle.NumCedulaDemandado" class="form-control" />
+                                        <ValidationMessage For="@(()=> demandasDetalle.NumCedulaDemandado)"/>
                                     </div>
                                 </div>
                                 <hr clas="border-bottom" />
                                 <div>
-                                    <table class="table table-bordered">
-                                        <thead>
+                                    <table class="table table-bordered text-center">
+                                        <thead class="text-white" style="background-color: #012E40">
                                             <tr>
-                                                <th>AccesorioId</th>
-                                                <th>Valor</th>
+                                                <th>Numero de cedula</th>
+                                                <th>Nombre de Demandado</th>
 
                                             </tr>
                                         </thead>
@@ -83,8 +87,8 @@
                                             @foreach (var item in Demanda.DemandaDetalles)
                                             {
                                                 <tr>
-                                                    <td>@item.NombreDemandado</td>
                                                     <td>@item.NumCedulaDemandado</td>
+                                                    <td>@item.NombreDemandado</td>
                                                     <td>
                                                         <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalleDemandado(item))" />
                                                     </td>
@@ -125,11 +129,12 @@
                                 </div>
                                 <hr clas="border-bottom" />
                                 <div>
-                                    <table class="table table-bordered">
-                                        <thead>
+                                    <table class="table table-bordered text-center">
+                                        <thead class="text-white"style="background-color: #012E40">
                                             <tr>
-                                                <th>AccesorioId</th>
-                                                <th>Valor</th>
+                                                <th>Nombre</th>
+                                                <th>G&eacute;nero</th>
+                                                <th>Fecha de Nacimiento</th>
 
                                             </tr>
                                         </thead>
@@ -154,17 +159,36 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer">
-                <div class="btn-group">
-                    <a href="IndexDemanda" class="btn text-white" style=" background-color: #012E40">
-                        <img src="Back.svg" style="width:25px; " />Atr&aacute;s
-                    </a>
+            <AuthorizeView Roles="Admin, Empleado">
+                <ChildContent Context="formContext">
+                    <div class="card-footer">
+                        <div class="btn-group">
+                            <a href="IndexDemanda" class="btn text-white" style=" background-color: #012E40">
+                                <img src="Back.svg" style="width:25px; " />Atr&aacute;s
+                            </a>
 
-                    <button type="submit" class="btn btn-success">
-                        <img src="Save.svg" style="width:25px" /> Guardar
-                    </button>
-                </div>
-            </div>
+                            <button type="submit" class="btn btn-success">
+                                <img src="Save.svg" style="width:25px" /> Guardar
+                            </button>
+                        </div>
+                    </div>
+                </ChildContent>
+            </AuthorizeView>
+            <AuthorizeView Roles="User">
+                <ChildContent Context="formContext">
+                    <div class="card-footer">
+                        <div class="btn-group">
+                            <a href="IndexDemandaUser" class="btn text-white" style=" background-color: #012E40">
+                                <img src="Back.svg" style="width:25px; " />Atr&aacute;s
+                            </a>
+
+                            <button type="submit" class="btn btn-success">
+                                <img src="Save.svg" style="width:25px" /> Guardar
+                            </button>
+                        </div>
+                    </div>
+                </ChildContent>
+            </AuthorizeView>
         </div>
     </div>
         
@@ -187,7 +211,7 @@
     public List<Audiencias> Audiencias { get; set; } = new List<Audiencias>();
     public List<TiposDemandas> TiposDemandas { get; set; } = new List<TiposDemandas>();
     private AuthenticationState authenticationState;
-    
+
     protected override async Task OnInitializedAsync()
     {
 
@@ -196,7 +220,6 @@
         Audiencias = await audienciaServices.Listar(e =>true);
         TiposDemandas = await tipoDemandaServices.Listar(e => true);
         authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-
     }
 
     public async Task agregarArchivo(InputFileChangeEventArgs e)
@@ -225,7 +248,7 @@
             }
         }
     }
-    
+
     // private async Task HandleImagenSeleccionada(InputFileChangeEventArgs e)
     // {
     //     var archivo = e.File;
@@ -239,11 +262,18 @@
     // }
     public async Task AgregarDetalleDemandado()
     {
-        if (Validar())
+        if (demandasDetalle.NombreDemandado == null || demandasDetalle.NumCedulaDemandado == null)
         {
+            var mensajeError = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "Debe ingresar algún valor en el demandado",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensajeError);
             return;
         }
-    
         else
         {
             Demanda.DemandaDetalles.Add(demandasDetalle);
@@ -252,11 +282,18 @@
     }
     public async Task AgregarDetalleNino()
     {
-        if (Validar())
+        if (NinoDetalle.NombreNino is null || NinoDetalle.Genero is null || NinoDetalle.FechaNacimientoNino is null)
         {
+            var mensajeError = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "Debe ingresar algún valor en el niño",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensajeError);
             return;
         }
-     
         else
         {
             Demanda.UsuarioNinoDetalles.Add(NinoDetalle);
@@ -266,10 +303,7 @@
 
     public async Task Guardar()
     {
-
         Demanda.Fecha = DateTime.Now;
-        
-
         var guardado = await demandaServices.Save(Demanda);
         if (!guardado)
         {
@@ -281,6 +315,7 @@
                 Duration = 4_000
             };
             notificationService.Notify(mensajeError);
+            return;
         }
         var mensaje = new NotificationMessage
         {
@@ -312,11 +347,7 @@
             Demanda.UsuarioNinoDetalles.Remove(detalle);
         }
     }
-    public bool Validar()
-    {
-        return Demanda.DemandaDetalles
-        .Any(v => v.NumCedulaDemandado == demandasDetalle.NumCedulaDemandado);
-    }
+   
     public void Nuevo()
     {
         Demanda = new Demandas();

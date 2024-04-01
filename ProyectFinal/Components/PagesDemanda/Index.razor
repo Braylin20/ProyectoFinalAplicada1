@@ -51,14 +51,27 @@
                             <td>
                                 @if(TipoDemanda != null)
                                     @TipoDemanda.TipoDemanda
+                                else
+                                {
+                                    <h6 >No asignado</h6>
+                                }
+
                             </td>
                             <td>
                                 @if (Estado != null)
                                     @Estado.Estado
+                                else
+                                {
+                                    <h6 >No asignado</h6>
+                                }
                             </td>
                             <td>
                                 @if (Audiencia != null)
                                     @Audiencia.FechaAudiencia.ToString("dd/MM/yyyy")
+                                else
+                                {
+                                    <h6>No asignado</h6>
+                                }
                             </td>
                             <td>
                                 @if (item.Documento != null && item.Documento.Length > 0)

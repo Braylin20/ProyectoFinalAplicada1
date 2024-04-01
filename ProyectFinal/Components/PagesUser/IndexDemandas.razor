@@ -15,66 +15,139 @@
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col-4">
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-6">
+                        <label class="fw-bold">Fecha Inicio</label>
+                        <InputDate @bind-Value="FechaInicio" class="form-control mb-4" />
+                    </div>
+                    <div class="col-6">
+                        <label class="fw-bold">Fecha Final</label>
+                        <div class="input-group">
+                            <InputDate @bind-Value="FechaFinal" class="form-control" />
+                            <button type="button" class="btn btn-primary bi bi-search" @onclick="FiltrarPorfecha"><img src="/Buscar2.svg" style="width: 20px;" /></button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
                 <label>Filtrar Por</label>
                 <InputSelect @bind-Value="Opcion" class="form-select">
                     <option value="1">DemandaId</option>
-                    <option value="2">Fecha</option>
-                    <option value="4">Todo</option>
+                    <option value="2">Tipo de Demanda</option>
+                    <option value="3">Todo</option>
                 </InputSelect>
+                @if (Opcion == 3)
+                {
+                    <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" /></button>
+                }
             </div>
-
-            <div class="justify-content-end d-flex mb-4">
-                <a href="CreateDemanda" class="btn btn-primary bi-floppy-fill"><img src="/Create.svg" style="width: 30px;" />Create</a>
-               
-            </div>
-
-            <table class="table table-bordered text-center">
-                <thead>
+        
+            @if (Opcion == 1)
+            {
+                <div class="col-3">
+                    <label>Demanda Id</label>
+                    <div class="input-group">
+                        <InputNumber @bind-Value="demandas.DemandaId" class="form-control"></InputNumber>
+                        <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" /></button>
+                    </div>
+                </div>
+            }
+            else if (Opcion == 2)
+            {
+                <div class="col-3">
+                    <label >Tipo de Demanda</label>
+                    <div class="input-group">
+                        <InputSelect @bind-Value="demandas.TiposDemandasId" class="form-select">
+                            @foreach (var item in TiposDemadas)
+                            {
+                                <option value="@item.TiposDemandasId">@item.TipoDemanda</option>
+                            }
+                        </InputSelect>
+                        <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" /></button>
+                    </div>
+                </div>
+            }
+        </div>
+           
+ 
+       
+        <div class="justify-content-end d-flex mb-4">
+            <a href="CreateDemanda" class="btn btn-primary bi-floppy-fill"><img src="/Create.svg" style="width: 30px;" />Create</a>
+        </div>
+        <table class="table table-bordered text-center">
+            <thead>
+                <tr>
+                    <th class="table-head text-white" style="background-color: #012E40">Id</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Tipo de Demanda</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Estado</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Fecha de Audiencia</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Instancia</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Foto de C&eacute;dula</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Opciones</th>
+                </tr>
+            </thead>
+            @if (ListaDemandasUser.Count == 0)
+            {
+                <tbody>
                     <tr>
-                        <th class="table-head text-white" style="background-color: #012E40">Id</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Tipo de Demanda</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Estado</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Fecha de Audiencia</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Archivo</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Foto de C&eacute;dula</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Opciones</th>
+                        <td colspan="6" class="text-center border border-4 bg-light p-3">
+                            <h4>No hay registros</h4>
+                        </td>
                     </tr>
-                </thead>
+                </tbody>
+            }
+            else
+            {
                 <tbody>
                     @foreach (var item in ListaDemandasUser)
                     {
-                         TipoDemanda= TiposDemadas.FirstOrDefault(t=> t.TiposDemandasId == item.TiposDemandasId);
-                         Audiencia = Audiencias.FirstOrDefault(t=> t.AudienciaId == item.AudienciaId);
-                         Estado = Estados.FirstOrDefault(t=> t.EstadoId == item.EstadoId);
+                        TipoDemanda = TiposDemadas.FirstOrDefault(t => t.TiposDemandasId == item.TiposDemandasId);
+                        Audiencia = Audiencias.FirstOrDefault(t => t.AudienciaId == item.AudienciaId);
+                        Estado = Estados.FirstOrDefault(t => t.EstadoId == item.EstadoId);
 
                         <tr>
                             <td>@item.DemandaId</td>
                             <td>
-                                @if(TipoDemanda != null)
+                                @if (TipoDemanda != null)
                                     @TipoDemanda.TipoDemanda
+                                else
+                                {
+                                    <h6>No asignado</h6>
+                                }
                             </td>
                             <td>
                                 @if (Estado != null)
                                     @Estado.Estado
+                                else
+                                {
+                                    <h6>No asignado</h6>
+                                }
                             </td>
                             <td>
                                 @if (Audiencia != null)
                                     @Audiencia.FechaAudiencia.ToString("dd/MM/yyyy")
+                                else
+                                {
+                                    <h6>No asignado</h6>
+                                }
                             </td>
                             <td>
                                 @if (item.Documento != null && item.Documento.Length > 0)
                                 {
-                                   
-                                    <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.Documento)" download="Archivo.pdf" ><img src="/Download.svg" style="width: 35px;" /></a>
+
+                                    <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.Documento)" download="Archivo.pdf"><img src="/Download.svg" style="width: 35px;" /></a>
                                 }
                             </td>
                             <td>
                                 @if (item.FotoCedula != null && item.FotoCedula.Length > 0)
                                 {
-                                   
-                                    <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.FotoCedula)" download="Foto.png" ><img src="/Download.svg" style="width: 35px;" /></a>
-                                }                        
+
+                                    <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.FotoCedula)" download="Foto.png"><img src="/Download.svg" style="width: 35px;" /></a>
+                                }
                             </td>
                             <td>
                                 <a href="/EditDemanda/@item.DemandaId">
@@ -83,14 +156,16 @@
                                 <a href="/DeleteDemanda/@item.DemandaId">
                                     <img src="Delete.svg" style="width: 35px;" />
                                 </a>
-                             
-                               
+
+
                             </td>
                         </tr>
                     }
                 </tbody>
-            </table>
-        </div>
+            }
+            
+        </table>
+        
     </div>
 </div>
 
@@ -106,6 +181,8 @@
     public List<EstadosDemandas>? Estados = new List<EstadosDemandas>();
     public int Opcion { get; set; }
     private AuthenticationState authenticationState;
+    public DateTime FechaInicio { get; set; }
+    public DateTime FechaFinal { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -117,9 +194,35 @@
         authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = await userManager.FindByEmailAsync(authenticationState.User.Identity.Name);
         ListaDemandasUser = ListaDemandas.Where(d => d.Cedula == user.Cedula).ToList();
-
+        FechaFinal = DateTime.Now;
+        FechaInicio = DateTime.Now;
 
     }
-    
+    public async Task FiltrarPorfecha()
+    {
+        ListaDemandas = await demandaServices.GetDemandas();
+        ListaDemandas = ListaDemandas.Where(x => x.Fecha.Date >= FechaInicio.Date && x.Fecha.Date <= FechaFinal.Date).ToList();
+    }
+
+    public async Task Filtrar()
+    {
+        if (Opcion == 1)
+        {
+            var user = await userManager.FindByEmailAsync(authenticationState.User.Identity.Name);
+            ListaDemandasUser = ListaDemandas.Where(d => d.Cedula == user.Cedula).ToList(); ;
+            ListaDemandasUser = ListaDemandasUser.Where(a => a.DemandaId == demandas.DemandaId).ToList();
+            int nombre = 3;
+        }
+        else if (Opcion == 2)
+        {
+            var user = await userManager.FindByEmailAsync(authenticationState.User.Identity.Name);
+            ListaDemandasUser = ListaDemandas.Where(d => d.Cedula == user.Cedula).ToList(); ;
+            ListaDemandasUser = ListaDemandasUser.Where(a => a.TipoDemanda!.TiposDemandasId == demandas.TiposDemandasId).ToList();
+            int nombre = 3;
+        }
+
+        else if (Opcion == 3)
+            ListaDemandasUser = await demandaServices.GetDemandas();
+    }
 
 }
