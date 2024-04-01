@@ -1,6 +1,8 @@
 **Sistema de Gestión Judicial**
-Este repositorio contiene un sistema de gestión judicial desarrollado para facilitar el manejo de demandas, sentencias, expedientes, empleados, alguaciles y audiencias en un entorno judicial. El sistema proporciona una plataforma centralizada para registrar, 
-gestionar y consultar información relevante para el proceso judicial.
+Este repositorio contiene un sistema de gestión judicial desarrollado para facilitar el manejo de demandas, sentencias, expedientes, empleados, alguaciles y audiencias en un entorno judicial. El sistema proporciona una plataforma centralizada para registrar, le permite al usuario poder acceder a la pagina para registrar cualquier demanda que le interese, le permite tambien agregar los niños involucrados y sus demandados correspondientes, tambien le permite visualizar sus demandas depositados y ver que fecha de audiencia tiene y como va el estado de sus demandas.
+
+Al igual que visualizar todos y cada unos de sus expedientes con sus sentencias que le corresponde y sus tipos de resoluciones.
+
 
 **Características Principales:**
 
@@ -29,21 +31,7 @@ El sistema se ha desarrollado utilizando las siguientes tecnologías y herramien
 
 **HTML/CSS/:** Utilizados para la maquetación, el diseño y la interactividad de las páginas web del sistema, asegurando una experiencia de usuario atractiva y funcional.
 
-**Instalación y Uso**
-Para instalar y utilizar el sistema de gestión judicial, sigue estos pasos:
 
-Clona el repositorio en tu máquina local utilizando el siguiente comando:
+Realmente este es un proyecto que nos tomo muchas horas, espero les guste, nos falta alguna que otra cosita, pero nos costo mucho trabajo hacerlo.
 
-bash
-Copy code
-git clone https://github.com/tu-usuario/repo.git
-Abre el proyecto en tu entorno de desarrollo preferido, como Visual Studio o Visual Studio Code.
 
-Configura la conexión a la base de datos en el archivo appsettings.json proporcionando la cadena de conexión adecuada.
-
-Ejecuta las migraciones de la base de datos para crear el esquema necesario en tu base de datos utilizando el siguiente comando:
-
-sql
-Copy code
-dotnet ef database update
-Inicia la aplicación y comienza a utilizar el sistema de gestión judicial.
