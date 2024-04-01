@@ -27,6 +27,26 @@
                                     <h3>Registro Tel&eacute;fono</h3>
                                 </div>
                                 <div class="row">
+                                    <div class="mb-3">
+                                        <label for="inputNombre" class="form-label">Nombre</label>
+                                        <InputText @bind-Value="User.Nombre" class="form-control" id="inputNombre" placeholder="Nombre" />
+                                        <ValidationMessage For="() => User.Nombre" class="text-danger" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="inputApellido" class="form-label">Apellido</label>
+                                        <InputText @bind-Value="User.Apellido" class="form-control" id="inputApellido" placeholder="Apellido" />
+                                        <ValidationMessage For="() => User.Apellido" class="text-danger" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="inputCedula" class="form-label">C&eacute;dula</label>
+                                        <InputNumber @bind-Value="User.Cedula" class="form-control" id="inputCedula" placeholder="C&eacute;dula" />
+                                        <ValidationMessage For="() => User.Cedula" class="text-danger" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="inputCedula" class="form-label">Email</label>
+                                        <InputText @bind-Value="User.UserName" class="form-control" id="inputCedula" placeholder="C&eacute;dula" />
+                                        <ValidationMessage For="() => User.UserName" class="text-danger" />
+                                    </div>
                                     <div class="col-6 ">
                                         <label>Tipos de Tel&eacute;fono</label>
                                         <div class="input-group">
@@ -103,6 +123,7 @@
     public List<TipoTelefonos> TiposTelefonos { get; set; } = new List<TipoTelefonos>();
     public ApplicationUser User { get; set; } = new ApplicationUser();
     private AuthenticationState authenticationState;
+    public string rol { get; set; }
     protected override async Task OnInitializedAsync()
     {
         User = await ApplicationUserServices.GetUser(Id.ToString());
@@ -171,7 +192,19 @@
         var user = authenticationState.User;
         var applicationUser = user.Identity.Name;
         var usuarioActualizar = context.Users.FirstOrDefault(u => u.UserName == applicationUser);
-        usuarioActualizar.TelefonoDetalles = User.TelefonoDetalles;
+        var usuarioAct = (await userManager.GetUsersInRoleAsync("Admin"));
+        var usuario = usuarioAct.FirstOrDefault(u => u.UserName == applicationUser);
+        if( usuario is not null)
+        {
+            usuarioActualizar.TelefonoDetalles = User.TelefonoDetalles;
+            usuarioActualizar.Nombre = User.Nombre;
+            usuarioActualizar.Apellido = User.Apellido;
+            usuarioActualizar.Cedula = User.Cedula;
+            usuarioActualizar.UserName = User.UserName;
+        }
+
+        
+        
         var guardado = await ApplicationUserServices.Update(usuarioActualizar);
         if (!guardado)
         {

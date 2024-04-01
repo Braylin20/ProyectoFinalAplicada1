@@ -57,6 +57,28 @@
                 </tbody>
             </table>
         </div>
+        <div>
+            <table class="table table-bordered text-center">
+                <thead class="text-white" style="background-color: #012E40">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>G&Eacute;nero</th>
+                        <th>Fecha de Nacimiento</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Demanda.UsuarioNinoDetalles)
+                    {
+                        <tr>
+                            <td>@item.NombreNino</td>
+                            <td>@item.Genero</td>
+                            <td>@item.FechaNacimientoNino</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
             <div class="card-footer">
                 <div class="btn-group">
@@ -118,7 +140,7 @@
         {
             TiposDemandas = tipo;
         }
-        
+
 
     }
 
@@ -127,10 +149,25 @@
         var guardo = await demandaService.DeleteDemanda(DemandaId);
         if (guardo)
         {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Eliminado",
+                    Detail = "Se ha eliminado correctamente",
+                    Duration = 3_000
+                };
             Nuevo();
-
         }
-
+        else
+        {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "No se ha eliminado correctamente",
+                    Duration = 3_000
+                };
+        }
 
     }
 

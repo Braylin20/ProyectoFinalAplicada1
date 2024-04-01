@@ -120,7 +120,9 @@
                                                     <td>@item.NombreDemandado</td>
                                                     <td>@item.NumCedulaDemandado</td>
                                                     <td>
-                                                        <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalleDemandado(item))" />
+                                                        <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalleDemandado(item))" >
+                                                            <img src="DeleteBlack.svg" style="width: 25px;" />
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             }
@@ -176,7 +178,9 @@
                                                     <td>@item.Genero</td>
                                                     <td>@item.FechaNacimientoNino</td>
                                                     <td>
-                                                        <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalleNino(item))" />
+                                                        <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverDetalleNino(item))" >
+                                                            <img src="DeleteBlack.svg" style="width: 25px;" />
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             }

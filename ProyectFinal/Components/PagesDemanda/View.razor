@@ -37,7 +37,7 @@
             <table class="table table-bordered text-center">
                 <thead class="text-white" style="background-color: #012E40">
                     <tr>
-                        <th>Numero de cedula</th>
+                        <th>Numero de c&eacute;dula</th>
                         <th>Nombre de Demandado</th>
 
                     </tr>
@@ -48,6 +48,28 @@
                         <tr>
                             <td>@item.NumCedulaDemandado</td>
                             <td>@item.NombreDemandado</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <table class="table table-bordered text-center">
+                <thead class="text-white" style="background-color: #012E40">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>G&Eacute;nero</th>
+                        <th>Fecha de Nacimiento</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Demanda.UsuarioNinoDetalles)
+                    {
+                        <tr>
+                            <td>@item.NombreNino</td>
+                            <td>@item.Genero</td>
+                            <td>@item.FechaNacimientoNino</td>
                         </tr>
                     }
                 </tbody>

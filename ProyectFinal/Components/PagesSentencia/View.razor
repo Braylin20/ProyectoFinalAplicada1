@@ -1,0 +1,74 @@
+﻿@page "/ViewSentencia/{SentenciaId:int}"
+@attribute [Authorize(Roles = "Admin,Empleado")]
+@inject NotificationService notificationService
+@inject SentenciaServices sentenciaService
+@inject TiposResolucionServices resolucionService
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+
+
+
+
+
+<div class="container-fluid">
+    <div class="card shadow-lg w-75 mx-auto mt-5">
+        <div class="card-header text-white" style=" background-color: #012E40">
+            <h3 class="text-center">Eliminar sentencia</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="fw-bold" for="Nombre">Nombre Ministerio:</label>
+                        <InputText @bind-Value="sentencia.NombreMinisterio" class="form-control" readonly />
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="fw-bold" for="Apellido"> Tipo Resolucion:</label>
+                        <InputSelect @bind-Value="sentencia.ResolucionId" class="form-control" readonly>
+                            <option value="">Seleccione una opcion</option>
+                            @foreach (var item in ListaResolucion)
+                            {
+                                var tipoResolucion = resolucionService.GetResolucion(item.ResolucionId);
+                                <option value="@item.ResolucionId">@tipoResolucion</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="fw-bold" for="FechaCreacion">Fecha Creación:</label>
+                        <InputDate @bind-Value="sentencia.FechaCreacion" class="form-control" readonly />
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="btn-group">
+                <a href="IndexSentencia" class="btn text-white" style=" background-color: #012E40">
+                    <img src="Back.svg" style="width:25px; " />Atr&aacute;s
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+
+    [Parameter]
+    public int SentenciaId { set; get; }
+    public Sentencias sentencia { get; set; } = new Sentencias();
+    public List<TipoResoluciones> ListaResolucion = new List<TipoResoluciones>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        sentencia = await sentenciaService.GetSentencia(SentenciaId);
+        ListaResolucion = await resolucionService.GetResoluciones();
+    }
+    
+}

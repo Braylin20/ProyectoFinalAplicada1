@@ -12,12 +12,22 @@
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col-4">
-                <label>Filtrar Por</label>
-                <InputSelect @bind-Value="Opcion" class="form-select mb-3">
-                    <option value="1">AlguacilId</option>
-                    <option value="2">Nombre</option>
-                </InputSelect>
+            <div class="col-6">
+
+                <div class="row">
+                    <div class="col-6">
+                        <label class="fw-bold">Fecha Inicio</label>
+                        <InputDate @bind-Value="FechaInicio" class="form-control mb-4" />
+                    </div>
+                    <div class="col-6">
+                        <label class="fw-bold">Fecha Final</label>
+                        <div class="input-group">
+                            <InputDate @bind-Value="FechaFinal" class="form-control" />
+                            <button type="button" class="btn btn-primary bi bi-search" @onclick="FiltrarPorfecha"><img src="/Buscar2.svg" style="width: 20px;" />Buscar</button>
+                        </div>
+
+                    </div>
+                </div>
             </div>
             <AuthorizeView Roles="Admin">
                 <div class="justify-content-end d-flex mb-4">
@@ -68,13 +78,20 @@
     public List<Sentencias> ListaSentencia { get; set; } = new List<Sentencias>();
     public List<TipoResoluciones> ListaResolucion { get; set; } = new List<TipoResoluciones>();
     public int Opcion { get; set; }
-
+    public DateTime FechaInicio { get; set; }
+    public DateTime FechaFinal { get; set; }
     protected override async Task OnInitializedAsync()
     {
         ListaSentencia = await sentenciaService.Listar(p=> true);
         ListaResolucion = await resolucionService.GetResoluciones();
+        FechaFinal = DateTime.Now;
+        FechaInicio = DateTime.Now;
     }
-
+    public async Task FiltrarPorfecha()
+    {
+        ListaSentencia = await sentenciaService.Listar(p => true);
+        ListaSentencia = ListaSentencia.Where(x => x.FechaCreacion.Date >= FechaInicio.Date && x.FechaCreacion.Date <= FechaFinal.Date).ToList();
+    }
     public string BuscarResolucion(Sentencias item)
     {
         var sen = ListaSentencia.FirstOrDefault(s => s.SentenciaId == item.SentenciaId);

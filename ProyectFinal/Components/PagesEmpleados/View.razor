@@ -1,10 +1,10 @@
-﻿@page "/DeleteEmpleado/{Id:guid}"
+﻿@page "/ViewEmpleado/{Id:guid}"
 
 @inject ApplicationUserServices ApplicationUserServices
 @inject NotificationService NotificationService
 @attribute [Authorize(Roles = "Admin,Empleado")]
 @rendermode InteractiveServer
-<RadzenNotification/>
+<RadzenNotification />
 <div class="container">
     <div class="card shadow-lg">
         <div class="card-header" style=" background-color: #012E40">
@@ -16,17 +16,12 @@
             <p class="fw-bold">C&eacute;dula: @User.Cedula</p>
             <p class="fw-bold">Email: @User.UserName</p>
         </div>
-       
 
         <div class="card-footer">
             <div class="btn-group">
                 <a href="IndexEmpleado" class="btn text-white" style=" background-color: #012E40">
                     <img src="Back.svg" style="width:25px; " />Atr&aacute;s
                 </a>
-                <button class="btn btn-danger" @onclick="Eliminar">
-                    <img src="DeleteBlack.svg" type="button" style="width: 25px;" />Delete
-                </button>
-
             </div>
         </div>
 
@@ -48,33 +43,7 @@
         User = await ApplicationUserServices.GetUser(Id.ToString());
     }
 
-    public async Task Eliminar()
-    {
-        var elimiando = await ApplicationUserServices.Delete(User.Id);
-        if (elimiando)
-        {
-            var mensaje = new NotificationMessage
-            {
-                Severity = NotificationSeverity.Success,
-                Summary = "Eliminado",
-                Detail = "Se ha eliminado correctamente",
-                Duration = 3_000
-            };
-            Nuevo();
-        }
-        else
-        {
-            var mensaje = new NotificationMessage
-            {
-                Severity = NotificationSeverity.Error,
-                Summary = "Error",
-                Detail = "No se ha eliminado correctamente",
-                Duration = 3_000
-            };
-        }
-
-
-    }
+    
 
     public void Nuevo()
     {

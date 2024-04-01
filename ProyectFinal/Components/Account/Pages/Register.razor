@@ -33,7 +33,7 @@
                             <ValidationMessage For="() => Input.Apellido" class="text-danger" />
                         </div>
                         <div class="mb-3">
-                            <label for="inputCedula" class="form-label">Cedula</label>
+                            <label for="inputCedula" class="form-label">C&eacute;dula</label>
                             <InputNumber @bind-Value="Input.Cedula" class="form-control" id="inputCedula" placeholder="C&eacute;dula" />
                             <ValidationMessage For="() => Input.Cedula" class="text-danger" />
                         </div>
@@ -52,7 +52,9 @@
                             <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" id="inputConfirmPassword" placeholder="Confirm Password" />
                             <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Register</button>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <img src="Save.svg" style="width:25px" /> Register
+                        </button>
                     </EditForm>
                 </div>
             </div>
@@ -105,7 +107,7 @@
 
        
    
-        await UserManager.AddToRoleAsync(user, "Admin");
+        await UserManager.AddToRoleAsync(user, "User");
 
         Logger.LogInformation("User created a new account with password.");
 

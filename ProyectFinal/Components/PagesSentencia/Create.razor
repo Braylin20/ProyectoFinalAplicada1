@@ -12,8 +12,8 @@
     <DataAnnotationsValidator />
 
     <div class="container-fluid">
-        <div class="card shadow-lg w-75 mx-auto mt-5">
-            <div class="card-header bg-primary text-white">
+        <div class="card shadow-lg w-75 mx-auto mt-5" >
+            <div class="card-header text-white" style=" background-color: #012E40">
                 <h3 class="text-center">Registro de Sentencia</h3>
             </div>
             <div class="card-body">
@@ -38,19 +38,17 @@
                             </InputSelect>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="fw-bold" for="FechaCreacion">Fecha Creación:</label>
-                            <InputDate @bind-Value="sentencia.FechaCreacion" class="form-control" readonly />
-                            <ValidationMessage For="@(()=>sentencia.FechaCreacion)" />
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="card-footer">
-                <div class="d-flex justify-content-end">
-                    <a href="IndexAudiencia" class="btn btn-secondary me-2">Atrás</a>
-                    <button type="submit" class="btn btn-success">Guardar</button>
+                <div class="btn-group">
+                    <a href="IndexSentencia" class="btn text-white" style=" background-color: #012E40">
+                        <img src="Back.svg" style="width:25px; " />Atr&aacute;s
+                    </a>
+
+                    <button type="submit" class="btn btn-success">
+                        <img src="Save.svg" style="width:25px" /> Guardar
+                    </button>
                 </div>
             </div>
         </div>
