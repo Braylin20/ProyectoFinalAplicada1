@@ -218,7 +218,6 @@
             var user = await userManager.FindByEmailAsync(authenticationState.User.Identity.Name);
             ListaDemandasUser = ListaDemandas.Where(d => d.Cedula == user.Cedula).ToList(); ;
             ListaDemandasUser = ListaDemandasUser.Where(a => a.TipoDemanda!.TiposDemandasId == demandas.TiposDemandasId).ToList();
-            int nombre = 3;
         }
 
         else if (Opcion == 3)
