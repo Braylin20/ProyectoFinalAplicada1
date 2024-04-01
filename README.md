@@ -11,11 +11,19 @@ Este repositorio contiene un sistema de gestión judicial desarrollado para faci
 
 Al igual que visualizar todos y cada unos de sus expedientes con sus sentencias que le corresponde y sus tipos de resoluciones.
 
+**Usuario administrador**
+
 **User Name** 
 Enel@mail.com
 **Password** 
 a12345A@
 
+**Usuario Común**
+
+**User Name** 
+user@mail.com
+**Password** 
+a12345A@
 **Características Principales:**
 
 **Registro de Demandas:** Permite registrar demandas presentadas ante el tribunal, incluyendo detalles como partes involucradas, fechas importantes y tipo de demanda.
