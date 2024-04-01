@@ -1,8 +1,8 @@
 Buenas, nuestros nombres son:
 
-Eliezer Terrero Rojas
+**Eliezer Terrero**
 
-Braylin Vásquez Guzmán
+**Braylin Vásquez Guzmán**
 
 Hoy les venimos a presentar nustro proyecto, esperando que les guste.
 
