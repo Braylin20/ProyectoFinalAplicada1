@@ -16,18 +16,24 @@
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col-4">
-                <label>Filtrar Por</label>
-                <InputSelect @bind-Value="Opcion" class="form-select">
-                    <option value="1">ExpedienteId</option>
-                    <option value="2">Fecha</option>
-                    <option value="4">Todo</option>
-                </InputSelect>
-            </div>
-            <div class="justify-content-end d-flex mb-4">
-                <a href="CreateExpediente" class="btn btn-primary bi-floppy-fill"> <img src="/Create.svg" style="width: 30px;" /> Create</a>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-6">
+                        <label class="fw-bold">Fecha Inicio</label>
+                        <InputDate @bind-Value="FechaInicio" class="form-control mb-4" />
+                    </div>
+                    <div class="col-6">
+                        <label class="fw-bold">Fecha Final</label>
+                        <div class="input-group">
+                            <InputDate @bind-Value="FechaFinal" class="form-control" />
+                            <button type="button" class="btn btn-primary bi bi-search" @onclick="FiltrarPorfecha"><img src="/Buscar2.svg" style="width: 20px;" /></button>
+                        </div>
 
+                    </div>
+                </div>
             </div>
+        </div>
+       
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -62,7 +68,6 @@
                     }
                 </tbody>
             </table>
-        </div>
     </div>
 </div>
 
@@ -77,9 +82,9 @@
     public List<Demandas>? ListaDemandasUser = new List<Demandas>();
     public List<TipoResoluciones> ListaResolucion { get; set; } = new List<TipoResoluciones>();
     public List<Sentencias> ListaSentencias { get; set; } = new List<Sentencias>();
-    public int contador = 0;
     public TipoResoluciones resolucion { get; set; } = new TipoResoluciones();
-
+    public DateTime FechaInicio { get; set; }
+    public DateTime FechaFinal { get; set; }
 
     public List<Expedientes>? ListaExpedienteUser = new List<Expedientes>();
 
@@ -90,11 +95,13 @@
         ListaResolucion = await resolucionService.GetResoluciones();
         ListaDemandas = await demandaService.GetDemandas();
         ListaSentencias = await sentenciaService.Listar(p => true);
-
-
         authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = await userManager.FindByEmailAsync(authenticationState.User.Identity.Name);
         ListaExpedienteUser = ListaExpedientes.Where(e => e.Id == user.Id).ToList();
+
+        FechaFinal = DateTime.Now;
+        FechaInicio = DateTime.Now;
+
 
         ListaDemandasUser = ListaDemandas.Where(d => d.Cedula == user.Cedula).ToList();
     }
@@ -104,4 +111,14 @@
         sen.TipoResoluciones = ListaResolucion.FirstOrDefault(r => r.ResolucionId == sen.ResolucionId);
         return sen.TipoResoluciones.TipoResolcion;
     }
+
+
+    public async Task FiltrarPorfecha()
+    {
+        var user = await userManager.FindByEmailAsync(authenticationState.User.Identity.Name);
+        ListaExpedientes = ListaExpedientes.Where(e => e.Id == user.Id).ToList();
+        ListaExpedienteUser = ListaExpedientes.Where(x => x.FechaCreacion.Date >= FechaInicio.Date && x.FechaCreacion.Date <= FechaFinal.Date).ToList();
+    }
+
+   
 }

@@ -47,29 +47,14 @@
             @if (Opcion == 1)
             {
                 <div class="col-3">
-                    <label>Demanda Id</label>
+                    <label>Expediente Id</label>
                     <div class="input-group">
                         <InputNumber @bind-Value="expediente.ExpedienteId" class="form-control"></InputNumber>
                         <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" /></button>
                     </div>
                 </div>
             }
-        @*     else if (Opcion == 2)
-            {
-                <div class="col-3">
-                    <label>Tipo de Demanda</label>
-                    <div class="input-group">
-                        <InputSelect @bind-Value="expediente.SentenciaId" class="form-select">
-                            @foreach (var item in ListaSentencias)
-                            {
-                                var tipoResolucion = resolucionService.GetResolucion(item.ResolucionId);
-                                <option value="@item.SentenciaId">@tipoResolucion</option>
-                            }
-                        </InputSelect>
-                        <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" /></button>
-                    </div>
-                </div>
-            } *@
+    
         </div>
         <div class="justify-content-end d-flex mb-4">
             <a href="CreateExpediente" class="btn btn-primary bi-floppy-fill"> <img src="/Create.svg" style="width: 30px;" /> Create</a>
@@ -172,12 +157,7 @@
             ListaExpedientes = ListaExpedientes.Where(d => d.ExpedienteId == expediente.ExpedienteId).ToList(); ;
             
         }
-        // else if (Opcion == 2)
-        // {
-        //     ListaExpedientes = await expedienteService.GetExpedientes();
-        //     ListaResolucion = ListaResolucion.Where(d => d.ResolucionId == sentencia.ResolucionId).ToList(); ;
-           
-        // }
+   
 
         else if (Opcion == 3)
             
