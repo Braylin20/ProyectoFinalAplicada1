@@ -1,3 +1,9 @@
+Buenas, nuestros nombres son:
+Eliezer Terrero Rojas
+Braylin Vásquez Guzmán
+
+Hoy les venimos a presentar nustro proyecto, esperando que les guste.
+
 **Sistema de Gestión Judicial**
 Este repositorio contiene un sistema de gestión judicial desarrollado para facilitar el manejo de demandas, sentencias, expedientes, empleados, alguaciles y audiencias en un entorno judicial. El sistema proporciona una plataforma centralizada para registrar, le permite al usuario poder acceder a la pagina para registrar cualquier demanda que le interese, le permite tambien agregar los niños involucrados y sus demandados correspondientes, tambien le permite visualizar sus demandas depositados y ver que fecha de audiencia tiene y como va el estado de sus demandas.
 
