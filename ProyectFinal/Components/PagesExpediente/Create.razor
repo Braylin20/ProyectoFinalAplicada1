@@ -110,11 +110,8 @@
     {
         var users = UserManager.Users.ToList();
         var user = users.FirstOrDefault(u => u.Cedula == Usuario.Cedula);
-        if ( user is null)
+        if(user is null)
         {
-            Usuario.Nombre = string.Empty;
-            Usuario.Apellido = string.Empty;
-            Usuario.UserName = string.Empty;
             var mensaje = new NotificationMessage
                 {
                     Severity = NotificationSeverity.Error,
@@ -128,7 +125,9 @@
         else
         {
             expediente.Id = user.Id;
-
+            Usuario.Nombre = user.Nombre;
+            Usuario.Apellido = user.Apellido;
+            Usuario.UserName = user.UserName;
             var mensaje2 = new NotificationMessage
                 {
                     Severity = NotificationSeverity.Success,
@@ -143,19 +142,18 @@
     public async Task Guardar()
     {
         expediente.FechaCreacion = DateTime.Now;
-        // var demanda = new Demandas
-        //     {
-        //         DemandaId = expediente.DemandaId,
-
-        //     };
-        // expediente.Demandas = demanda;
-        // var sentencia = new Sentencias
-        //     {
-        //         SentenciaId = expediente.SentenciaId,
-        //     };
-        // expediente.Sentencia = sentencia;
-        expediente.SentenciaId = 2;
-        expediente.DemandaId = 2;
+        if(expediente.SentenciaId == 0 || expediente.DemandaId == 0)
+        {
+            var mensaje = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "Debe seleccionar una sentencia y una demanda",
+                    Duration = 3_000
+                };
+            notificationService.Notify(mensaje);
+            return;
+        }
         var guardo = await expedienteService.Save(expediente);
         if (!guardo)
         {
