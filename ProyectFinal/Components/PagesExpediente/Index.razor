@@ -14,37 +14,91 @@
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col-4">
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-6">
+                        <label class="fw-bold">Fecha Inicio</label>
+                        <InputDate @bind-Value="FechaInicio" class="form-control mb-4" />
+                    </div>
+                    <div class="col-6">
+                        <label class="fw-bold">Fecha Final</label>
+                        <div class="input-group">
+                            <InputDate @bind-Value="FechaFinal" class="form-control" />
+                            <button type="button" class="btn btn-primary bi bi-search" @onclick="FiltrarPorfecha"><img src="/Buscar2.svg" style="width: 20px;" /></button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
                 <label>Filtrar Por</label>
                 <InputSelect @bind-Value="Opcion" class="form-select">
-                    <option value="1">ExpedienteId</option>
-                    <option value="2">Fecha</option>
-                    <option value="4">Todo</option>
+                    <option value="1">DemandaId</option>
+                    <option value="2">Tipo de Demanda</option>
+                    <option value="3">Todo</option>
                 </InputSelect>
+                @if (Opcion == 3)
+                {
+                    <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" /></button>
+                }
             </div>
-            <div class="justify-content-end d-flex mb-4">
-                <a href="CreateExpediente" class="btn btn-primary bi-floppy-fill"> <img src="/Create.svg" style="width: 30px;" /> Create</a>
-               
-            </div>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th class="table-head text-white" style="background-color: #012E40">ExpedienteId</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Fecha</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Comentario</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Sentencia</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Tipo Demanda</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in ListaExpedientes)
-                    {
-                        var sentencia =BuscarResolucion(item);
-                        <tr> 
+
+            @if (Opcion == 1)
+            {
+                <div class="col-3">
+                    <label>Demanda Id</label>
+                    <div class="input-group">
+                        <InputNumber @bind-Value="expediente.ExpedienteId" class="form-control"></InputNumber>
+                        <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" /></button>
+                    </div>
+                </div>
+            }
+            else if (Opcion == 2)
+            {
+                <div class="col-3">
+                    <label>Tipo de Demanda</label>
+                    <div class="input-group">
+                        <InputSelect @bind-Value="expediente.SentenciaId" class="form-select">
+                            @foreach (var item in ListaSentencias)
+                            {
+                                var tipoResolucion = resolucionService.GetResolucion(item.ResolucionId);
+                                <option value="@item.SentenciaId">@tipoResolucion</option>
+                            }
+                        </InputSelect>
+                        <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" /></button>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="justify-content-end d-flex mb-4">
+            <a href="CreateExpediente" class="btn btn-primary bi-floppy-fill"> <img src="/Create.svg" style="width: 30px;" /> Create</a>
+
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="table-head text-white" style="background-color: #012E40">ExpedienteId</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Fecha</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Comentario</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Tipo Resoluci&oacute;n</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Tipo Demanda</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ListaExpedientes)
+                {
+                    
+                    var resolucion = BuscarResolucion(item);
+                   
+                    
+                       
+                        <tr>
                             <td>@item.ExpedienteId</td>
                             <td>@item.FechaCreacion</td>
                             <td>@item.Comentario</td>
-                            <td>@sentencia</td>
+                            <td>@resolucion</td>
                             <td>
                                 <a href="/EditExpediente/@item.ExpedienteId">
                                     <img src="Edit.svg" style="width: 30px;" />
@@ -57,10 +111,11 @@
                                 </a>
                             </td>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                    
+                }
+            </tbody>
+        </table>
+        
     </div>
 </div>
 
@@ -68,6 +123,7 @@
 
 @code {
     public Expedientes expediente { get; set; } = new Expedientes();
+    public Sentencias sentencia { get; set; } = new Sentencias();
     public List<Expedientes>? ListaExpedientes = new List<Expedientes>();
     public List<Demandas> ListaDemandas = new List<Demandas>();
     public int Opcion { get; set; }
@@ -76,6 +132,9 @@
     public List<Sentencias> ListaSentencias { get; set; } = new List<Sentencias>();
     public int contador = 0;
     public TipoResoluciones resolucion { get; set; } = new TipoResoluciones();
+    public DateTime FechaInicio { get; set; }
+    public DateTime FechaFinal { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -84,11 +143,45 @@
         ListaDemandas = await demandaService.GetDemandas();
         ListaSentencias = await sentenciaService.Listar(p => true);
 
+        FechaFinal = DateTime.Now;
+        FechaInicio = DateTime.Now;
+
     }
     public string BuscarResolucion(Expedientes item)
     {
         var sen = ListaSentencias.FirstOrDefault(s => s.SentenciaId == item.SentenciaId);
         sen.TipoResoluciones = ListaResolucion.FirstOrDefault(r => r.ResolucionId == sen.ResolucionId);
+        if(sen.TipoResoluciones == null)
+        {
+            return "" ;
+        }
         return sen.TipoResoluciones.TipoResolcion;
+
+    }
+
+    public async Task FiltrarPorfecha()
+    {
+        ListaExpedientes = await expedienteService.GetExpedientes();
+        ListaExpedientes = ListaExpedientes.Where(x => x.FechaCreacion.Date >= FechaInicio.Date && x.FechaCreacion.Date <= FechaFinal.Date).ToList();
+    }
+
+    public async Task Filtrar()
+    {
+        if (Opcion == 1)
+        {
+            ListaExpedientes = await expedienteService.GetExpedientes();
+            ListaExpedientes = ListaExpedientes.Where(d => d.ExpedienteId == expediente.ExpedienteId).ToList(); ;
+            
+        }
+        // else if (Opcion == 2)
+        // {
+        //     ListaExpedientes = await expedienteService.GetExpedientes();
+        //     ListaResolucion = ListaResolucion.Where(d => d.ResolucionId == sentencia.ResolucionId).ToList(); ;
+           
+        // }
+
+        else if (Opcion == 3)
+            
+            ListaExpedientes = await expedienteService.GetExpedientes();
     }
 }
