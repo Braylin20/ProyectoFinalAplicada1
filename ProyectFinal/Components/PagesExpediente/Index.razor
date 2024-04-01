@@ -35,8 +35,7 @@
             <div class="col-3">
                 <label>Filtrar Por</label>
                 <InputSelect @bind-Value="Opcion" class="form-select">
-                    <option value="1">DemandaId</option>
-                    <option value="2">Tipo de Demanda</option>
+                    <option value="1">ExpedienteId</option>
                     <option value="3">Todo</option>
                 </InputSelect>
                 @if (Opcion == 3)
@@ -55,7 +54,7 @@
                     </div>
                 </div>
             }
-            else if (Opcion == 2)
+        @*     else if (Opcion == 2)
             {
                 <div class="col-3">
                     <label>Tipo de Demanda</label>
@@ -70,7 +69,7 @@
                         <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" /></button>
                     </div>
                 </div>
-            }
+            } *@
         </div>
         <div class="justify-content-end d-flex mb-4">
             <a href="CreateExpediente" class="btn btn-primary bi-floppy-fill"> <img src="/Create.svg" style="width: 30px;" /> Create</a>
