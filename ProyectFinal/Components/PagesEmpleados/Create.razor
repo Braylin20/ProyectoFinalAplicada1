@@ -67,12 +67,17 @@
                                         <label for="Seleccione un rol">Seleccione un rol</label>
                                         <option value="">Seleccione un rol</option>
                                         <option value="Empleado">Empleado</option>
-                                        <option value="Juez">Juez</option>
+                                        <option value="Admin">Admin</option>
+                                        
                                     </InputSelect>
                                     <ValidationMessage For="() => Input.Rol" class="text-danger" />
                                 </div>
-                                <div class="d-grid">
+                                <div class="card-footer">
+                                    <a href="IndexEmpleado" class="btn text-white" style=" background-color: #012E40">
+                                        <img src="Back.svg" style="width:25px; " />Atr&aacute;s
+                                    </a>
                                     <button type="submit" class="btn btn-primary">Registrar Empleado</button>
+
                                 </div>
                             </EditForm>
                         </div>
@@ -122,10 +127,12 @@
 
         if(Input.Rol == "Admin")
         {
+            await RoleManager.CreateAsync(new IdentityRole("Admin"));
             await UserManager.AddToRoleAsync(user, "Admin");
         }
         else if(Input.Rol == "Empleado")
         {
+            await RoleManager.CreateAsync(new IdentityRole("Empleado"));
             await UserManager.AddToRoleAsync(user, "Empleado");
         }
         else
