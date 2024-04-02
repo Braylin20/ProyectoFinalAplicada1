@@ -24,7 +24,7 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label class="fw-bold mb-2">C&eacute;dula:</label>
-                                <InputNumber  @bind-Value="Demanda.Cedula" class="form-control"  />
+                                <InputNumber  @bind-Value="Demanda.Cedula" class="form-control"  readonly/>
                                 <ValidationMessage For="@(()=>Demanda.Cedula)" />
                                 
                             </div>
@@ -229,6 +229,8 @@
         authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         Demanda.Fecha = DateTime.Now;
         NinoDetalle.FechaNacimientoNino = DateTime.Now;
+        var user = await userManager.FindByEmailAsync(authenticationState.User.Identity.Name);
+        Demanda.Cedula = user.Cedula;
     }
 
     public async Task agregarArchivo(InputFileChangeEventArgs e)
