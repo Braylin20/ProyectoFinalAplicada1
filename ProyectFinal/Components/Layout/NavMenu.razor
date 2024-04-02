@@ -84,7 +84,15 @@
 
                     <img type="button" src="Telefono.svg" class="ConfigImagen" />
                 </a>
-                <img type="button" src="User.svg" class="UserImagen" data-bs-toggle="modal" data-bs-target="#exampleModal" />
+                <a>
+                    <img type="button" src="User.svg" class="UserImagen" data-bs-toggle="modal" data-bs-target="#exampleModal" />
+
+                </a>
+
+                <h5 class="text-white" style="margin-top:10px" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    @context.User.Identity?.Name
+
+                </h5>
                 
             </div>
         </nav>
