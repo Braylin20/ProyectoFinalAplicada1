@@ -61,87 +61,92 @@
             }
         </div>
         
-            <div class="justify-content-end d-flex mb-4">
-                <a href="CreateDemanda" class="btn btn-primary bi-floppy-fill"><img src="/Create.svg" style="width: 30px;" />Create</a>
+        <div class="justify-content-end d-flex mb-4">
+            <a href="CreateDemanda" class="btn btn-primary bi-floppy-fill"><img src="/Create.svg" style="width: 30px;" />Create</a>
                
-            </div>
+        </div>
+        <div class="btn-group" style="margin-bottom: 10px; ">
+            <button class="@finalizadosButtonClass" @onclick="() => ChangeButtonColor('f')" style="margin-right: 30px;border-radius: 5px; width: 250px">Finalizados</button>
+            <button class="@enProcesoButtonClass" @onclick="() => ChangeButtonColor('e')" style="margin-right: 30px;border-radius: 5px;width: 250px">En Proceso</button>
+            <button class="@enviadosButtonClass" @onclick="() => ChangeButtonColor('d')" style="margin-right: 30px; border-radius: 5px;width: 250px">Env&iacute;ados</button>
+            <button class="@botonTodos" @onclick="() => ChangeButtonColor('t')" style="border-radius: 5px;width: 250px">Todos</button>
+        </div>
+        <table class="table table-bordered text-center">
+            <thead>
+                <tr>
+                    <th class="table-head text-white" style="background-color: #012E40">Id</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Tipo de Demanda</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Estado</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Fecha de Audiencia</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Archivo</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Foto de C&eacute;dula</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ListaDemandas)
+                {
+                        TipoDemanda= TiposDemadas.FirstOrDefault(t=> t.TiposDemandasId == item.TiposDemandasId);
+                        Audiencia = Audiencias.FirstOrDefault(t=> t.AudienciaId == item.AudienciaId);
+                        Estado = Estados.FirstOrDefault(t=> t.EstadoId == item.EstadoId);
 
-            <table class="table table-bordered text-center">
-                <thead>
                     <tr>
-                        <th class="table-head text-white" style="background-color: #012E40">Id</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Tipo de Demanda</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Estado</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Fecha de Audiencia</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Archivo</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Foto de C&eacute;dula</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Opciones</th>
+                        <td>@item.DemandaId</td>
+                        <td>
+                            @if(TipoDemanda != null)
+                                @TipoDemanda.TipoDemanda
+                            else
+                            {
+                                <h6 >No asignado</h6>
+                            }
+
+                        </td>
+                        <td>
+                            @if (Estado != null)
+                                @Estado.Estado
+                            else
+                            {
+                                <h6 >No asignado</h6>
+                            }
+                        </td>
+                        <td>
+                            @if (Audiencia != null)
+                                @Audiencia.FechaAudiencia.ToString("dd/MM/yyyy")
+                            else
+                            {
+                                <h6>No asignado</h6>
+                            }
+                        </td>
+                        <td>
+                            @if (item.Documento != null && item.Documento.Length > 0)
+                            {
+                                   
+                                <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.Documento)" download="Archivo.pdf" ><img src="/Download.svg" style="width: 35px;" /></a>
+                            }
+                        </td>
+                        <td>
+                            @if (item.FotoCedula != null && item.FotoCedula.Length > 0)
+                            {
+                                   
+                                <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.FotoCedula)" download="Foto.png" ><img src="/Download.svg" style="width: 35px;" /></a>
+                            }                        
+                        </td>
+                        <td>
+                            <a href="/EditDemanda/@item.DemandaId">
+                                <img src="Edit.svg" style="width: 30px;" />
+                            </a>
+                            <a href="/DeleteDemanda/@item.DemandaId">
+                                <img src="Delete.svg" style="width: 35px;" />
+                            </a>
+
+                            <a href="/ViewDemanda/@item.DemandaId">
+                                <img src="Info.svg" style="width: 35px;" />
+                            </a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in ListaDemandas)
-                    {
-                         TipoDemanda= TiposDemadas.FirstOrDefault(t=> t.TiposDemandasId == item.TiposDemandasId);
-                         Audiencia = Audiencias.FirstOrDefault(t=> t.AudienciaId == item.AudienciaId);
-                         Estado = Estados.FirstOrDefault(t=> t.EstadoId == item.EstadoId);
-
-                        <tr>
-                            <td>@item.DemandaId</td>
-                            <td>
-                                @if(TipoDemanda != null)
-                                    @TipoDemanda.TipoDemanda
-                                else
-                                {
-                                    <h6 >No asignado</h6>
-                                }
-
-                            </td>
-                            <td>
-                                @if (Estado != null)
-                                    @Estado.Estado
-                                else
-                                {
-                                    <h6 >No asignado</h6>
-                                }
-                            </td>
-                            <td>
-                                @if (Audiencia != null)
-                                    @Audiencia.FechaAudiencia.ToString("dd/MM/yyyy")
-                                else
-                                {
-                                    <h6>No asignado</h6>
-                                }
-                            </td>
-                            <td>
-                                @if (item.Documento != null && item.Documento.Length > 0)
-                                {
-                                   
-                                    <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.Documento)" download="Archivo.pdf" ><img src="/Download.svg" style="width: 35px;" /></a>
-                                }
-                            </td>
-                            <td>
-                                @if (item.FotoCedula != null && item.FotoCedula.Length > 0)
-                                {
-                                   
-                                    <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.FotoCedula)" download="Foto.png" ><img src="/Download.svg" style="width: 35px;" /></a>
-                                }                        
-                            </td>
-                            <td>
-                                <a href="/EditDemanda/@item.DemandaId">
-                                    <img src="Edit.svg" style="width: 30px;" />
-                                </a>
-                                <a href="/DeleteDemanda/@item.DemandaId">
-                                    <img src="Delete.svg" style="width: 35px;" />
-                                </a>
-
-                                <a href="/ViewDemanda/@item.DemandaId">
-                                    <img src="Info.svg" style="width: 35px;" />
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                }
+            </tbody>
+        </table>
         
     </div>
 </div>
@@ -158,6 +163,10 @@
     public int Opcion { get; set; }
     public DateTime FechaInicio { get; set; }
     public DateTime FechaFinal { get; set; }
+    private string finalizadosButtonClass = "btn btn-primary"; 
+    private string enProcesoButtonClass = "btn btn-primary"; 
+    private string enviadosButtonClass = "btn btn-primary";
+    private string botonTodos = "btn btn-secondary";
     protected override async Task OnInitializedAsync()
     {
 
@@ -167,6 +176,44 @@
         Estados = await estadosDemandasServices.Listar(t => true);
         FechaFinal = DateTime.Now;
         FechaInicio = DateTime.Now;
+
+    }
+    private async Task ChangeButtonColor(char buttonName)
+    {
+        // Reiniciar todas las clases a la clase CSS inicial
+        finalizadosButtonClass = "btn btn-primary";
+        enProcesoButtonClass = "btn btn-primary";
+        enviadosButtonClass = "btn btn-primary";
+
+        // Establecer la clase CSS para el botón seleccionado
+        switch (buttonName)
+        {
+            case 'f':
+                finalizadosButtonClass = "btn btn-secondary";
+                botonTodos = "btn btn-primary";
+                ListaDemandas = await demandaServices.GetDemandas();
+                var finalizados = ListaDemandas.Where(x => x.EstadoId == 1).ToList();
+                ListaDemandas = finalizados;
+                break;
+            case 'e':
+                ListaDemandas = await demandaServices.GetDemandas();
+                var proceso = ListaDemandas.Where(x => x.EstadoId == 2).ToList();
+                ListaDemandas = proceso;
+                enProcesoButtonClass = "btn btn-secondary"; 
+                botonTodos = "btn btn-primary";
+                break;
+            case 'd':
+                ListaDemandas = await demandaServices.GetDemandas();
+                var enviados = ListaDemandas.Where(x => x.EstadoId == 3).ToList();
+                ListaDemandas = enviados;
+                enviadosButtonClass = "btn btn-secondary"; 
+                botonTodos = "btn btn-primary";
+                break;
+            case 't':
+                ListaDemandas = await demandaServices.GetDemandas();
+                botonTodos = "btn btn-secondary";
+                break;
+        }
     }
     public async Task FiltrarPorfecha()
     {
