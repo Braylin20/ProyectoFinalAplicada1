@@ -29,24 +29,22 @@
                        
                     </div>
                     <div class="input-group mb-3">
-                        <InputText @bind-Value="Input.Email" class="form-control form-control-lg bg-light " placeholder="Email" />
+                        <InputText @bind-Value="Input.Email" class="form-control form-control-lg bg-light " placeholder="Correo Electrónico" />
                     </div>
                         <ValidationMessage For="@(()=>Input.Email)" />
                     <div class="input-group mb-1">
-                        <InputText @bind-Value="Input.Password" class="form-control form-control-lg bg-light " placeholder="Password" type="password" password />
+                        <InputText @bind-Value="Input.Password" class="form-control form-control-lg bg-light " placeholder="Contraseña" type="password" password />
                     </div>
                         <ValidationMessage For="@(()=>Input.Password)"/>
                     <div class="input-group mb-5 d-flex justify-content-between">
                         <div class="form-check">
                             <InputCheckbox @bind-Value="Input.RememberMe" class="form-check-input" id="formCheck" />
-                            <label form="formCheck" class="form-check-label text-secondary"><small>Remember Me</small></label>
+                            <label form="formCheck" class="form-check-label text-secondary"><small>Recuerdame</small></label>
                         </div>
-                        <div class="forgot">
-                            <small><a href="#">Forgot Password?</a></small>
-                        </div>
+                        
                     </div>
                     <div class="input-group mb-3">
-                        <button type="submit" class="btn btn-lg btn-primary w-100  fs-6">Login</button>
+                        <button type="submit" class="btn btn-lg btn-primary w-100  fs-6">Iniciar Sesi&oacute;n</button>
                     </div>
                     <div class="row">
                         <p>
