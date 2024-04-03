@@ -364,8 +364,6 @@
     public async Task Guardar()
     {
         if (validar() == false) { return;};
-        NinoDetalle = new NinoDetalle();
-        demandasDetalle = new DemandasDetalle();
         Demanda.Fecha = DateTime.Now;
         var guardado = await demandaServices.Save(Demanda);
         if (!guardado)
