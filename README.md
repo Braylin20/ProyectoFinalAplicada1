@@ -1,7 +1,29 @@
-**Sistema de Gestión Judicial**
-Este repositorio contiene un sistema de gestión judicial desarrollado para facilitar el manejo de demandas, sentencias, expedientes, empleados, alguaciles y audiencias en un entorno judicial. El sistema proporciona una plataforma centralizada para registrar, 
-gestionar y consultar información relevante para el proceso judicial.
+Buenas, nuestros nombres son:
 
+**Eliezer Terrero**
+
+**Braylin Vásquez Guzmán**
+
+Hoy les venimos a presentar nustro proyecto, esperando que les guste.
+
+**Sistema de Gestión Judicial**
+Este repositorio contiene un sistema de gestión judicial desarrollado para facilitar el manejo de demandas, sentencias, expedientes, empleados, alguaciles y audiencias en un entorno judicial. El sistema proporciona una plataforma centralizada para registrar, le permite al usuario poder acceder a la pagina para registrar cualquier demanda que le interese, le permite tambien agregar los niños involucrados y sus demandados correspondientes, tambien le permite visualizar sus demandas depositados y ver que fecha de audiencia tiene y como va el estado de sus demandas.
+
+Al igual que visualizar todos y cada unos de sus expedientes con sus sentencias que le corresponde y sus tipos de resoluciones.
+
+**Usuario administrador**
+
+**User Name** 
+Enel@mail.com
+**Password** 
+a12345A@
+
+**Usuario Común**
+
+**User Name** 
+user@mail.com
+**Password** 
+a12345A@
 **Características Principales:**
 
 **Registro de Demandas:** Permite registrar demandas presentadas ante el tribunal, incluyendo detalles como partes involucradas, fechas importantes y tipo de demanda.
@@ -17,33 +39,13 @@ gestionar y consultar información relevante para el proceso judicial.
 **Programación de Audiencias:** Permite programar y gestionar audiencias judiciales.
 
 **Tecnologías Utilizadas**
-El sistema se ha desarrollado utilizando las siguientes tecnologías y herramientas:
+Utilizamos blazor en conjunto de Boostrap para el lado del diseño, junto con c# y Asp.net8.
 
-**ASP.NET Core:** Utilizado para el desarrollo del backend del sistema, proporcionando una arquitectura robusta y escalable.
+![![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/b0cfbf10-caf1-4ca6-a934-9e56f01ba290)
+]
 
-**C#: **Lenguaje de programación principal utilizado en el desarrollo del sistema, aprovechando su sintaxis intuitiva y su amplia gama de características.
+![![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/6a6cdf80-7078-4f62-8c77-006434c70247)
+]
+![![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/720d7b59-3003-4cf9-8750-f355c56b615b)
+]
 
-**Entity Framework Core:** Utilizado para el mapeo objeto-relacional y el acceso a la base de datos, simplificando las operaciones de persistencia de datos.
-
-**Razor Pages:** Utilizado para desarrollar las páginas web del frontend del sistema, proporcionando una interfaz de usuario dinámica y receptiva.
-
-**HTML/CSS/:** Utilizados para la maquetación, el diseño y la interactividad de las páginas web del sistema, asegurando una experiencia de usuario atractiva y funcional.
-
-**Instalación y Uso**
-Para instalar y utilizar el sistema de gestión judicial, sigue estos pasos:
-
-Clona el repositorio en tu máquina local utilizando el siguiente comando:
-
-bash
-Copy code
-git clone https://github.com/tu-usuario/repo.git
-Abre el proyecto en tu entorno de desarrollo preferido, como Visual Studio o Visual Studio Code.
-
-Configura la conexión a la base de datos en el archivo appsettings.json proporcionando la cadena de conexión adecuada.
-
-Ejecuta las migraciones de la base de datos para crear el esquema necesario en tu base de datos utilizando el siguiente comando:
-
-sql
-Copy code
-dotnet ef database update
-Inicia la aplicación y comienza a utilizar el sistema de gestión judicial.

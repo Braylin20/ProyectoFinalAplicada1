@@ -21,14 +21,36 @@
             <div class="row">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label class="fw-bold mb-2">C&eacute;dula:</label>
-                                <InputNumber  @bind-Value="Demanda.Cedula" class="form-control"  />
-                                <ValidationMessage For="@(()=>Demanda.Cedula)" />
+                        <AuthorizeView Roles="User">
+                            <ChildContent Context="formContext">
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="fw-bold mb-2">C&eacute;dula:</label>
+                                        <InputNumber  @bind-Value="Demanda.Cedula" class="form-control"  readonly/>
+                                        <ValidationMessage For="@(()=>Demanda.Cedula)" />
                                 
-                            </div>
-                        </div>
+                                    </div>
+                                </div>
+                            </ChildContent>
+
+                        </AuthorizeView>
+
+
+                        <AuthorizeView Roles="Admin,Empleado">
+                            <ChildContent Context="formContext">
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="fw-bold mb-2">C&eacute;dula:</label>
+                                        <InputNumber @bind-Value="Demanda.Cedula" class="form-control"/>
+                                        <ValidationMessage For="@(()=>Demanda.Cedula)" />
+
+                                    </div>
+                                </div>
+                            </ChildContent>
+
+                        </AuthorizeView>
                         <div class="col-6">
                             <div class="form-group">
                                 <label class="fw-bold mb-2">Instancia:</label>
@@ -229,6 +251,16 @@
         authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         Demanda.Fecha = DateTime.Now;
         NinoDetalle.FechaNacimientoNino = DateTime.Now;
+        var user = await userManager.FindByEmailAsync(authenticationState.User.Identity.Name);
+        var roles = await userManager.GetRolesAsync(user);
+        foreach (var item in roles)
+        {
+            if (item == "User")
+            {
+                Demanda.Cedula = user.Cedula;
+            }
+        }
+
     }
 
     public async Task agregarArchivo(InputFileChangeEventArgs e)
@@ -274,12 +306,43 @@
         else
         {
             Demanda.DemandaDetalles.Add(demandasDetalle);
-            demandasDetalle = new DemandasDetalle();
+            
         }
+    }
+
+
+    public bool validar()
+    {
+        if (demandasDetalle.NombreDemandado == null || demandasDetalle.NumCedulaDemandado == null || demandasDetalle.NumCedulaDemandado.Length != 11)
+        {
+            var mensajeError = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "Debe ingresar algún valor en el demandado o la cédula es invalida",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensajeError);
+            return false;
+        }
+
+        else if (NinoDetalle.NombreNino is null || NinoDetalle.Genero is null)
+        {
+            var mensajeError = new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "Debe ingresar algún valor en el niño",
+                    Duration = 4_000
+                };
+            notificationService.Notify(mensajeError);
+            return false;
+        }
+        return true;
     }
     public async Task AgregarDetalleNino()
     {
-        if (NinoDetalle.NombreNino is null || NinoDetalle.Genero is null || NinoDetalle.FechaNacimientoNino is null)
+        if (NinoDetalle.NombreNino is null || NinoDetalle.Genero is null)
         {
             var mensajeError = new NotificationMessage
                 {
@@ -294,12 +357,13 @@
         else
         {
             Demanda.UsuarioNinoDetalles.Add(NinoDetalle);
-            NinoDetalle = new NinoDetalle();
+           
         }
     }
 
     public async Task Guardar()
     {
+        if (validar() == false) { return;};
         Demanda.Fecha = DateTime.Now;
         var guardado = await demandaServices.Save(Demanda);
         if (!guardado)

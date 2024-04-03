@@ -14,9 +14,8 @@ namespace Share.Models
         public int DemandaId { get; set; }
         [RegularExpression(@"^\d{11}$", ErrorMessage = "La cédula debe tener 11 digitos")]
         public string? NumCedulaDemandado { get; set; }
+        [Required(ErrorMessage = "El nombre del demandante es requerido")]
         public string? NombreDemandado { get; set; }
-        //public string? NombreNino { get; set; }
-        //public DateTime? FechaNacimientoNino { get; set; }
-        //public string? Genero { get; set; }
+        
     }
 }

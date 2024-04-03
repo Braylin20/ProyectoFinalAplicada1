@@ -163,8 +163,6 @@
             Empleados = await userManager.GetUsersInRoleAsync("Empleado");
             var cedula = await empleadoServices.ListarPorCedula(Empleados, User);
             Empleados = await empleadoServices.ListarPorCedula(Empleados, User);
-
-
         }
         else if (Opcion == 2)
         {
