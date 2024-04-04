@@ -14,7 +14,7 @@
 <EditForm Model="Demanda" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
     
-    <div class="container-fluid w-75 mx-auto ">
+    <div class="container-fluid ">
         <div class="card shadow-lg ">
             <div class="card-header " style="background-color: #012E40">
                 <h3 class="text-center text-white">Editar Demanda</h3>
@@ -34,16 +34,21 @@
                                         }
                                     </InputSelect>
                                 </div>
-                                <div class="col-6">
-                                     <label class="fw-bold mb-2">Estado</label>
-                                    <InputSelect @bind-Value="Demanda.EstadoId" class="form-select mb-2">
-                                        <option value="">Elija una opci&oacute;n</option>
-                                        @foreach (var item in EstadoDemandas)
-                                        {
-                                            <option value="@item.EstadoId">@item.Estado</option>
-                                        }
-                                    </InputSelect>
-                                </div>
+                               <div class="col-6">
+                                    <div class="d-flex flex-column"> <!-- Utilizamos flex-column para colocar los elementos en columnas -->
+                                        <label class="fw-bold d-flex align-content-center mb-2">Estado de demanda</label>
+                                        <InputRadioGroup @bind-Value="Demanda.EstadoId" class="form-check mb-auto">
+                                            <div class="form-check">
+                                                <InputRadio Value="1" class="custom-radio" style="width: 1em;height: 1em;margin-right: 0.5em;"/>
+                                                <label class="form-check-label">Finalizado</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <InputRadio Value="2" class="custom-radio" style="width: 1em;height: 1em;margin-right: 0.5em;"/>
+                                                <label class="form-check-label">En Proceso</label>
+                                            </div>
+                                        </InputRadioGroup>
+                                    </div>
+                               </div>
                             </div>
                             <div class="row">
                                 <div class="col-6">
@@ -75,7 +80,7 @@
                     <div class="row">
                         <div class="col-12">
                             <label class="fw-bold mb-2">Descripci&oacute;n</label>
-                            <InputTextArea @bind-Value="Demanda.Descripcion" class="form-control mb-3" />
+                            <InputTextArea @bind-Value="Demanda.Descripcion" class="form-control mb-3"/>
                             <ValidationMessage For="@(()=>Demanda.Descripcion)" />
                         </div>
                     </div>
@@ -243,6 +248,7 @@
     public List<Audiencias> Audiencias { get; set; } = new List<Audiencias>();
     public List<TiposDemandas> TiposDemandas { get; set; } = new List<TiposDemandas>();
     private AuthenticationState authenticationState;
+    private string estado;
 
     protected override async Task OnInitializedAsync()
     {
@@ -256,6 +262,8 @@
         authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
     }
+    
+
     public async Task AgregarDetalleDemandado()
     {
         if (demandasDetalle.NombreDemandado == null || demandasDetalle.NumCedulaDemandado == null || demandasDetalle.NumCedulaDemandado.Length != 11)

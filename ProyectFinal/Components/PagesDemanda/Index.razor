@@ -38,17 +38,10 @@
                 <div class="input-group">
                     <InputSelect @bind-Value="Opcion" class="form-select col-4">
                         <option value="1">DemandaId</option>
-                        <option value="2">Todo</option>
                     </InputSelect>
-                    @if (Opcion == 2)
-                    {
-                        <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" /></button>
-                    }
                 </div>
                 
             </div>
-        
-
             @if (Opcion == 1)
             {
                 <div class="col-3">
@@ -68,7 +61,7 @@
         <div class="btn-group" style="margin-bottom: 10px; ">
             <button class="@finalizadosButtonClass" @onclick="() => ChangeButtonColor('f')" style="margin-right: 30px;border-radius: 5px; width: 250px">Finalizados</button>
             <button class="@enProcesoButtonClass" @onclick="() => ChangeButtonColor('e')" style="margin-right: 30px;border-radius: 5px;width: 250px">En Proceso</button>
-            <button class="@enviadosButtonClass" @onclick="() => ChangeButtonColor('d')" style="margin-right: 30px; border-radius: 5px;width: 250px">Env&iacute;ados</button>
+            <button class="@enviadosButtonClass" @onclick="() => ChangeButtonColor('d')" style="margin-right: 30px; border-radius: 5px;width: 250px">Enviados</button>
             <button class="@botonTodos" @onclick="() => ChangeButtonColor('t')" style="border-radius: 5px;width: 250px">Todos</button>
         </div>
         <table class="table table-bordered text-center">
@@ -180,12 +173,10 @@
     }
     private async Task ChangeButtonColor(char buttonName)
     {
-        // Reiniciar todas las clases a la clase CSS inicial
         finalizadosButtonClass = "btn btn-primary";
         enProcesoButtonClass = "btn btn-primary";
         enviadosButtonClass = "btn btn-primary";
 
-        // Establecer la clase CSS para el botón seleccionado
         switch (buttonName)
         {
             case 'f':
@@ -241,8 +232,6 @@
             var listDemandas = ListaDemandas.Where(a => a.DemandaId == demandas.DemandaId).ToList();
             ListaDemandas = listDemandas;
         }
-        else if (Opcion == 2)
-            ListaDemandas = await demandaServices.GetDemandas();
     }
 
 
