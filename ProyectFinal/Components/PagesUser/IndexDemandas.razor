@@ -38,7 +38,6 @@
                 <InputSelect @bind-Value="Opcion" class="form-select">
                     <option value="1">DemandaId</option>
                     <option value="2">Tipo de Demanda</option>
-                    <option value="3">Todo</option>
                 </InputSelect>
                 @if (Opcion == 3)
                 {
@@ -61,10 +60,10 @@
                 <div class="col-3">
                     <label >Tipo de Demanda</label>
                     <div class="input-group">
-                        <InputSelect @bind-Value="demandas.TiposDemandasId" class="form-select">
-                            @foreach (var item in TiposDemadas)
+                        <InputSelect @bind-Value="tipoDemandaId" class="form-select">
+                            @foreach (var tipoDemanda in TiposDemadas)
                             {
-                                <option value="@item.TiposDemandasId">@item.TipoDemanda</option>
+                                <option value="@tipoDemanda.TiposDemandasId">@tipoDemanda.TipoDemanda</option>
                             }
                         </InputSelect>
                         <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" /></button>
@@ -78,10 +77,18 @@
         <div class="justify-content-end d-flex mb-4">
             <a href="CreateDemanda" class="btn btn-primary bi-floppy-fill"><img src="/Create.svg" style="width: 30px;" />Create</a>
         </div>
+        <div class="btn-group" style="margin-bottom: 10px; ">
+            <button class="@finalizadosButtonClass" @onclick="() => ChangeButtonColor('f')" style="margin-right: 30px;border-radius: 5px; width: 250px">Finalizados</button>
+            <button class="@enProcesoButtonClass" @onclick="() => ChangeButtonColor('e')" style="margin-right: 30px;border-radius: 5px;width: 250px">En Proceso</button>
+            <button class="@enviadosButtonClass" @onclick="() => ChangeButtonColor('d')" style="margin-right: 30px; border-radius: 5px;width: 250px">Env&iacute;ados</button>
+            <button class="@botonTodos" @onclick="() => ChangeButtonColor('t')" style="border-radius: 5px;width: 250px">Todos</button>
+           
+        </div>
+
         <table class="table table-bordered text-center">
             <thead>
                 <tr>
-                    <th class="table-head text-white" style="background-color: #012E40">Id</th>
+                   
                     <th class="table-head text-white" style="background-color: #012E40">Tipo de Demanda</th>
                     <th class="table-head text-white" style="background-color: #012E40">Estado</th>
                     <th class="table-head text-white" style="background-color: #012E40">Fecha de Audiencia</th>
@@ -110,7 +117,7 @@
                         Estado = Estados.FirstOrDefault(t => t.EstadoId == item.EstadoId);
 
                         <tr>
-                            <td>@item.DemandaId</td>
+                            
                             <td>
                                 @if (TipoDemanda != null)
                                     @TipoDemanda.TipoDemanda
@@ -122,10 +129,7 @@
                             <td>
                                 @if (Estado != null)
                                     @Estado.Estado
-                                else
-                                {
-                                    <h6>No asignado</h6>
-                                }
+                               
                             </td>
                             <td>
                                 @if (Audiencia != null)
@@ -183,6 +187,12 @@
     private AuthenticationState authenticationState;
     public DateTime FechaInicio { get; set; }
     public DateTime FechaFinal { get; set; }
+    private string finalizadosButtonClass = "btn btn-primary";
+    private string enProcesoButtonClass = "btn btn-primary";
+    private string enviadosButtonClass = "btn btn-primary";
+    private string botonTodos = "btn btn-secondary";
+    int tipoDemandaId = 0;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -204,6 +214,45 @@
         ListaDemandasUser = ListaDemandas.Where(x => x.Fecha.Date >= FechaInicio.Date && x.Fecha.Date <= FechaFinal.Date).ToList();
     }
 
+    private async Task ChangeButtonColor(char buttonName)
+    {
+        finalizadosButtonClass = "btn btn-primary";
+        enProcesoButtonClass = "btn btn-primary";
+        enviadosButtonClass = "btn btn-primary";
+
+        var user = await userManager.FindByEmailAsync(authenticationState.User.Identity.Name);
+        switch (buttonName)
+        {
+            case 'f':
+                finalizadosButtonClass = "btn btn-secondary";
+                botonTodos = "btn btn-primary";
+                ListaDemandasUser = ListaDemandas.Where(d => d.Cedula == user.Cedula).ToList();
+                var finalizados = ListaDemandasUser.Where(x => x.EstadoId == 1).ToList();
+                ListaDemandasUser = finalizados;
+                break;
+            case 'e':
+                ListaDemandasUser = ListaDemandas.Where(d => d.Cedula == user.Cedula).ToList();
+                var proceso = ListaDemandasUser.Where(x => x.EstadoId == 2).ToList();
+                ListaDemandasUser = proceso;
+                enProcesoButtonClass = "btn btn-secondary";
+                botonTodos = "btn btn-primary";
+                break;
+            case 'd':
+                ListaDemandasUser = ListaDemandas.Where(d => d.Cedula == user.Cedula).ToList();
+                var enviados = ListaDemandasUser.Where(x => x.EstadoId == 3).ToList();
+                ListaDemandasUser = enviados;
+                enviadosButtonClass = "btn btn-secondary";
+                botonTodos = "btn btn-primary";
+                break;
+            case 't':
+                ListaDemandasUser = ListaDemandas.Where(d => d.Cedula == user.Cedula).ToList();
+                botonTodos = "btn btn-secondary";
+                break;
+
+
+        }
+    }
+
     public async Task Filtrar()
     {
         if (Opcion == 1)
@@ -216,12 +265,17 @@
         else if (Opcion == 2)
         {
             var user = await userManager.FindByEmailAsync(authenticationState.User.Identity.Name);
-            ListaDemandasUser = ListaDemandas.Where(d => d.Cedula == user.Cedula).ToList(); ;
-            ListaDemandasUser = ListaDemandasUser.Where(a => a.TipoDemanda!.TiposDemandasId == demandas.TiposDemandasId).ToList();
+            ListaDemandasUser = ListaDemandas.Where(d => d.Cedula == user.Cedula).ToList();
+          
+         
+            var tipoDemandaSeleccionado = TiposDemadas.FirstOrDefault(t => t.TiposDemandasId == tipoDemandaId);
+            if (tipoDemandaSeleccionado != null)
+            {
+                // Filtrar ListaDemandasUser por el ID del tipo de demanda seleccionado
+                ListaDemandasUser = ListaDemandasUser.Where(d => d.TiposDemandasId == tipoDemandaSeleccionado.TiposDemandasId).ToList();
+            }
+    
         }
-
-        else if (Opcion == 3)
-            ListaDemandasUser = await demandaServices.GetDemandas();
     }
 
 }
