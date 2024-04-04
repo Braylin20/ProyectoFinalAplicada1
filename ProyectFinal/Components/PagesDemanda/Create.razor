@@ -250,6 +250,7 @@
         TiposDemandas = await tipoDemandaServices.Listar(e => true);
         authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         Demanda.Fecha = DateTime.Now;
+        
         NinoDetalle.FechaNacimientoNino = DateTime.Now;
         var user = await userManager.FindByEmailAsync(authenticationState.User.Identity.Name);
         var roles = await userManager.GetRolesAsync(user);
@@ -365,6 +366,7 @@
     {
         if (validar() == false) { return;};
         Demanda.Fecha = DateTime.Now;
+        Demanda.EstadoId = 3;
         var guardado = await demandaServices.Save(Demanda);
         if (!guardado)
         {
