@@ -8,6 +8,7 @@
 @inject EstadoServices estadosDemandasServices
 @inject NotificationService notificationService
 @inject IJSRuntime JSRuntime
+
 <RadzenNotification/>
 <div class="card shadow-lg">
     <div class="card-header" style="background-color: #012E40">
@@ -189,6 +190,8 @@
         
     </div>
 </div>
+
+
 <div class="modal fade" id="ModalSentencia" tabindex="-1" aria-labelledby="ModalSentenicia" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -241,9 +244,6 @@
     }
     public async Task ImprimirPDF(byte[] pdfBytes)
     {
-        // Simulando la obtención de un PDF en forma de arreglo de bytes
-
-        // Invoca la función JavaScript para imprimir el PDF
         await JSRuntime.InvokeVoidAsync("imprimirPDF", pdfBytes);
     }
     private async Task ChangeButtonColor(char buttonName)
