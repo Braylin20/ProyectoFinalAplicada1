@@ -1,8 +1,12 @@
 ﻿@page "/IndexSentencia"
 @inject SentenciaServices sentenciaService
 @inject TiposResolucionServices resolucionService
+@inject TipoDemandaServices TipoDemandaServices
+@inject DemandaServices DemandaServices
+@inject ApplicationUserServices ApplicationUserServices
 @rendermode InteractiveServer
 @inject NotificationService notificationService
+@inject IJSRuntime JSRuntime
 @attribute [Authorize(Roles = "Admin,Empleado")]
 
 <RadzenNotification />
@@ -35,24 +39,38 @@
                   
                 </div>
             </AuthorizeView>
-            <table class="table table-bordered">
+            <table class="table table-bordered text-center">
                 <thead>
                     <tr>
-                        <th class="table-head text-white" style="background-color: #012E40">Nombre Ministerio</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Tipo Resoluci&oacute;n</th>
-                        <th class="table-head text-white" style="background-color: #012E40">Fecha Creaci&oacute;n</th>
-                        <th class="table-head text-white" style="background-color: #012E40"></th>
+                        <th class="table-head text-white" style="background-color: #012E40">Nombre del Usuario</th>
+                        <th class="table-head text-white" style="background-color: #012E40">C&eacute;dula del usuario</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Archivo de Demanda</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Fecha</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Tipo de Demanda</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Documento de Sentencia</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Imprimir</th>
+                        <th class="table-head text-white" style="background-color: #012E40">Opciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in ListaSentencia)
                     {
-                        var sentencia = BuscarResolucion(item);
+                        var user = BucarUsuario(item);
+                        var Sentencia = ListaSentencia.FirstOrDefault(d=> d.DemandaId == item.DemandaId);
+                        Sentencia.Demandas = ListaDemandas.FirstOrDefault(d => d.DemandaId == Sentencia.DemandaId);
+                        var tipoDemanda = TiposDemandas.FirstOrDefault(t => t.TiposDemandasId == Sentencia.Demandas.TiposDemandasId);
                         <tr>
-                            <td>@item.NombreMinisterio</td>
-                            <td>@sentencia</td>
+                            <td>@user.Nombre</td>
+                            <td>@Sentencia.Demandas.Cedula</td>
+
                             <td>@item.FechaCreacion.ToString("dd/MM/yyyy")</td>
 
+                            <td>@tipoDemanda.TipoDemanda</td>
+                            <td> <a href="data:application/octet-stream;base64,@Convert.ToBase64String(Sentencia.Demandas.Documento)" download="Archivo.pdf"><img src="/Download.svg" style="width: 35px;" /></a></td>
+                            <td> <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.Sentencia)" download="Archivo.pdf"><img src="/Download.svg" style="width: 35px;" /></a></td>
+                            <td>
+                                <img src="Imprimir.svg" style="width: 40px;" type="button" @onclick="() => ImprimirPDF(item.Sentencia)" />
+                            </td>
                             <td>
                                 <a href="/EditSentencia/@item.SentenciaId">
                                     <img src="Edit.svg" style="width: 30px;" />
@@ -77,13 +95,17 @@
 @code {
     public List<Sentencias> ListaSentencia { get; set; } = new List<Sentencias>();
     public List<TipoResoluciones> ListaResolucion { get; set; } = new List<TipoResoluciones>();
+    public List<Demandas> ListaDemandas { get; set; } = new List<Demandas>();
+    public List<TiposDemandas> TiposDemandas { get; set; } = new List<TiposDemandas>();
     public int Opcion { get; set; }
     public DateTime FechaInicio { get; set; }
     public DateTime FechaFinal { get; set; }
     protected override async Task OnInitializedAsync()
     {
         ListaSentencia = await sentenciaService.Listar(p=> true);
+        ListaDemandas = await DemandaServices.Listar(p => true);
         ListaResolucion = await resolucionService.GetResoluciones();
+        TiposDemandas = await TipoDemandaServices.Listar(p => true);
         FechaFinal = DateTime.Now;
         FechaInicio = DateTime.Now;
     }
@@ -97,5 +119,19 @@
         var sen = ListaSentencia.FirstOrDefault(s => s.SentenciaId == item.SentenciaId);
         sen.TipoResoluciones = ListaResolucion.FirstOrDefault(r => r.ResolucionId == sen.ResolucionId);
         return sen.TipoResoluciones.TipoResolcion;
+    }
+    public async Task ImprimirPDF(byte[] pdfBytes)
+    {
+        // Simulando la obtención de un PDF en forma de arreglo de bytes
+
+        // Invoca la función JavaScript para imprimir el PDF
+        await JSRuntime.InvokeVoidAsync("imprimirPDF", pdfBytes);
+    }
+
+    public ApplicationUser? BucarUsuario(Sentencias sentencia)
+    {
+        var demanda = ListaDemandas.FirstOrDefault(d => d.DemandaId == sentencia.DemandaId);
+        var user = ApplicationUserServices.GetUserByCedula(demanda!.Cedula);
+        return user;
     }
 }

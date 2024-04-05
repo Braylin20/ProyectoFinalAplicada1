@@ -17,7 +17,7 @@ namespace ProyectFinal.Services
         }
 
         
-        public async Task<Demandas?> GetDemanda(int id)
+        public async Task<Demandas?> GetDemanda(int? id)
         {
             return await _context!.Demandas.
                 Include(d => d.DemandaDetalles).

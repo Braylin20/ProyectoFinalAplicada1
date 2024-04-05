@@ -19,6 +19,11 @@ namespace ProyectFinal.Services
         {
             return _context.Users.Include(u => u.TelefonoDetalles).FirstOrDefault(t => t.Id == id);
         }
+        public  ApplicationUser GetUserByCedula(long? cedula)
+        {
+            var user= _context.Users.Include(u => u.TelefonoDetalles).FirstOrDefault(t => t.Cedula == cedula);
+            return user;
+        }
         public async Task<bool> Update(ApplicationUser user)
         {
             _context!.Users.Update(user);

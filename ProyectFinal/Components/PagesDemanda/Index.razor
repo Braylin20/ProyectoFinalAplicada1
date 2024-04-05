@@ -59,10 +59,11 @@
                
         </div>
         <div class="btn-group" style="margin-bottom: 10px; ">
-            <button class="@finalizadosButtonClass" @onclick="() => ChangeButtonColor('f')" style="margin-right: 30px;border-radius: 5px; width: 250px">Finalizados</button>
-            <button class="@enProcesoButtonClass" @onclick="() => ChangeButtonColor('e')" style="margin-right: 30px;border-radius: 5px;width: 250px">En Proceso</button>
-            <button class="@enviadosButtonClass" @onclick="() => ChangeButtonColor('d')" style="margin-right: 30px; border-radius: 5px;width: 250px">Enviados</button>
-            <button class="@botonTodos" @onclick="() => ChangeButtonColor('t')" style="border-radius: 5px;width: 250px">Todos</button>
+            <button class="@finalizadosButtonClass" @onclick="() => ChangeButtonColor('f')" style="margin-right: 30px;border-radius: 5px; width: 200px">Finalizados</button>
+            <button class="@enProcesoButtonClass" @onclick="() => ChangeButtonColor('e')" style="margin-right: 30px;border-radius: 5px;width: 200px">En Proceso</button>
+            <button class="@enviadosButtonClass" @onclick="() => ChangeButtonColor('d')" style="margin-right: 30px; border-radius: 5px;width: 200px">Enviados</button>
+            <button class="@enProcesoSentencia" @onclick="() => ChangeButtonColor('s')" style="margin-right: 30px; border-radius: 5px;width: 200px">Proceso de Sentencia</button>
+            <button class="@botonTodos" @onclick="() => ChangeButtonColor('t')" style="border-radius: 5px;width: 200px">Todos</button>
         </div>
         <table class="table table-bordered text-center">
             <thead>
@@ -74,6 +75,7 @@
                     <th class="table-head text-white" style="background-color: #012E40">Archivo</th>
                     <th class="table-head text-white" style="background-color: #012E40">Foto de C&eacute;dula</th>
                     <th class="table-head text-white" style="background-color: #012E40">Opciones</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Sentenciar Demanda</th>
                 </tr>
             </thead>
             <tbody>
@@ -136,11 +138,54 @@
                                 <img src="Info.svg" style="width: 35px;" />
                             </a>
                         </td>
+                        <td>
+                            <a type="button" data-bs-toggle="modal" data-bs-target="#ModalSentencia_@item.DemandaId">
+                                <img src="Sentence.svg" style="width: 50px;" />
+                            </a>
+                        </td>
+
                     </tr>
+                    <div class="modal fade" id="ModalSentencia_@item.DemandaId" tabindex="-1" aria-labelledby="ModalSentenicia" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title fs-5" id="exampleModalLabel">¿Seguro que quiere agregar una sentencia a esta demanda?</h3>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                    <form action="CreateSentencia" method="get">
+                                        @* <input type="hidden" name="DemandaId" value="@item.DemandaId" /> *@
+                                        <a href="CreateSentencia/@item.DemandaId"type="button" class="btn btn-primary">Si</a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 }
             </tbody>
         </table>
         
+    </div>
+</div>
+<div class="modal fade" id="ModalSentencia" tabindex="-1" aria-labelledby="ModalSentenicia" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title fs-5" id="exampleModalLabel">¿Seguro que quiere agregar una sentencia?</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Aquí puedes agregar el contenido del cuerpo del modal -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                <form action="CreateSentencia" method="get">
+                    <input type="hidden" name="DemandaId" value="@demandas.DemandaId" />
+                    <button type="submit" class="btn btn-primary">Si</button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -159,7 +204,9 @@
     private string finalizadosButtonClass = "btn btn-primary"; 
     private string enProcesoButtonClass = "btn btn-primary"; 
     private string enviadosButtonClass = "btn btn-primary";
+    private string enProcesoSentencia = "btn btn-primary";
     private string botonTodos = "btn btn-secondary";
+
     protected override async Task OnInitializedAsync()
     {
 
@@ -176,6 +223,7 @@
         finalizadosButtonClass = "btn btn-primary";
         enProcesoButtonClass = "btn btn-primary";
         enviadosButtonClass = "btn btn-primary";
+        enProcesoSentencia = "btn btn-primary";
 
         switch (buttonName)
         {
@@ -195,7 +243,7 @@
                 break;
             case 'd':
                 ListaDemandas = await demandaServices.GetDemandas();
-                var enviados = ListaDemandas.Where(x => x.EstadoId == 3).ToList();
+                var enviados = ListaDemandas.Where(x => x.EstadoId == 1003).ToList();
                 ListaDemandas = enviados;
                 enviadosButtonClass = "btn btn-secondary"; 
                 botonTodos = "btn btn-primary";
@@ -203,6 +251,13 @@
             case 't':
                 ListaDemandas = await demandaServices.GetDemandas();
                 botonTodos = "btn btn-secondary";
+                break;
+            case 's':
+                ListaDemandas = await demandaServices.GetDemandas();
+                var sentencia = ListaDemandas.Where(x => x.EstadoId == 3).ToList();
+                ListaDemandas = sentencia;
+                enProcesoSentencia = "btn btn-secondary";
+                botonTodos = "btn btn-primary";
                 break;
         }
     }

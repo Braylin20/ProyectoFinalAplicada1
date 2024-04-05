@@ -1,42 +1,40 @@
-﻿@page "/CreateSentencia"
+﻿@page "/CreateSentencia/{DemandaId:int}"
 @attribute [Authorize(Roles = "Admin,Empleado")]
 @inject NotificationService notificationService
 @inject SentenciaServices sentenciaService
 @inject TiposResolucionServices resolucionService
+@inject DemandaServices demandaService
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 
 <RadzenNotification />
 
-<EditForm Model="sentencia" OnValidSubmit="Guardar">
+<EditForm Model="sentencia">
     <DataAnnotationsValidator />
 
     <div class="container-fluid">
-        <div class="card shadow-lg w-75 mx-auto mt-5" >
+        <div class="card shadow-lg w-50 mx-auto mt-5" >
             <div class="card-header text-white" style=" background-color: #012E40">
-                <h3 class="text-center">Registro de Sentencia</h3>
+                <h3 class="text-center">Agregar Sentencia a la Demanda</h3>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="fw-bold" for="Nombre">Nombre Ministerio:</label>
-                            <InputText @bind-Value="sentencia.NombreMinisterio" class="form-control" />
-                            <ValidationMessage For="@(()=>sentencia.NombreMinisterio)" />
-                        </div>
+                    <div class="form-group">
+                        <label class="fw-bold mb-2">Sentencia de la Demanda:</label>
+                        <InputFile accept=".pdf" class="form-control" OnChange="agregarArchivo" />
+                        <ValidationMessage For="@(()=>sentencia.Sentencia)" />
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="fw-bold" for="Apellido"> Tipo Resolucion:</label>
-                            <InputSelect @bind-Value="sentencia.ResolucionId" class="form-control">
-                                <option value="">Seleccione una opcion</option>
-                                @foreach (var item in ListaResolucion)
-                                {
-                                    var tipoResolucion = resolucionService.GetResolucion(item.ResolucionId);
-                                    <option value="@item.ResolucionId">@tipoResolucion</option>
-                                }
-                            </InputSelect>
-                        </div>
+
+                    <div class="form-group">
+                        <label class="fw-bold" for="Apellido"> Tipo Resolucion:</label>
+                        <InputSelect @bind-Value="sentencia.ResolucionId" class="form-control">
+                            <option value="">Seleccione una opcion</option>
+                            @foreach (var item in ListaResolucion)
+                            {
+                                var tipoResolucion = resolucionService.GetResolucion(item.ResolucionId);
+                                <option value="@item.ResolucionId">@tipoResolucion</option>
+                            }
+                        </InputSelect>
                     </div>
                 </div>
             </div>
@@ -45,8 +43,7 @@
                     <a href="IndexSentencia" class="btn text-white" style=" background-color: #012E40">
                         <img src="Back.svg" style="width:25px; " />Atr&aacute;s
                     </a>
-
-                    <button type="submit" class="btn btn-success">
+                    <button type="button" @onclick="Guardar" class="btn btn-success">
                         <img src="Save.svg" style="width:25px" /> Guardar
                     </button>
                 </div>
@@ -57,16 +54,23 @@
 
 
 @code {
+    [Parameter]
+    public int DemandaId { get; set; }
     public Sentencias sentencia { get; set; } = new Sentencias();
+    public Demandas? demanda { get; set; } = new Demandas();
     public List<TipoResoluciones> ListaResolucion = new List<TipoResoluciones>();
 
     protected override async Task OnInitializedAsync()
     {
+        demanda = await demandaService.GetDemanda(DemandaId);
         sentencia.FechaCreacion = DateTime.Now;
         ListaResolucion = await resolucionService.GetResoluciones();
     }
     public async Task Guardar()
     {
+        Console.WriteLine("Guardando...");
+        sentencia.DemandaId = DemandaId;
+        sentencia.NombreMinisterio = "Tribunal";
         var guardado = await sentenciaService.Save(sentencia);
         if (!guardado)
         {
@@ -91,6 +95,18 @@
             notificationService.Notify(mensaje);
             sentencia = new Sentencias();
         }
-
+    }
+    public async Task agregarArchivo(InputFileChangeEventArgs e)
+    {
+        var archivo = e.File;
+        if (archivo != null)
+        {
+            var stream = archivo.OpenReadStream();
+            using (var memoryStream = new MemoryStream())
+            {
+                await stream.CopyToAsync(memoryStream);
+                sentencia.Sentencia= memoryStream.ToArray();
+            }
+        }
     }
 }
