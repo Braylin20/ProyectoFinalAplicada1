@@ -91,6 +91,7 @@
                     <th class="table-head text-white" style="background-color: #012E40">Fecha de Audiencia</th>
                     <th class="table-head text-white" style="background-color: #012E40">Archivo</th>
                     <th class="table-head text-white" style="background-color: #012E40">Foto de C&eacute;dula</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Imprimir Demanda</th>
                     <th class="table-head text-white" style="background-color: #012E40">Opciones</th>
                     <th class="table-head text-white" style="background-color: #012E40">Sentenciar Demanda</th>
                 </tr>
@@ -142,6 +143,9 @@
                                    
                                 <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.FotoCedula)" download="Foto.png" ><img src="/Download.svg" style="width: 35px;" /></a>
                             }                        
+                        </td>
+                        <td>
+                            <img src="Imprimir.svg" style="width: 40px;" type="button" @onclick="() => ImprimirPDF(item.Documento)" />
                         </td>
                         <td>
                             <a href="/EditDemanda/@item.DemandaId">
@@ -223,7 +227,7 @@
     private string enviadosButtonClass = "btn btn-primary";
     private string enProcesoSentencia = "btn btn-primary";
     private string botonTodos = "btn btn-secondary";
-
+    public int tipoDemandaId;
     protected override async Task OnInitializedAsync()
     {
 
@@ -234,6 +238,13 @@
         FechaFinal = DateTime.Now;
         FechaInicio = DateTime.Now;
 
+    }
+    public async Task ImprimirPDF(byte[] pdfBytes)
+    {
+        // Simulando la obtención de un PDF en forma de arreglo de bytes
+
+        // Invoca la función JavaScript para imprimir el PDF
+        await JSRuntime.InvokeVoidAsync("imprimirPDF", pdfBytes);
     }
     private async Task ChangeButtonColor(char buttonName)
     {
