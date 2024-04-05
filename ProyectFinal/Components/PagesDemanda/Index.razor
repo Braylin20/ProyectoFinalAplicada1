@@ -38,6 +38,7 @@
                 <div class="input-group">
                     <InputSelect @bind-Value="Opcion" class="form-select col-4">
                         <option value="1">DemandaId</option>
+                        <option value="2">Tipos Demanda</option>
                     </InputSelect>
                 </div>
                 
@@ -48,6 +49,22 @@
                     <label>Demanda Id</label>
                     <div class="input-group">
                         <InputNumber @bind-Value="demandas.DemandaId" class="form-control"></InputNumber>
+                        <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" /></button>
+                    </div>
+                </div>
+            }
+
+            else if (Opcion == 2)
+            {
+                <div class="col-3">
+                    <label>Tipo de Demanda</label>
+                    <div class="input-group">
+                        <InputSelect @bind-Value="tipoDemandaId" class="form-select">
+                            @foreach (var tipoDemanda in TiposDemadas)
+                            {
+                                <option value="@tipoDemanda.TiposDemandasId">@tipoDemanda.TipoDemanda</option>
+                            }
+                        </InputSelect>
                         <button type="button" class="btn btn-primary" style="height: 38px;" @onclick="Filtrar"><img src="/Buscar2.svg" style="width: 20px;" /></button>
                     </div>
                 </div>
@@ -286,6 +303,21 @@
             ListaDemandas = await demandaServices.GetDemandas();
             var listDemandas = ListaDemandas.Where(a => a.DemandaId == demandas.DemandaId).ToList();
             ListaDemandas = listDemandas;
+        }
+
+        else if (Opcion == 2)
+        {
+            ListaDemandas = await demandaServices.GetDemandas();
+           
+
+
+            var tipoDemandaSeleccionado = TiposDemadas.FirstOrDefault(t => t.TiposDemandasId == tipoDemandaId);
+            if (tipoDemandaSeleccionado != null)
+            {
+                // Filtrar ListaDemandasUser por el ID del tipo de demanda seleccionado
+                ListaDemandas = ListaDemandas.Where(d => d.TiposDemandasId == tipoDemandaSeleccionado.TiposDemandasId).ToList();
+            }
+
         }
     }
 
