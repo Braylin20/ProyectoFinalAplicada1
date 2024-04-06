@@ -7,72 +7,87 @@
 @inject ApplicationUserServices ApplicationUserServices
 @rendermode InteractiveServer
 <RadzenNotification/>
-<div class="card shadow-lg w-50 mx-auto">
-    <div class="card-header">
-        <h3>Tel&eacute;fono</h3>
-    </div>
-    <div class="card-body ">
-        <div class="card-body border border-primary mb-4">
-            <div>
-                <h3>Registro Demandado</h3>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <label class="fw-bold mb-2">Tippo de tel&eacute;fono</label>
-                    <div class="input-group">
-                        <InputSelect @bind-Value="TelefonoDetalle.TipoId" class="form-select mb-2">
-                            <option value="">Elija una opci&oacute;n</option>
-                            @foreach (var item in TiposTelefonos)
-                            {
-                                <option value="@item.TipoTelefonoId">@item.Descripcion</option>
-                            }
-                        </InputSelect>
-                        <button type="button" class="btn btn-success bi-floppy-fill" @onclick="AgregarTelefono">Agregar</button>
+
+<EditForm Model="@TelefonoDetalle" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="card shadow-lg w-50 mx-auto">
+        <div class="card-header">
+            <h3>Tel&eacute;fono</h3>
+        </div>
+        <div class="card-body ">
+            <div class="card-body border border-primary mb-4">
+                <div>
+                    <h3>Registro Demandado</h3>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <label class="fw-bold mb-2">Tippo de tel&eacute;fono</label>
+                        <div class="input-group">
+                            <InputSelect @bind-Value="TelefonoDetalle.TipoId" class="form-select mb-2">
+                                <option value="">Elija una opci&oacute;n</option>
+                                @foreach (var item in TiposTelefonos)
+                                {
+                                    <option value="@item.TipoTelefonoId">@item.Descripcion</option>
+                                }
+                            </InputSelect>
+                            <button type="button" class="btn btn-success bi-floppy-fill" @onclick="AgregarTelefono">Agregar</button>
+                        </div>
+
                     </div>
 
                 </div>
-
-            </div>
-            <div class="row">
-                <div class="col-6 ">
-                    <label>Nombre</label>
-                    <div class="input-group">
-                        <InputText @bind-Value="TelefonoDetalle.Telefono" class="form-control " />
-
+                <div class="row">
+                    <div class="col-6 ">
+                        <label>Nombre</label>
+                        <div class="input-group">
+                            <InputText @bind-Value="TelefonoDetalle.Telefono" class="form-control " />
+                            <ValidationMessage For="@(()=> TelefonoDetalle.Telefono)" />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <hr clas="border-bottom" />
-            <div>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Tipo de </th>
-                            <th>Valor</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in User.TelefonoDetalles)
-                        {
+                <hr clas="border-bottom" />
+                <div>
+                    <table class="table table-bordered">
+                        <thead>
                             <tr>
-                                <td>@item.TipoTelefono</td>
-                                <td>@item.Telefono</td>
-                                <td>
-                                    <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverTelefono(item))" />
-                                </td>
+                                <th>Tipo de tel&eacute;fono</th>
+                                <th>Valor</th>
+
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in User.TelefonoDetalles)
+                            {
+                                var Tipo = TiposTelefonos.FirstOrDefault(t => t.TipoTelefonoId == item.TipoId);
+                                <tr>
+                                    <td>@Tipo.Descripcion</td>
+                                    <td>@item.Telefono</td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger bi bi-trash-fill" @onclick="@(()=> RemoverTelefono(item))">
+                                            <img src="DeleteBlack.svg" style="width: 25px " />
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="btn-group">
+                <a href="Configuration" class="btn text-white" style=" background-color: #012E40">
+                    <img src="Back.svg" style="width:25px; " />Atr&aacute;s
+                </a>
+
+                <button type="submit" class="btn btn-success">
+                    <img src="Save.svg" style="width:25px" /> Guardar
+                </button>
             </div>
         </div>
     </div>
-    <div class="input-group">
-        <a href="" class="btn btn-secondary">Atr&aacute;s</a>
-        <button type="button" @onclick="Guardar" class="btn btn-success">Guardar</button>
-    </div>
-</div>
+</EditForm>
+
 
 @code {
     public TelefonoDetalles TelefonoDetalle { get; set; } = new();
@@ -120,9 +135,10 @@
             {
                 User.TelefonoDetalles = new List<TelefonoDetalles>();
             }
-            if (usuarioAutenticado.TelefonoDetalles.FirstOrDefault(u => u.Telefono == TelefonoDetalle.Telefono) == null)
+            if (User.TelefonoDetalles.FirstOrDefault(u => u.Telefono == TelefonoDetalle.Telefono) == null)
             {
                 User.TelefonoDetalles.Add(nuevoTelefono);
+                TelefonoDetalle = new TelefonoDetalles();
             }
             else
             {
@@ -134,7 +150,6 @@
                     Duration = 4_000
                 };
                 notificationService.Notify(mensaje);
-                TelefonoDetalle = new TelefonoDetalles();
             }
             
         }

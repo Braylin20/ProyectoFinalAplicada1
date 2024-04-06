@@ -33,9 +33,9 @@
                             <ValidationMessage For="() => Input.Apellido" class="text-danger" />
                         </div>
                         <div class="mb-3">
-                            <label for="inputCedula" class="form-label">C&eacute;dula</label>
-                            <InputNumber @bind-Value="Input.Cedula" class="form-control" id="inputCedula" placeholder="C&eacute;dula" />
-                            <ValidationMessage For="() => Input.Cedula" class="text-danger" />
+                            <label for="inputCedula" class="form-label">C&eacute;dula(Con guiones)</label>
+                            <InputText @bind-Value="Input.CedulaString" class="form-control" id="inputCedula" placeholder="Cédula" oninput="formatearCedula()" />
+                            <ValidationMessage For="() => Input.CedulaString" class="text-danger" />
                         </div>
                         <div class="mb-3">
                             <label for="inputEmail" class="form-label">Email</label>
@@ -147,6 +147,29 @@
         }
         return (IUserEmailStore<ApplicationUser>)UserStore;
     }
+    private void formatCedulaWithHyphens()
+    {
+        // Obtener el valor actual de la cédula
+        var cedula = Input.CedulaString;
+
+        // Eliminar todos los caracteres no numéricos
+        cedula = new string(cedula.Where(char.IsDigit).ToArray());
+
+        // Formatear la cédula con guiones
+        if (cedula.Length >= 3)
+        {
+            cedula = cedula.Insert(3, "-");
+        }
+        if (cedula.Length >= 11)
+        {
+            cedula = cedula.Insert(11, "-");
+        }
+
+        // Asignar el valor formateado de vuelta al modelo
+        Input.CedulaString = cedula;
+    }
+
+
     private sealed class InputModel
     {
         [Required(ErrorMessage = "El Email es requerido")]
@@ -163,8 +186,9 @@
         [Display(Name = "Confirmar Contraseña")]
         [Compare("Password", ErrorMessage = "La contraseña y la confirmación de contraseña no coinciden.")]
         public string ConfirmPassword { get; set; } = "";
-        [RegularExpression(@"^\d{11}$", ErrorMessage = "La cédula debe tener 11 digitos")]
-        public long Cedula { get; set; }
+        [RegularExpression(@"^\d{3}-\d{7}-\d{1}$|^\d{11}$", ErrorMessage = "La cédula debe tener el formato correcto (xxx-xxxxxxx-x)")]
+        public string CedulaString { get; set; } = "";
+        public long Cedula => long.TryParse(CedulaString.Replace("-", ""), out long result) ? result : 0;
         [Required(ErrorMessage ="El Apellido es requerido")]
         public string Apellido { get; set; }
         [Required(ErrorMessage = "El Nombre es requerido")]

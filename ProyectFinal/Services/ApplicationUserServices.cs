@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProyectFinal.Data;
 using Share.Models;
+using System.Linq.Expressions;
 
 namespace ProyectFinal.Services
 {
@@ -11,13 +12,17 @@ namespace ProyectFinal.Services
             _context!.TelefonoDetalles.Add(telefono);
             return await _context.SaveChangesAsync() > 0;
         }
-        //public async Task<ApplicationUser?> GetUser(string id)
-        //{
-        //    return _context.Users.Include(u => u.TelefonoDetalles).Include(u => u.Expedientes).ThenInclude(u => u.Demandas).ThenInclude(u => u.DemandaDetalles).FirstOrDefault(t => t.Id == id);
-        //}
+        
         public async Task<ApplicationUser?> GetUser(string id)
         {
             return _context.Users.Include(u => u.TelefonoDetalles).FirstOrDefault(t => t.Id == id);
+        }
+        public async Task<List<ApplicationUser>> Listar(Expression<Func<ApplicationUser, bool>> criterio)
+        {
+            return await _context.Users
+                .AsNoTracking()
+                .Where(criterio)
+                .ToListAsync();
         }
         public  ApplicationUser GetUserByCedula(long? cedula)
         {
