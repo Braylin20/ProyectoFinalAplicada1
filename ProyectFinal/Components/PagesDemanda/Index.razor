@@ -117,11 +117,17 @@
                         </td>
                         <td>
                             @if (Estado != null)
-                                @Estado.Estado
-                            else
                             {
-                                <h6 >No asignado</h6>
+                                if (Estado.Estado == "Enviada")
+                                {
+                                    Estado.Estado = "No asignado";
+                                    @Estado.Estado;
+                                }
+                                
+                                else
+                                    @Estado.Estado
                             }
+
                         </td>
                         <td>
                             @if (Audiencia != null)
