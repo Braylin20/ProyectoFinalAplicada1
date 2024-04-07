@@ -101,6 +101,7 @@
     protected override async Task OnInitializedAsync()
     {
         ListaSentencia = await sentenciaService.Listar(p=> true);
+
         ListaDemandas = await DemandaServices.Listar(p => true);
         ListaResolucion = await resolucionService.GetResoluciones();
         TiposDemandas = await TipoDemandaServices.Listar(p => true);
@@ -120,6 +121,9 @@
     }
     public async Task ImprimirPDF(byte[] pdfBytes)
     {
+        // Simulando la obtención de un PDF en forma de arreglo de bytes
+
+        // Invoca la función JavaScript para imprimir el PDF
         await JSRuntime.InvokeVoidAsync("imprimirPDF", pdfBytes);
     }
 

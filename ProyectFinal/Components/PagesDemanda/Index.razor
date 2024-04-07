@@ -2,6 +2,7 @@
 @attribute [Authorize(Roles = "Admin,Empleado")]
 @rendermode InteractiveServer
 @inject DemandaServices demandaServices
+@inject SentenciaServices sentenciaService
 @inject TipoDemandaServices tipoDemandaServices
 @inject AlguacilServices alguacilServices
 @inject AudienciasServices audienciasServices
@@ -99,9 +100,11 @@
             <tbody>
                 @foreach (var item in ListaDemandas)
                 {
-                        TipoDemanda= TiposDemadas.FirstOrDefault(t=> t.TiposDemandasId == item.TiposDemandasId);
-                        Audiencia = Audiencias.FirstOrDefault(t=> t.AudienciaId == item.AudienciaId);
-                        Estado = Estados.FirstOrDefault(t=> t.EstadoId == item.EstadoId);
+                    
+
+                    TipoDemanda = TiposDemadas.FirstOrDefault(t => t.TiposDemandasId == item.TiposDemandasId);
+                    Audiencia = Audiencias.FirstOrDefault(t => t.AudienciaId == item.AudienciaId);
+                    Estado = Estados.FirstOrDefault(t => t.EstadoId == item.EstadoId);
 
                     <tr>
                         <td>
@@ -165,9 +168,21 @@
                             </a>
                         </td>
                         <td>
-                            <a type="button" data-bs-toggle="modal" data-bs-target="#ModalSentencia_@item.DemandaId">
-                                <img src="Sentence.svg" style="width: 50px;" />
-                            </a>
+                            @if(Estado != null)
+                            {
+                                
+                                if(Estado.EstadoId == 2){
+                                    <a type="button" data-bs-toggle="modal" data-bs-target="#ModalSentencia_@item.DemandaId">
+                                        <img src="Sentence.svg" style="width: 50px;" />
+                                    </a>
+
+                                }
+                                else
+                                {
+                                    
+                                    <h6 class="fw-bold">Proceso No agotado</h6>
+                                }
+                            }
                         </td>
 
                     </tr>
@@ -226,6 +241,7 @@
     public List<TiposDemandas>? TiposDemadas = new List<TiposDemandas>();
     public List<Audiencias>? Audiencias = new List<Audiencias>();
     public List<EstadosDemandas>? Estados = new List<EstadosDemandas>();
+    public List<Sentencias>? ListaSentencia = new List<Sentencias>();
     public int Opcion { get; set; }
     public DateTime FechaInicio { get; set; }
     public DateTime FechaFinal { get; set; }
@@ -245,6 +261,10 @@
         FechaFinal = DateTime.Now;
         FechaInicio = DateTime.Now;
 
+
+        ListaSentencia = await sentenciaService.Listar(s => true);
+
+
     }
     public async Task ImprimirPDF(byte[] pdfBytes)
     {
@@ -262,9 +282,13 @@
             case 'f':
                 finalizadosButtonClass = "btn btn-secondary";
                 botonTodos = "btn btn-primary";
+               
                 ListaDemandas = await demandaServices.GetDemandas();
-                var finalizados = ListaDemandas.Where(x => x.EstadoId == 1).ToList();
-                ListaDemandas = finalizados;
+               
+                var demandasConSentencia = ListaDemandas.Where(d => ListaSentencia.Any(s => s.DemandaId == d.DemandaId) && d.EstadoId == 1).ToList();
+               
+                ListaDemandas = demandasConSentencia;
+                
                 break;
             case 'e':
                 ListaDemandas = await demandaServices.GetDemandas();
@@ -323,8 +347,6 @@
         else if (Opcion == 2)
         {
             ListaDemandas = await demandaServices.GetDemandas();
-           
-
 
             var tipoDemandaSeleccionado = TiposDemadas.FirstOrDefault(t => t.TiposDemandasId == tipoDemandaId);
             if (tipoDemandaSeleccionado != null)
