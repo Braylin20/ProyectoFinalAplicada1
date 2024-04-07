@@ -42,21 +42,5 @@ namespace ProyectFinal.Services
             _context.Entry(sentencia).State = EntityState.Modified;
             return await _context.SaveChangesAsync() > 0;
         }
-
-        public async Task<List<int>> GetSentenciasPorMes(int year)
-        {
-            var sentenciasPorMes = new List<int>();
-
-            for (int i = 1; i <= 12; i++)
-            {
-                var sentenciasMes = await _context.Sentencias
-                    .Where(s => s.FechaCreacion.Month == i && s.FechaCreacion.Year == year)
-                    .CountAsync();
-
-                sentenciasPorMes.Add(sentenciasMes);
-            }
-
-            return sentenciasPorMes;
-        }
     }
 }

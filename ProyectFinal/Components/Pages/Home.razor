@@ -2,144 +2,30 @@
 
 
 
-<AuthorizeView Roles="Admin,Empleado">
+@* <div style="width: 400px; height: 300px;">
+    <!-- Define el ancho y la altura del contenedor del gráfico -->
+    <canvas id="myChart"></canvas>
+</div> *@
 
-
-    @inject DemandaServices demandaService
-    @inject ApplicationUserServices ApplicationUserServices
-    @inject IJSRuntime JSRuntime
-
-    <body>
-        <Chart />
-        <div class="card-body" style="height: 300px">
-            <div class="card-group align-items-center d-flex">
-                <div class="card shadow-lg" type="button">
-                    <h3 class="text-center text-white" style="background-color: dimgrey">Sentencia Reciente</h3>
-                </div>
-                <div class="card shadow-lg " style="border: 0px; ">
-                    <h3 class="text-center text-white" style="background-color: dimgrey">Demanda Reciente</h3>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-center align-items-center mb-4">
-                            <img class="" src="Book.svg" style="width: 100px" />
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <p>
-                                    <img src="UserDemanda.svg" style="width: 30px" />
-                                    @NombreCompleto
-                                </p>
-
-                            </div>
-                            <div class="col-6">
-                                <p>
-                                    <img src="Cedula.svg" style="width: 30px" />
-                                    @Usuario.Cedula
-                                </p>
-                            </div>
-                            <hr clas="border-bottom" />
-
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                @foreach (var ninoDetalle in Demanda.UsuarioNinoDetalles)
-                                {
-                                    <p>
-                                        <img src="Boy.svg" style="width: 30px" />
-                                        @ninoDetalle.NombreNino
-                                    </p>
-                                }
-
-                            </div>
-                            <div class="col-6 mb-3">
-                                <p>
-                                    <img src="Date.svg" style="width: 30px" />
-                                    @Demanda.Fecha.ToString("dd/MM/yyyy");
-                                </p>
-                            </div>
-                            <div class="row">
-                                <div class="d-flex justify-content-center align-items-center mb-4">
-                                    <p>
-                                        <img src="Date.svg" style="width: 30px" />
-                                        @Demanda.Descripcion
-                                    </p>
-                                </div>
-                            </div>
-
-                        </div>
-
-
-                    </div>
-
-
-                </div>
-                <div class="card shadow-lg">
-                    <h3 class="text-center text-white" style="background-color: dimgrey">Empleado Destacado</h3>
-                </div>
-            </div>
+<div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" style="max-width: 800px; margin: 0 auto;">
+    <h2 class="text-center">Explora las Funcionalidades de Gestión de Demandas como Usuario</h2>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="/CrearDemanda.jpg" class="d-block w-100" alt="...">
         </div>
-
-    </body>
-    <footer>
-        <div class="row">
-            <div class="col-lg-12 text-center text-muted">
-                <a href="https://www.facebook.com/Braylin20"><img src="https://img.icons8.com/ios-glyphs/30/000000/facebook-new.png" /></a>
-                <a href="https://www.instagram.com/braylin_20/"><img src="https://img.icons8.com/ios-glyphs/30/000000/instagram-new.png" /></a>
-                <a href="https://www.twitter.com/"><img src="https://img.icons8.com/ios-glyphs/30/000000/twitter.png" /></a>
-                <p>© 2024 - Sistema Tribunal Niños y Niñas - Programación Web</p>
-            </div>
+        <div class="carousel-item">
+            <img src="/EditarDemanda.jpg" class="d-block w-100" alt="...">
         </div>
-    </footer>
-
-
-    @code {
-        public Demandas Demanda { get; set; } = new Demandas();
-        public ApplicationUser Usuario { get; set; } = new ApplicationUser();
-        public string NombreCompleto => $"{Usuario.Nombre} {Usuario.Apellido}";
-        protected override async Task OnInitializedAsync()
-        {
-        Demanda = await demandaService.ObtenerUltimaDemanda();
-        Usuario = ApplicationUserServices.GetUserByCedula(Demanda.Cedula);
-
-        }
-        // protected override async Task OnAfterRenderAsync(bool firstRender)
-        // {
-        //     Demanda =  await demandaService.ObtenerUltimaDemanda();
-        //     Usuario = ApplicationUserServices.GetUserByCedula(Demanda.Cedula);
-
-        // }
-        // protected override async Task OnAfterRenderAsync(bool firstRender)
-        // {
-        //     if (firstRender)
-        //     {
-        //         await JSRuntime.InvokeVoidAsync("loadChart", Demanda.UsuarioNinoDetalles.Select(x => x.NombreNino).ToArray());
-        //     }
-        // }
-    }
-</AuthorizeView>
-
-
-<AuthorizeView Roles="User">
-
-    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" style="max-width: 800px; margin: 0 auto;">
-        <h2 class="text-center">Explora las Funcionalidades de Gestión de Demandas como Usuario</h2>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="/CrearDemanda.jpg" class="d-block w-100" alt="...">
-            </div>
-            <div class="carousel-item">
-                <img src="/EditarDemanda.jpg" class="d-block w-100" alt="...">
-            </div>
-            <div class="carousel-item">
-                <img src="/IndexDemanda.jpg" class="d-block w-100" alt="...">
-            </div>
+        <div class="carousel-item">
+            <img src="/IndexDemanda.jpg" class="d-block w-100" alt="...">
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
     </div>
-</AuthorizeView>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>

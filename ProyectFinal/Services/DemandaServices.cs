@@ -54,14 +54,5 @@ namespace ProyectFinal.Services
             _context.Entry(demanda).State = EntityState.Modified;
             return await _context.SaveChangesAsync() > 0;
         }
-
-        public async Task<Demandas> ObtenerUltimaDemanda()
-        {
-            return await _context.Demandas
-                .Include(d => d.DemandaDetalles)
-                .Include(d => d.UsuarioNinoDetalles)
-                .OrderByDescending(d => d.Fecha)
-                .FirstOrDefaultAsync();
-        }
     }
 }
