@@ -1,6 +1,31 @@
 ﻿@page "/"
 
-<div style="width: 400px; height: 300px;">
+
+
+@* <div style="width: 400px; height: 300px;">
     <!-- Define el ancho y la altura del contenedor del gráfico -->
     <canvas id="myChart"></canvas>
+</div> *@
+
+<div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" style="max-width: 800px; margin: 0 auto;">
+    <h2 class="text-center">Explora las Funcionalidades de Gestión de Demandas como Usuario</h2>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="/CrearDemanda.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+            <img src="/EditarDemanda.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+            <img src="/IndexDemanda.jpg" class="d-block w-100" alt="...">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
 </div>
