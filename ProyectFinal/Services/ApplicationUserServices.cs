@@ -17,6 +17,7 @@ namespace ProyectFinal.Services
         {
             return _context.Users.Include(u => u.TelefonoDetalles).FirstOrDefault(t => t.Id == id);
         }
+        
         public async Task<List<ApplicationUser>> Listar(Expression<Func<ApplicationUser, bool>> criterio)
         {
             return await _context.Users

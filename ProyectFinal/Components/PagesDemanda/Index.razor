@@ -86,7 +86,6 @@
         <table class="table table-bordered text-center">
             <thead>
                 <tr>
-                    <th class="table-head text-white" style="background-color: #012E40">Id</th>
                     <th class="table-head text-white" style="background-color: #012E40">Tipo de Demanda</th>
                     <th class="table-head text-white" style="background-color: #012E40">Estado</th>
                     <th class="table-head text-white" style="background-color: #012E40">Fecha de Audiencia</th>
@@ -105,7 +104,6 @@
                         Estado = Estados.FirstOrDefault(t=> t.EstadoId == item.EstadoId);
 
                     <tr>
-                        <td>@item.DemandaId</td>
                         <td>
                             @if(TipoDemanda != null)
                                 @TipoDemanda.TipoDemanda
