@@ -1,0 +1,24 @@
+﻿@page "/Chart"
+@rendermode InteractiveServer
+@inject SentenciaServices sentenciasService
+<h3>Chart</h3>
+
+<div style="width: 800px; height: 350px;">
+    <canvas id="myChart"></canvas>
+</div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var sentenciasPorMes = await sentenciasService.GetSentenciasPorMes(DateTime.Now.Year);
+            await JSRuntime.InvokeVoidAsync("loadChart", sentenciasPorMes);
+        }
+    }
+
+
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
+    
+}
