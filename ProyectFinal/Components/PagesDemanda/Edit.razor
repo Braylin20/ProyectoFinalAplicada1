@@ -35,20 +35,20 @@
                                     </InputSelect>
                                 </div>
                                <div class="col-6">
-                                    <div class="d-flex flex-column"> <!-- Utilizamos flex-column para colocar los elementos en columnas -->
+                                    <div class="d-flex flex-column"> 
                                         <label class="fw-bold d-flex align-content-center mb-2">Estado de demanda</label>
                                         <InputRadioGroup @bind-Value="Demanda.EstadoId" class="form-check mb-auto">
-                                            <div class="form-check">
+                                            @* <div class="form-check">
                                                 <InputRadio Value="1" class="custom-radio" style="width: 1em;height: 1em;margin-right: 0.5em;"/>
                                                 <label class="form-check-label">Finalizado</label>
-                                            </div>
+                                            </div> *@
                                             <div class="form-check">
-                                                <InputRadio Value="1003" class="custom-radio" style="width: 1em;height: 1em;margin-right: 0.5em;"/>
+                                                <InputRadio Value="2" class="custom-radio" style="width: 1em;height: 1em;margin-right: 0.5em;"/>
                                                 <label class="form-check-label">En Proceso</label>
                                             </div>
                                             <div class="form-check">
-                                                <InputRadio Value="2" class="custom-radio" style="width: 1em;height: 1em;margin-right: 0.5em;"/>
-                                                <label class="form-check-label">En de Sentencia</label>
+                                                <InputRadio Value="4" class="custom-radio" style="width: 1em;height: 1em;margin-right: 0.5em;"/>
+                                                <label class="form-check-label">En Proceso de Sentencia</label>
                                             </div>
                                         </InputRadioGroup>
                                     </div>
