@@ -28,6 +28,9 @@ namespace Share.Models
         public DateTime Fecha { get; set; }
         [Required(ErrorMessage = "Este campo es requerido")]
         public string? Descripcion { get; set; }
+
+        public Sentencias? Sentencias { get; set; }
+
         [ForeignKey("EstadoId")]
         public EstadosDemandas? EstadoDemanda { get; set; }
         [ForeignKey("TiposDemandasId")]
