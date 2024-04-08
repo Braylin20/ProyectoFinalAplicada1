@@ -1,4 +1,5 @@
-﻿@page "/"
+﻿ @page "/"
+
 @inject DemandaServices demandaService
 @inject TipoDemandaServices tipoDemandaServices
 @inject TiposResolucionServices resolucionServices
@@ -203,16 +204,7 @@
         </div>
 
     </body>
-    <footer>
-        <div class="row">
-            <div class="col-lg-12 text-center text-muted">
-                <a href="https://www.facebook.com/Braylin20"><img src="https://img.icons8.com/ios-glyphs/30/000000/facebook-new.png" /></a>
-                <a href="https://www.instagram.com/braylin_20/"><img src="https://img.icons8.com/ios-glyphs/30/000000/instagram-new.png" /></a>
-                <a href="https://www.twitter.com/"><img src="https://img.icons8.com/ios-glyphs/30/000000/twitter.png" /></a>
-                <p>© 2024 - Sistema Tribunal Niños y Niñas - Programación Web</p>
-            </div>
-        </div>
-    </footer>
+    
 
 
 
@@ -245,7 +237,16 @@
     </div>
 </AuthorizeView>
 
-
+<footer>
+    <div class="row">
+        <div class="col-lg-12 text-center text-muted">
+            <a href="https://www.facebook.com/Braylin20"><img src="https://img.icons8.com/ios-glyphs/30/000000/facebook-new.png" /></a>
+            <a href="https://www.instagram.com/braylin_20/"><img src="https://img.icons8.com/ios-glyphs/30/000000/instagram-new.png" /></a>
+            <a href="https://www.twitter.com/"><img src="https://img.icons8.com/ios-glyphs/30/000000/twitter.png" /></a>
+            <p>© 2024 - Sistema Tribunal Niños y Niñas - Programación Web</p>
+        </div>
+    </div>
+</footer>
 @code {
     public List<TipoResoluciones> ListResolucion { get; set; } = new List<TipoResoluciones>();
     public List<Demandas> ListDemanda { get; set; } = new List<Demandas>();
@@ -259,9 +260,9 @@
     public TipoResoluciones ultimaResolucion { get; set; } = new TipoResoluciones();
     public Demandas demandaSentencia { get; set; } = new Demandas();
     public TiposDemandas tipoDemandaSentencia { get; set; } = new TiposDemandas();
-    public string NombreCompleto => $"{Usuario.Nombre} {Usuario.Apellido}";
-    public string NombreCompletoSentencia => $"{user.Nombre} {user.Apellido}";
-    public string NombreCompletoEmpleado => $"{Empleado.Nombre} {Empleado.Apellido}";
+    public string? NombreCompleto => $"{Usuario.Nombre} {Usuario.Apellido}";
+    public string? NombreCompletoSentencia => $"{user.Nombre} {user.Apellido}";
+    public string? NombreCompletoEmpleado => $"{Empleado.Nombre} {Empleado.Apellido}";
     public byte[]? archivoSentencia;
     public ApplicationUser User { get; set; } = new ApplicationUser();
     public ApplicationUser Empleado { get; set; } = new ApplicationUser();
@@ -301,17 +302,5 @@
         }
 
     }
-    // protected override async Task OnAfterRenderAsync(bool firstRender)
-    // {
-    //     Demanda =  await demandaService.ObtenerUltimaDemanda();
-    //     Usuario = ApplicationUserServices.GetUserByCedula(Demanda.Cedula);
-
-    // }
-    // protected override async Task OnAfterRenderAsync(bool firstRender)
-    // {
-    //     if (firstRender)
-    //     {
-    //         await JSRuntime.InvokeVoidAsync("loadChart", Demanda.UsuarioNinoDetalles.Select(x => x.NombreNino).ToArray());
-    //     }
-// }
-    }
+ 
+    } 
