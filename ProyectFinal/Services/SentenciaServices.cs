@@ -58,5 +58,13 @@ namespace ProyectFinal.Services
 
             return sentenciasPorMes;
         }
+
+
+        public async Task<Sentencias> ObtenerUltimaSentencia()
+        {
+            return await _context.Sentencias
+                .OrderByDescending(d => d.FechaCreacion)
+                .FirstOrDefaultAsync();
+        }
     }
 }
