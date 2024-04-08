@@ -17,20 +17,25 @@ namespace ProyectFinal.Services
         }
         public async Task<bool> DeleteAudiencia(int id)
         {
-          
-            var demandaConAudiencia = await _context.Demandas.Include(d => d.Audiencia).FirstOrDefaultAsync(d => d.Audiencia!.AudienciaId == id);
+            var audienciaToDelete = await _context.Audiencias.FindAsync(id);
 
-            if (demandaConAudiencia != null)
+            if (audienciaToDelete == null)
             {
-                demandaConAudiencia.Audiencia = null;
+                return false; 
             }
+            var demandasConAudiencia = await _context.Demandas
+                .Where(d => d.AudienciaId == id)
+                .ToListAsync();
 
+            foreach (var demanda in demandasConAudiencia)
+            {
+                demanda.Audiencia = null;
+            }
             await _context.SaveChangesAsync();
-            return await _context!.Audiencias
-                .AsNoTracking()
-                .Where(a => a.AudienciaId == id)
-                .ExecuteDeleteAsync() > 0;
+            _context.Audiencias.Remove(audienciaToDelete);
+            await _context.SaveChangesAsync();
 
+            return true;
         }
         public async Task<List<Audiencias>> Listar(Expression<Func<Audiencias, bool>> criterio)
         {
