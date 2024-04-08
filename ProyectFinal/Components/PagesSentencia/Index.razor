@@ -63,10 +63,19 @@
                             <td>@user.Nombre</td>
                             <td>@Sentencia.Demandas.Cedula</td>
                             <td>@item.FechaCreacion.ToString("dd/MM/yyyy")</td>
-                            <td>@tipoDemanda.TipoDemanda</td>
-                            <td> <a href="data:application/octet-stream;base64,@Convert.ToBase64String(Sentencia.Demandas.Documento)" download="Archivo.pdf"><img src="/Download.svg" style="width: 35px;" /></a></td>
-                            <td> <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.Sentencia)" download="Archivo.pdf"><img src="/Download.svg" style="width: 35px;" /></a></td>
-                            <td>
+                            @if(tipoDemanda != null)
+                            {
+                                <td>@tipoDemanda.TipoDemanda</td>
+                                
+                            }
+
+                            @if (Sentencia.Demandas.Documento != null && item.Sentencia != null)
+                            {
+                                <td> <a href="data:application/octet-stream;base64,@Convert.ToBase64String(Sentencia.Demandas.Documento)" download="Archivo.pdf"><img src="/Download.svg" style="width: 35px;" /></a></td>
+                                <td> <a href="data:application/octet-stream;base64,@Convert.ToBase64String(item.Sentencia)" download="Archivo.pdf"><img src="/Download.svg" style="width: 35px;" /></a></td> 
+                                
+                            }
+                            <td> 
                                 <img src="Imprimir.svg" style="width: 40px;" type="button" @onclick="() => ImprimirPDF(item.Sentencia)" />
                             </td>
                             <td>
