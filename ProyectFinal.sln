@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProyectFinal.Client", "Proy
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Share", "Shared\Share.csproj", "{084F343B-FE3D-4410-9579-CE892D2DADDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSistemaTribunal", "TestSistemaTribunal\TestSistemaTribunal.csproj", "{0466E8BB-27C4-4A6E-AB7B-F3A3EC1FA9DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestSistemaTribunal", "TestSistemaTribunal\TestSistemaTribunal.csproj", "{0466E8BB-27C4-4A6E-AB7B-F3A3EC1FA9DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
