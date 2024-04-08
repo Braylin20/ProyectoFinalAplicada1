@@ -36,6 +36,11 @@ namespace ProyectFinal.Services
             return await _context.SaveChangesAsync() > 0;
         }
 
+        public async Task SaveChanges(ApplicationUser user)
+        {
+            _context!.Users.Update(user);
+            await _context.SaveChangesAsync();
+        }
 
         public async Task<bool> Delete(string id)
         {
