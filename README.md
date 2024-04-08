@@ -41,11 +41,14 @@ a12345A@
 **Tecnologías Utilizadas**
 Utilizamos blazor en conjunto de Boostrap para el lado del diseño, junto con c# y Asp.net8.
 
-![![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/b0cfbf10-caf1-4ca6-a934-9e56f01ba290)
+![![image](![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/91a80f55-8725-4c26-8f67-ff268b876067)
+)
 ]
 
-![![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/6a6cdf80-7078-4f62-8c77-006434c70247)
+![![image](![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/fad933c5-80fb-47b6-9472-75733695a11e)
+)
 ]
-![![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/720d7b59-3003-4cf9-8750-f355c56b615b)
+![![image](![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/ab11a2c6-df74-4192-a22d-6c6143aaff2e)
+)
 ]
 
