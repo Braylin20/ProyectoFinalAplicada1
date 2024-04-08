@@ -13,6 +13,8 @@ namespace ProyectFinal.Data
 
         public int? AbogadoId { get; set; }
         public long? Cedula { get; set; }
+
+        public int ContadorSentencias { get; set; }
         public DateTime FechaCreacion { get; set; }
         public Expedientes? Expedientes { get; set; }
 
