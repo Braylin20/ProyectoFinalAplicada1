@@ -100,8 +100,8 @@
             <tbody>
                 @foreach (var item in ListaDemandas)
                 {
-                    
 
+                    demandas.Sentencias = ListaSentencia.FirstOrDefault(d => d.DemandaId == item.DemandaId);
                     TipoDemanda = TiposDemadas.FirstOrDefault(t => t.TiposDemandasId == item.TiposDemandasId);
                     Audiencia = Audiencias.FirstOrDefault(t => t.AudienciaId == item.AudienciaId);
                     Estado = Estados.FirstOrDefault(t => t.EstadoId == item.EstadoId);
@@ -168,20 +168,36 @@
                             </a>
                         </td>
                         <td>
-                            @if(Estado != null)
+                            @if (Estado != null)
                             {
-                                
-                                if(Estado.EstadoId == 2){
+
+                                @*    if(Estado.EstadoId == 2){
                                     <a type="button" data-bs-toggle="modal" data-bs-target="#ModalSentencia_@item.DemandaId">
                                         <img src="Sentence.svg" style="width: 50px;" />
                                     </a>
 
                                 }
-                                else
-                                {
-                                    
-                                    <h6 class="fw-bold">Proceso No agotado</h6>
-                                }
+ *@
+
+
+                                    if (demandas.Sentencias == null && Estado.EstadoId == 4 && TipoDemanda != null && Audiencia != null)
+                                    {
+                                        <a type="button" data-bs-toggle="modal" data-bs-target="#ModalSentencia_@item.DemandaId">
+                                            <img src="Sentence.svg" style="width: 50px;" />
+                                        </a>
+                                    }
+                                    else if (demandas.Sentencias != null)
+                                    {
+                                        <h6>Proceso Agotado</h6>
+                                    }
+
+                                    else
+                                    {
+
+                                        <h6 class="fw-bold">Proceso No agotado</h6>
+                                    }
+
+                                
                             }
                         </td>
 
@@ -251,6 +267,7 @@
     private string enProcesoSentencia = "btn btn-primary";
     private string botonTodos = "btn btn-secondary";
     public int tipoDemandaId;
+
     protected override async Task OnInitializedAsync()
     {
 
@@ -261,9 +278,7 @@
         FechaFinal = DateTime.Now;
         FechaInicio = DateTime.Now;
 
-
         ListaSentencia = await sentenciaService.Listar(s => true);
-
 
     }
     public async Task ImprimirPDF(byte[] pdfBytes)
@@ -310,7 +325,7 @@
                 break;
             case 's':
                 ListaDemandas = await demandaServices.GetDemandas();
-                var sentencia = ListaDemandas.Where(x => x.EstadoId == 3).ToList();
+                var sentencia = ListaDemandas.Where(x => x.EstadoId == 4).ToList();
                 ListaDemandas = sentencia;
                 enProcesoSentencia = "btn btn-secondary";
                 botonTodos = "btn btn-primary";
