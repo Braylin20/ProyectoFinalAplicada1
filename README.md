@@ -1,3 +1,9 @@
+![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/90113598/d9801f9a-1e7a-4060-b9a6-0dd5f355db8a)
+![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/90113598/624272f4-f287-45fc-a5e0-7325074f8f16)
+![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/90113598/d12cebab-2ec4-4744-8f25-1b4d4e6d3b86)
+![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/90113598/f96813a6-db4b-4be1-80ad-12396b7f76d0)
+![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/90113598/8acca104-046e-4f9c-92c7-48d28c5f4e48)
+
 Buenas, nuestros nombres son:
 
 **Eliezer Terrero**
@@ -38,20 +44,7 @@ a12345A@
 
 **Programación de Audiencias:** Permite programar y gestionar audiencias judiciales.
 
-**Tecnologías Utilizadas**
-Utilizamos blazor en conjunto de Boostrap para el lado del diseño, junto con c# y Asp.net8.
-- **ASP.NET Core:** Utilizado para el desarrollo del backend.
-- **Entity Framework Core:** Framework de mapeo objeto-relacional (ORM) para el acceso a datos.
-- **Blazor:** Framework de Microsoft para construir aplicaciones web interactivas.
-- **Razor:** Motor de plantillas de Blazor para definir la interfaz de usuario.
-- **HTML/CSS:** Utilizado para el diseño y la estructura visual de las páginas web.
-- **Bootstrap:** Framework de diseño CSS para la creación de interfaces de usuario.
-- **C#:** Lenguaje de programación utilizado en el backend y en el código del lado del servidor en Blazor.
-- **Microsoft SQL Server:** Sistema de gestión de bases de datos relacional utilizado para almacenar datos.
-- **Razor Components:** Componentes reutilizables en Blazor para construir la interfaz de usuario.
-
 (![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/e28aca3a-797f-46f7-aea5-aa695a5ece02)
-
 
 (![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/1aaa5f4a-322e-4091-9e44-cfdd046cd49e)
 
