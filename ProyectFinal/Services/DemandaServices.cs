@@ -50,14 +50,6 @@ namespace ProyectFinal.Services
 
             return await _context.SaveChangesAsync() > 0;
         }
-        public async Task<bool> Edit(Demandas demanda)
-        {
-            _context!.Update(demanda);
-            _context.Entry(demanda).State = EntityState.Modified;
-            return await _context.SaveChangesAsync() > 0;
-        }
-
-
         public async Task SaveChanges(Demandas demanda)
         {
             _context!.Demandas.Update(demanda);

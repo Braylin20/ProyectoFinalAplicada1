@@ -7,11 +7,7 @@ namespace ProyectFinal.Services
 {
     public class ApplicationUserServices(ApplicationDbContext _context)
     {
-        public async Task<bool> Save(TelefonoDetalles telefono)
-        {
-            _context!.TelefonoDetalles.Add(telefono);
-            return await _context.SaveChangesAsync() > 0;
-        }
+        
         
         public async Task<ApplicationUser?> GetUser(string id)
         {

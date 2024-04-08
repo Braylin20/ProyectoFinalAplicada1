@@ -16,22 +16,7 @@ namespace ProyectFinal.Services
         {
             return await _context!.Expedientes.FindAsync(id);
         }
-        public async Task<List<Demandas>> Listar(Expression<Func<Demandas, bool>> criterio)
-        {
-            return await _context.Demandas
-                .AsNoTracking()
-                .Where(criterio)
-                .ToListAsync();
-        }
 
-        public async Task<bool> DeleteExpediente(int id)
-        {
-            var expediente = _context.Expedientes.Find(id);
-
-            _context.Expedientes.Remove(expediente);
-            var deleted = await _context.SaveChangesAsync() > 0;
-            return deleted;
-        }
         public async Task<bool> Save(Expedientes expediente)
         {
             if (expediente.ExpedienteId == 0)
