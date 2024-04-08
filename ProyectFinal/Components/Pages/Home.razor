@@ -54,7 +54,7 @@
                             <div class="col-6 mb-3">
                                 <p>
                                     <img src="/tiposDemanda.svg" style="width: 30px" />
-                                    @tipoDemandaSentencia
+                                    @tipoDemandaSentencia.TipoDemanda
                                     
                                 </p>
                             </div>
@@ -136,7 +136,7 @@
                                     <div class="d-flex justify-content-center align-items-center mb-4">
                                         <p>
                                             <img src="Date.svg" style="width: 30px" />
-                                            @Demanda.Descripcion
+                                            Descripcion: @Demanda.Descripcion
                                         </p>
                                     </div>
                                 </div>
@@ -151,6 +151,49 @@
                 </div>
                 <div class="card shadow-lg" style="border: 0px;height: 450px ">
                     <h3 class="text-center text-white" style="background-color: dimgrey">Empleado Destacado</h3>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center align-items-center mb-4">
+                            <img class="" src="/Trabajador.svg" style="width: 100px" />
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <p>
+                                    <img src="UserDemanda.svg" style="width: 30px" />
+                                    @NombreCompletoEmpleado
+                                </p>
+
+                            </div>
+                            <div class="col-6">
+                                <p>
+                                    <img src="Cedula.svg" style="width: 30px" />
+                                    @Empleado.Cedula
+                                </p>
+                            </div>
+                            <hr clas="border-bottom" />
+
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+
+                                <p>
+                                    <img src="Boy.svg" style="width: 30px" />
+                                    @Empleado.Email
+                                </p>
+
+                            </div>
+
+                            <div class="col-6 mb-3">
+                                <p>
+                                    <img src="/contador.svg" style="width: 30px" />
+
+                                    Cantidad Sentencias: @Empleado.ContadorSentencias
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -214,6 +257,7 @@
     public TiposDemandas tipoDemandaSentencia { get; set; } = new TiposDemandas();
     public string NombreCompleto => $"{Usuario.Nombre} {Usuario.Apellido}";
     public string NombreCompletoSentencia => $"{user.Nombre} {user.Apellido}";
+    public string NombreCompletoEmpleado => $"{Empleado.Nombre} {Empleado.Apellido}";
     public byte[]? archivoSentencia;
     public ApplicationUser User { get; set; } = new ApplicationUser();
     public ApplicationUser Empleado { get; set; } = new ApplicationUser();
@@ -226,7 +270,7 @@
             Usuario = ApplicationUserServices.GetUserByCedula(Demanda.Cedula);  
 
         }
-        // Empleado = ApplicationUserServices.ObtenerEmpleadoDestacado();
+        Empleado = ApplicationUserServices.ObtenerEmpleadoDestacado();
         sentencia = await sentenciaServices.ObtenerUltimaSentencia();
         ListResolucion = await resolucionServices.GetResoluciones();
         ListDemanda = await demandaService.GetDemandas();
