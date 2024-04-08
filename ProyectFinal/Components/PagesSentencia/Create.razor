@@ -3,6 +3,9 @@
 @inject NotificationService notificationService
 @inject SentenciaServices sentenciaService
 @inject TiposResolucionServices resolucionService
+@inject ApplicationUserServices applicationUserServices
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> userManager
 @inject DemandaServices demandaService
 @attribute [StreamRendering]
 @rendermode InteractiveServer
@@ -59,12 +62,23 @@
     public Sentencias sentencia { get; set; } = new Sentencias();
     public Demandas? demanda { get; set; } = new Demandas();
     public List<TipoResoluciones> ListaResolucion = new List<TipoResoluciones>();
+    private AuthenticationState authenticationState;
+    public ApplicationUser user { get; set; } = new ApplicationUser();
+
+
+
 
     protected override async Task OnInitializedAsync()
     {
         demanda = await demandaService.GetDemanda(DemandaId);
         sentencia.FechaCreacion = DateTime.Now;
         ListaResolucion = await resolucionService.GetResoluciones();
+        authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+
+        user = await userManager.FindByEmailAsync(authenticationState.User.Identity.Name);
+
+
     }
     public async Task Guardar()
     {
@@ -93,6 +107,10 @@
                     Duration = 4_000
                 };
             notificationService.Notify(mensaje);
+            user.ContadorSentencias +=1;
+            demanda.EstadoId = 1;
+            await demandaService.SaveChanges(demanda);
+            await applicationUserServices.SaveChanges(user);
             sentencia = new Sentencias();
         }
     }
