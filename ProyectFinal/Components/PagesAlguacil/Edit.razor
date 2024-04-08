@@ -74,7 +74,7 @@
 
     public async Task Editar()
     {
-        var guardado = await alguacilService.Edit(Alguacil);
+        var guardado = await alguacilService.Save(Alguacil);
         if (!guardado)
         {
             var mensaje = new NotificationMessage

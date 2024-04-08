@@ -272,7 +272,7 @@
     {
 
         ListaDemandas = await demandaServices.GetDemandas();
-        TiposDemadas = await tipoDemandaServices.Listar(t => true);
+        TiposDemadas = await tipoDemandaServices.Listar();
         Audiencias = await audienciasServices.Listar(t => true);
         Estados = await estadosDemandasServices.Listar(t => true);
         FechaFinal = DateTime.Now;

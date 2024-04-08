@@ -102,7 +102,7 @@
     protected override async Task OnInitializedAsync()
     { 
         sentencias = await sentenciaService.Listar(p => true);
-        tipoDemandas = await tiposDemandaServices.Listar(p => true);
+        tipoDemandas = await tiposDemandaServices.Listar();
 
 
     }

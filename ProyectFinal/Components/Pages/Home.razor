@@ -230,7 +230,7 @@
         sentencia = await sentenciaServices.ObtenerUltimaSentencia();
         ListResolucion = await resolucionServices.GetResoluciones();
         ListDemanda = await demandaService.GetDemandas();
-        ListTiposDemandas = await tipoDemandaServices.Listar(t => true);
+        ListTiposDemandas = await tipoDemandaServices.Listar();
         ListSentencias = await sentenciaServices.Listar(s => true);
 
         if(sentencia != null)
