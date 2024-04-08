@@ -106,7 +106,7 @@
             Audiencia = await AudienciasServices.GetAudiencia(Demanda.AudienciaId.Value);
         }
 
-        TiposDemadas = await demandasServices.Listar(t => true);
+        TiposDemadas = await demandasServices.Listar();
 
         var tipo = TiposDemadas.FirstOrDefault(t => t.TiposDemandasId == Demanda.TiposDemandasId);
         if (tipo != null)

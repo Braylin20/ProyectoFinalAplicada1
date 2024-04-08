@@ -113,7 +113,7 @@
 
         ListaDemandas = await DemandaServices.Listar(p => true);
         ListaResolucion = await resolucionService.GetResoluciones();
-        TiposDemandas = await TipoDemandaServices.Listar(p => true);
+        TiposDemandas = await TipoDemandaServices.Listar();
         FechaFinal = DateTime.Now;
         FechaInicio = DateTime.Now;
     }

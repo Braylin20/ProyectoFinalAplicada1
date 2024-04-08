@@ -244,10 +244,10 @@
     protected override async Task OnInitializedAsync()
     {
 
-        Alguaciles = await alguacilServices.Listar(a =>true);
+        Alguaciles = await alguacilServices.GetAlguaciles();
         EstadoDemandas = await estadoServices.Listar(e =>true);
         Audiencias = await audienciaServices.Listar(e =>true);
-        TiposDemandas = await tipoDemandaServices.Listar(e => true);
+        TiposDemandas = await tipoDemandaServices.Listar();
         authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         Demanda.Fecha = DateTime.Now;
         
