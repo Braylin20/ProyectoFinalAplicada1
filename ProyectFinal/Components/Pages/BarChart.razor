@@ -1,10 +1,10 @@
-﻿@page "/Chart"
+﻿@page "/BarChart"
 @rendermode InteractiveServer
 @inject SentenciaServices sentenciasService
-
+<h3>Chart</h3>
 
 <div style="width: 800px; height: 350px;">
-    <canvas id="myChart"></canvas>
+    <canvas id="myBarChart"></canvas>
 </div>
 
 @code {
@@ -13,12 +13,10 @@
         if (firstRender)
         {
             var sentenciasPorMes = await sentenciasService.GetSentenciasPorMes(DateTime.Now.Year);
-            await JSRuntime.InvokeVoidAsync("loadChart", sentenciasPorMes);
+            await JSRuntime.InvokeVoidAsync("loadBarChart", sentenciasPorMes);
         }
     }
 
-
     [Inject]
     public IJSRuntime JSRuntime { get; set; }
-    
 }
