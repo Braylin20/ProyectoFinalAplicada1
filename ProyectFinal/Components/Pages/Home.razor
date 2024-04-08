@@ -1,18 +1,89 @@
 ﻿@page "/"
+@inject DemandaServices demandaService
+@inject TipoDemandaServices tipoDemandaServices
+@inject TiposResolucionServices resolucionServices
+@inject ApplicationUserServices ApplicationUserServices
+@inject SentenciaServices sentenciaServices
+@inject ApplicationUserServices applicationUserServices
+
+@inject ApplicationUserServices ApplicationUserServices
+@inject IJSRuntime JSRuntime
 
 
 <AuthorizeView Roles="Admin,Empleado">
-    @inject DemandaServices demandaService
-    @inject ApplicationUserServices ApplicationUserServices
-    @inject IJSRuntime JSRuntime
 
     <body>
         <Chart />
         <div class="card-body" style="height: 300px">
             <div class="card-group align-items-center d-flex">
-                <div class="card shadow-lg" type="button">
+                <div class="card shadow-lg" >
                     <h3 class="text-center text-white" style="background-color: dimgrey">Sentencia Reciente</h3>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center align-items-center mb-4">
+                            <img class="" src="/Sentence.svg" style="width: 100px" />
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <p>
+                                    <img src="UserDemanda.svg" style="width: 30px" />
+                                    @NombreCompletoSentencia
+                                </p>
+
+                            </div>
+                            <div class="col-6">
+                                <p>
+                                    <img src="/tipoResolucion.svg" style="width: 30px" />
+                                    @ultimaResolucion.TipoResolcion
+                                </p>
+                            </div>
+                            <hr clas="border-bottom" />
+
+                        </div>
+                        <div class="row">
+
+                            <div class="col-6 mb-3">
+                                <p>
+                                    <img src="Date.svg" style="width: 30px" />
+                                    @if(sentencia != null)
+                                    {
+                                        @sentencia.FechaCreacion.ToString("dd/MM/yyyy");    
+                                        
+                                    }
+                                </p>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <p>
+                                    <img src="/tiposDemanda.svg" style="width: 30px" />
+                                    @tipoDemandaSentencia
+                                    
+                                </p>
+                            </div>
+
+                            <div class="row justify-content-end">
+                                <div class="col-8">
+                                    <p>
+                                        <img src="/tiposDemanda.svg" style="width: 30px;" />
+
+                                        @if (archivoSentencia != null)
+                                        {
+                                            <a href="data:application/octet-stream;base64,@Convert.ToBase64String(archivoSentencia)" download="Archivo.pdf">
+                                                <img src="/Download.svg" style="width: 35px;" />
+                                            </a>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
                 </div>
+
+
+
+
+                
                 <div class="card shadow-lg " style="border: 0px; ">
                     <h3 class="text-center text-white" style="background-color: dimgrey">Demanda Reciente</h3>
                     <div class="card-body">
@@ -38,29 +109,38 @@
                         </div>
                         <div class="row">
                             <div class="col-6">
-                                @foreach (var ninoDetalle in Demanda.UsuarioNinoDetalles)
+                                @if(Demanda != null)
                                 {
-                                    <p>
-                                        <img src="Boy.svg" style="width: 30px" />
-                                        @ninoDetalle.NombreNino
-                                    </p>
+                                    @foreach (var ninoDetalle in Demanda.UsuarioNinoDetalles)
+                                    {
+                                        <p>
+                                            <img src="Boy.svg" style="width: 30px" />
+                                            @ninoDetalle.NombreNino
+                                        </p>
+                                    }
+                                    
                                 }
 
                             </div>
-                            <div class="col-6 mb-3">
-                                <p>
-                                    <img src="Date.svg" style="width: 30px" />
-                                    @Demanda.Fecha.ToString("dd/MM/yyyy");
-                                </p>
-                            </div>
-                            <div class="row">
-                                <div class="d-flex justify-content-center align-items-center mb-4">
+                            @if(Demanda != null)
+                            {
+                                
+                                <div class="col-6 mb-3">
                                     <p>
                                         <img src="Date.svg" style="width: 30px" />
-                                        @Demanda.Descripcion
+                                    
+                                        @Demanda.Fecha.ToString("dd/MM/yyyy");
                                     </p>
                                 </div>
-                            </div>
+                                <div class="row">
+                                    <div class="d-flex justify-content-center align-items-center mb-4">
+                                        <p>
+                                            <img src="Date.svg" style="width: 30px" />
+                                            @Demanda.Descripcion
+                                        </p>
+                                    </div>
+                                </div>
+                            }
 
                         </div>
 
@@ -88,30 +168,7 @@
     </footer>
 
 
-    @code {
-        public Demandas Demanda { get; set; } = new Demandas();
-        public ApplicationUser Usuario { get; set; } = new ApplicationUser();
-        public string NombreCompleto => $"{Usuario.Nombre} {Usuario.Apellido}";
-        protected override async Task OnInitializedAsync()
-        {
-        Demanda = await demandaService.ObtenerUltimaDemanda();
-        Usuario = ApplicationUserServices.GetUserByCedula(Demanda.Cedula);
 
-        }
-        // protected override async Task OnAfterRenderAsync(bool firstRender)
-        // {
-        //     Demanda =  await demandaService.ObtenerUltimaDemanda();
-        //     Usuario = ApplicationUserServices.GetUserByCedula(Demanda.Cedula);
-
-        // }
-        // protected override async Task OnAfterRenderAsync(bool firstRender)
-        // {
-        //     if (firstRender)
-        //     {
-        //         await JSRuntime.InvokeVoidAsync("loadChart", Demanda.UsuarioNinoDetalles.Select(x => x.NombreNino).ToArray());
-        //     }
-        // }
-    }
 </AuthorizeView>
 
 
@@ -140,3 +197,81 @@
         </button>
     </div>
 </AuthorizeView>
+
+
+@code {
+    public List<TipoResoluciones> ListResolucion { get; set; } = new List<TipoResoluciones>();
+    public List<Demandas> ListDemanda { get; set; } = new List<Demandas>();
+    public List<TiposDemandas> ListTiposDemandas = new List<TiposDemandas>();
+
+    public List<Sentencias> ListSentencias = new List<Sentencias>();
+    public ApplicationUser user { get; set; } = new ApplicationUser();
+
+    public Demandas Demanda { get; set; } = new Demandas();
+    public Sentencias sentencia { get; set; } = new Sentencias();
+    public Sentencias sentencia2 { get; set; } = new Sentencias();
+    public ApplicationUser Usuario { get; set; } = new ApplicationUser();
+    public TipoResoluciones ultimaResolucion { get; set; } = new TipoResoluciones();
+    public Demandas demandaSentencia { get; set; } = new Demandas();
+    public TiposDemandas tipoDemandaSentencia { get; set; } = new TiposDemandas();
+    public string NombreCompleto => $"{Usuario.Nombre} {Usuario.Apellido}";
+    public string NombreCompletoSentencia => $"{user.Nombre} {user.Apellido}";
+    public byte[]? archivoSentencia;
+    public ApplicationUser User { get; set; } = new ApplicationUser();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Demanda = await demandaService.ObtenerUltimaDemanda();
+        if(Demanda != null)
+        {
+            Usuario = ApplicationUserServices.GetUserByCedula(Demanda.Cedula);  
+
+        }
+
+
+        sentencia = await sentenciaServices.ObtenerUltimaSentencia();
+        ListResolucion = await resolucionServices.GetResoluciones();
+        ListDemanda = await demandaService.GetDemandas();
+        ListTiposDemandas = await tipoDemandaServices.Listar(t => true);
+        ListSentencias = await sentenciaServices.Listar(s => true);
+
+        if(sentencia != null)
+        {
+            demandaSentencia = ListDemanda.FirstOrDefault(d => d.DemandaId == sentencia.DemandaId);
+            sentencia2 = ListSentencias.FirstOrDefault(s=> s.SentenciaId == sentencia.SentenciaId);
+            
+        }
+
+        if (sentencia2 != null && sentencia2.Sentencia != null)
+        {
+            archivoSentencia = sentencia2.Sentencia;
+        }
+        if(sentencia != null && demandaSentencia !=null)
+        {
+            
+            ultimaResolucion = ListResolucion.FirstOrDefault(r => r.ResolucionId == sentencia.ResolucionId);    
+            user =  applicationUserServices.GetUserByCedula(demandaSentencia.Cedula);
+            tipoDemandaSentencia = ListTiposDemandas.FirstOrDefault(t => t.TiposDemandasId == demandaSentencia.TiposDemandasId);
+        }
+
+        
+        
+
+
+
+
+    }
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     Demanda =  await demandaService.ObtenerUltimaDemanda();
+    //     Usuario = ApplicationUserServices.GetUserByCedula(Demanda.Cedula);
+
+    // }
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     if (firstRender)
+    //     {
+    //         await JSRuntime.InvokeVoidAsync("loadChart", Demanda.UsuarioNinoDetalles.Select(x => x.NombreNino).ToArray());
+    //     }
+// }
+    }
