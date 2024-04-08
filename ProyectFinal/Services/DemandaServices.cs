@@ -34,6 +34,8 @@ namespace ProyectFinal.Services
 
         public async Task<bool> DeleteDemanda(int id)
         {
+            
+             await _context!.Sentencias.AsNoTracking().Where(s=> s.DemandaId == id).ExecuteDeleteAsync();
             return await _context!.Demandas
                 .AsNoTracking()
                 .Where(a => a.DemandaId == id)
@@ -55,6 +57,12 @@ namespace ProyectFinal.Services
             return await _context.SaveChangesAsync() > 0;
         }
 
+
+        public async Task SaveChanges(Demandas demanda)
+        {
+            _context!.Demandas.Update(demanda);
+            await _context.SaveChangesAsync();
+        }
         public async Task<Demandas> ObtenerUltimaDemanda()
         {
             return await _context.Demandas
