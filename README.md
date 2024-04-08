@@ -44,7 +44,8 @@ Utilizamos blazor en conjunto de Boostrap para el lado del diseño, junto con c#
 ![![image](![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/91a80f55-8725-4c26-8f67-ff268b876067)
 )
 ]
-
+[!(![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/e28aca3a-797f-46f7-aea5-aa695a5ece02)
+)]
 ![![image](![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/fad933c5-80fb-47b6-9472-75733695a11e)
 )
 ]
