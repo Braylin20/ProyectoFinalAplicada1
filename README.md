@@ -14,14 +14,14 @@ Al igual que visualizar todos y cada unos de sus expedientes con sus sentencias 
 **Usuario administrador**
 
 **User Name** 
-Enel@mail.com
+braylin@mail.com
 **Password** 
 a12345A@
 
 **Usuario Común**
 
 **User Name** 
-user@mail.com
+enel@mail.com
 **Password** 
 a12345A@
 **Características Principales:**
