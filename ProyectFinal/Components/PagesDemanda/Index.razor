@@ -90,6 +90,7 @@
                     <th class="table-head text-white" style="background-color: #012E40">Tipo de Demanda</th>
                     <th class="table-head text-white" style="background-color: #012E40">Estado</th>
                     <th class="table-head text-white" style="background-color: #012E40">Fecha de Audiencia</th>
+                    <th class="table-head text-white" style="background-color: #012E40">Alguacil</th>
                     <th class="table-head text-white" style="background-color: #012E40">Archivo</th>
                     <th class="table-head text-white" style="background-color: #012E40">Foto de C&eacute;dula</th>
                     <th class="table-head text-white" style="background-color: #012E40">Imprimir Demanda</th>
@@ -105,7 +106,7 @@
                     TipoDemanda = TiposDemadas.FirstOrDefault(t => t.TiposDemandasId == item.TiposDemandasId);
                     Audiencia = Audiencias.FirstOrDefault(t => t.AudienciaId == item.AudienciaId);
                     Estado = Estados.FirstOrDefault(t => t.EstadoId == item.EstadoId);
-
+                    alguacil = ListaAlguaciles.FirstOrDefault(a => a.AlguacilId == item.AlguacilId);
                     <tr>
                         <td>
                             @if(TipoDemanda != null)
@@ -133,6 +134,19 @@
                         <td>
                             @if (Audiencia != null)
                                 @Audiencia.FechaAudiencia.ToString("dd/MM/yyyy")
+                            else
+                            {
+                                <h6>No asignado</h6>
+                            }
+                        </td>
+                        
+                        <td>
+                            @if(alguacil != null)
+                            {
+                                <h6>
+                                    @alguacil.Nombre @alguacil.Apellido
+                                </h6>
+                            }
                             else
                             {
                                 <h6>No asignado</h6>
@@ -212,7 +226,7 @@
                                 <div class="modal-footer">
                                     <button class="btn btn-danger" data-bs-dismiss="modal">No</button>
                                     <form action="CreateSentencia" method="get">
-                                        @* <input type="hidden" name="DemandaId" value="@item.DemandaId" /> *@
+                                        
                                         <a href="CreateSentencia/@item.DemandaId"type="button" class="btn btn-primary">Si</a>
                                     </form>
                                 </div>
@@ -235,7 +249,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Aquí puedes agregar el contenido del cuerpo del modal -->
+               
             </div>
             <div class="modal-footer">
                 <button class="btn btn-danger" data-bs-dismiss="modal">No</button>
@@ -253,9 +267,11 @@
     public Audiencias? Audiencia { get; set; } = new Audiencias();
     public EstadosDemandas? Estado { get; set; } = new EstadosDemandas();
     public Demandas? demandas = new Demandas();
+    public Alguaciles alguacil { get; set; } = new Alguaciles();
     public List<Demandas>? ListaDemandas = new List<Demandas>();
     public List<TiposDemandas>? TiposDemadas = new List<TiposDemandas>();
     public List<Audiencias>? Audiencias = new List<Audiencias>();
+    public List<Alguaciles>? ListaAlguaciles = new List<Alguaciles>();
     public List<EstadosDemandas>? Estados = new List<EstadosDemandas>();
     public List<Sentencias>? ListaSentencia = new List<Sentencias>();
     public int Opcion { get; set; }
@@ -268,16 +284,17 @@
     private string botonTodos = "btn btn-secondary";
     public int tipoDemandaId;
 
+
     protected override async Task OnInitializedAsync()
     {
-
+        ListaAlguaciles = await alguacilServices.GetAlguaciles();
         ListaDemandas = await demandaServices.GetDemandas();
         TiposDemadas = await tipoDemandaServices.Listar();
         Audiencias = await audienciasServices.Listar(t => true);
         Estados = await estadosDemandasServices.Listar(t => true);
         FechaFinal = DateTime.Now;
         FechaInicio = DateTime.Now;
-
+       
         ListaSentencia = await sentenciaService.Listar(s => true);
 
     }
