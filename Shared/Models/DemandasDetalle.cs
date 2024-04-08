@@ -12,7 +12,7 @@ namespace Share.Models
         [Key]
         public int DetalleId { get; set; }
         public int DemandaId { get; set; }
-        [RegularExpression(@"^\d{11}$", ErrorMessage = "La cédula debe tener 11 digitos")]
+        [RegularExpression(@"^\d{3}-\d{7}-\d{1}$", ErrorMessage = "La cédula debe tener el formato XXX-XXXXXXX-X")]
         public string? NumCedulaDemandado { get; set; }
         [Required(ErrorMessage = "El nombre del demandante es requerido")]
         public string? NombreDemandado { get; set; }

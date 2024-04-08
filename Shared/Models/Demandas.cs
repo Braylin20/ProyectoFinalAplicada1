@@ -39,8 +39,7 @@ namespace Share.Models
         public Alguaciles? Alguacil { get; set; }
         [ForeignKey("AudienciaId")]
         public Audiencias? Audiencia { get; set; }
-        //[ForeignKey("DemandaId")]
-        //public ICollection<Audiencias> Audiencias { get; set; } = new List<Audiencias>();
+
         [ForeignKey("DemandaId")]
         public ICollection<DemandasDetalle> DemandaDetalles { get; set; } = new List<DemandasDetalle>();
 
