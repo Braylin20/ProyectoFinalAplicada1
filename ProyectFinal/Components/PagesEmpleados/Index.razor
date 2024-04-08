@@ -69,7 +69,7 @@
                     <div class="col-3">
                         <label class="fw-bold">Nombre</label>
                         <div class="input-group">
-                            <InputText @bind-Value="User.Nombre" class="form-control"></InputText>
+                            <InputText @bind-Value="User.Nombre" class="form-control" @oninput="FiltrarPorNombre"></InputText>
                             <button type="button" class="btn btn-primary bi bi-search" @onclick="Filtrar">
                                 <img src="Search.svg" style="width: 20px;" />
                             </button>
@@ -156,11 +156,17 @@
         Empleados = await userManager.GetUsersInRoleAsync("Empleado");
         Empleados = await empleadoServices.ListarPorFecha(Empleados, FechaInicio, FechaFinal);
     }
+
+    public async Task FiltrarPorNombre(ChangeEventArgs e)
+    {
+        User.Nombre = e.Value?.ToString();
+        await Filtrar();
+    }
     public async Task Filtrar()
     {
         if (Opcion == 1)
         {
-            Empleados = await userManager.GetUsersInRoleAsync("Empleado");
+            Empleados = (await userManager.GetUsersInRoleAsync("Empleado")).Concat(await userManager.GetUsersInRoleAsync("Admin")).ToList();
             var cedula = await empleadoServices.ListarPorCedula(Empleados, User);
             Empleados = await empleadoServices.ListarPorCedula(Empleados, User);
         }

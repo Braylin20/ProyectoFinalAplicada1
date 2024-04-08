@@ -77,7 +77,9 @@
                 @foreach (var item in ListaExpedientes)
                 {
                     
-                    var resolucion = BuscarResolucion(item);
+                         resolucionTipo = BuscarResolucion(item);
+                        
+                    
                    
                     
                        
@@ -85,7 +87,7 @@
                             <td>@item.ExpedienteId</td>
                             <td>@item.FechaCreacion</td>
                             <td>@item.Comentario</td>
-                            <td>@resolucion</td>
+                            <td>@resolucionTipo</td>
                             <td>
                                 <a href="/EditExpediente/@item.ExpedienteId">
                                     <img src="Edit.svg" style="width: 30px;" />
@@ -115,7 +117,7 @@
     public TipoResoluciones resolucion { get; set; } = new TipoResoluciones();
     public DateTime FechaInicio { get; set; }
     public DateTime FechaFinal { get; set; }
-
+    public string resolucionTipo;
 
     protected override async Task OnInitializedAsync()
     {
@@ -131,8 +133,12 @@
     public string BuscarResolucion(Expedientes item)
     {
         var sen = ListaSentencias.FirstOrDefault(s => s.SentenciaId == item.SentenciaId);
-        sen.TipoResoluciones = ListaResolucion.FirstOrDefault(r => r.ResolucionId == sen.ResolucionId);
-        if(sen.TipoResoluciones == null)
+        if(sen != null)
+        {
+            sen.TipoResoluciones = ListaResolucion.FirstOrDefault(r => r.ResolucionId == sen.ResolucionId);
+            
+        }
+        else if(sen.TipoResoluciones == null)
         {
             return "" ;
         }
