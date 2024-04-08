@@ -17,6 +17,7 @@ namespace ProyectFinal.Services
             
             return Task.FromResult((ICollection<ApplicationUser>)users);
         }
+        
         public Task<ICollection<ApplicationUser>> ListarPorCedula(ICollection<ApplicationUser> empleados, ApplicationUser user)
         {
 

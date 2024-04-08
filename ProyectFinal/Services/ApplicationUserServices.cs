@@ -13,7 +13,10 @@ namespace ProyectFinal.Services
         {
             return _context.Users.Include(u => u.TelefonoDetalles).FirstOrDefault(t => t.Id == id);
         }
-        
+        public ApplicationUser ObtenerEmpleadoDestacado()
+        {
+            return _context.Users.OrderByDescending(u => u.ContadorSentencias).FirstOrDefault();
+        }
         public async Task<List<ApplicationUser>> Listar(Expression<Func<ApplicationUser, bool>> criterio)
         {
             return await _context.Users
