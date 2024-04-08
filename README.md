@@ -40,12 +40,38 @@ a12345A@
 
 **Tecnologías Utilizadas**
 Utilizamos blazor en conjunto de Boostrap para el lado del diseño, junto con c# y Asp.net8.
+- **ASP.NET Core:** Utilizado para el desarrollo del backend.
+- **Entity Framework Core:** Framework de mapeo objeto-relacional (ORM) para el acceso a datos.
+- **Blazor:** Framework de Microsoft para construir aplicaciones web interactivas.
+- **Razor:** Motor de plantillas de Blazor para definir la interfaz de usuario.
+- **HTML/CSS:** Utilizado para el diseño y la estructura visual de las páginas web.
+- **Bootstrap:** Framework de diseño CSS para la creación de interfaces de usuario.
+- **C#:** Lenguaje de programación utilizado en el backend y en el código del lado del servidor en Blazor.
+- **Microsoft SQL Server:** Sistema de gestión de bases de datos relacional utilizado para almacenar datos.
+- **Razor Components:** Componentes reutilizables en Blazor para construir la interfaz de usuario.
+
+(![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/e28aca3a-797f-46f7-aea5-aa695a5ece02)
 
 
-[!(![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/e28aca3a-797f-46f7-aea5-aa695a5ece02)
-)]
+(![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/1aaa5f4a-322e-4091-9e44-cfdd046cd49e)
 
-[!(![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/1aaa5f4a-322e-4091-9e44-cfdd046cd49e))]
+![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/df55c6c7-f5d3-405d-a9ff-63192f28a819)
 
-(![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/df55c6c7-f5d3-405d-a9ff-63192f28a819)
-)
+
+
+Los Administradores de este proyecto fueron:
+
+**Braylin Vasquez Guzman**
+
+
+
+
+![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/25475ab3-e299-44ff-961a-722e0e26bfb8)
+
+
+
+**Elizer Terrero Rojas**
+
+
+
+(![image](https://github.com/Braylin20/ProyectoFinalAplicada1/assets/144468282/510b81f5-470d-4397-ae85-83038ac13ae4)
